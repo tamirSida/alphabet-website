@@ -50,8 +50,10 @@ export interface Testimonial {
 
 export interface CurriculumItem {
   id: string;
+  weekNumber: number;
   title: string;
   description: string;
+  icon?: string; // Font Awesome icon class (e.g., "fas fa-rocket")
   order: number;
   isVisible: boolean;
   createdAt: Date;

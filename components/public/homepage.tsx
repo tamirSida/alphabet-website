@@ -5,7 +5,7 @@ import HeroSection from './hero-section';
 import ContentSection from './content-section';
 import TeamSection from './team-section';
 import TestimonialsSection from './testimonials-section';
-import CurriculumSection from './curriculum-section';
+import CurriculumTimeline from './curriculum-timeline';
 import CTASection from './cta-section';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
 import EditableSection from '@/components/admin/editable-section';
@@ -96,6 +96,12 @@ function AlphaBetHomepageContent() {
         } else {
           await CMSServiceFactory.getContentSectionService().create(data);
         }
+      } else if (editingType === 'curriculum') {
+        if (editingItem) {
+          await CMSServiceFactory.getCurriculumService().update(editingItem.id, data);
+        } else {
+          await CMSServiceFactory.getCurriculumService().create(data);
+        }
       }
       
       await loadContent();
@@ -120,6 +126,13 @@ function AlphaBetHomepageContent() {
           { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'Enter section title' },
           { key: 'content', label: 'Content', type: 'textarea' as const, required: true, placeholder: 'Enter section content...' },
           { key: 'type', label: 'Section Type', type: 'text' as const, required: true, placeholder: 'e.g., mission, why-alpha-bet, who-should-apply' }
+        ];
+      case 'curriculum':
+        return [
+          { key: 'weekNumber', label: 'Week Number', type: 'number' as const, required: true, placeholder: '1-10' },
+          { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'Enter week title' },
+          { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter week description...' },
+          { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-rocket' }
         ];
       default:
         return [];
@@ -275,8 +288,13 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
       {/* Team Section */}
       <TeamSection members={teamMembers} />
 
-      {/* Curriculum Section */}
-      <CurriculumSection items={curriculum} />
+      {/* Curriculum Timeline */}
+      <EditableSection
+        sectionName="Curriculum Timeline"
+        onEdit={() => handleEdit('curriculum')}
+      >
+        <CurriculumTimeline items={curriculum} />
+      </EditableSection>
 
       {/* Testimonials Section */}
       <TestimonialsSection testimonials={testimonials} />
