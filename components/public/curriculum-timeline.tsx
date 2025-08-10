@@ -176,15 +176,61 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
 
             {/* Loading Status Overlay */}
             <div className="absolute inset-0 flex items-center justify-center z-10">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-950 mb-4 font-mono">
-                  <span className="animate-pulse">STATUS: MISSION PARAMETERS LOADED</span>
+              <div className="text-center bg-gradient-to-br from-gray-900 via-gray-800 to-black bg-opacity-95 p-8 rounded border-2 border-white" style={{fontFamily: 'monospace'}}>
+                {/* Retro Header */}
+                <div className="text-white text-xl font-bold mb-6">
+                  <span className="animate-pulse">DECRYPTING FILES...</span>
                 </div>
                 
-                {/* Progress bar */}
-                <div className="w-80 mx-auto h-2 bg-gray-300 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-blue-950 to-blue-700 animate-pulse"></div>
+                {/* 32-bit Style Loading Bar */}
+                <div className="w-96 mx-auto mb-6">
+                  <div className="bg-gray-900 border-2 border-white p-1 rounded">
+                    <div className="h-8 bg-gray-900 flex items-center relative overflow-hidden">
+                      {/* Animated loading blocks */}
+                      <div className="flex w-full h-full">
+                        {Array.from({ length: 20 }).map((_, i) => (
+                          <div
+                            key={`block-${i}`}
+                            className="flex-1 h-full bg-white opacity-70 border-r border-gray-600"
+                            style={{
+                              animation: `loadBlock 2s ease-in-out infinite`,
+                              animationDelay: `${i * 100}ms`
+                            }}
+                          ></div>
+                        ))}
+                      </div>
+                      {/* Loading text overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-900 text-sm font-bold">
+                        <span className="animate-pulse">LOADING...</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Status */}
+                <div className="bg-white text-gray-900 px-4 py-2 rounded font-bold text-lg mb-4">
+                  <span className="animate-pulse">STATUS: MISSION PARAMETERS LOADED</span>
+                </div>
+
+                {/* Simple file list */}
+                <div className="text-white text-sm space-y-1">
+                  <div className="animate-pulse">► curriculum_week_01.dat</div>
+                  <div className="animate-pulse">► curriculum_week_02.dat</div>
+                  <div className="animate-pulse">► mission_briefing.enc</div>
+                </div>
+
+                <style jsx>{`
+                  @keyframes loadBlock {
+                    0%, 100% { 
+                      background-color: #ffffff;
+                      opacity: 0.3;
+                    }
+                    50% { 
+                      background-color: #ffffff;
+                      opacity: 1;
+                    }
+                  }
+                `}</style>
               </div>
             </div>
           </div>
@@ -252,12 +298,6 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                         {item.title.toUpperCase()}
                       </div>
 
-                      {/* Status Indicator */}
-                      <div className="absolute -top-2 -right-2">
-                        <div className={`w-4 h-4 rounded-full ${
-                          activeWeek === item.weekNumber ? 'bg-green-400' : 'bg-yellow-400'
-                        } animate-pulse`}></div>
-                      </div>
 
                       {/* Edit Button - Admin Only */}
                       {isAdminMode && (
