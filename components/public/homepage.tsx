@@ -97,10 +97,17 @@ function AlphaBetHomepageContent() {
           await CMSServiceFactory.getContentSectionService().create(data);
         }
       } else if (editingType === 'curriculum') {
-        if (editingItem) {
+        if (editingItem && editingItem.id && !editingItem.id.startsWith('week-')) {
+          // Existing Firestore document - update it
           await CMSServiceFactory.getCurriculumService().update(editingItem.id, data);
         } else {
-          await CMSServiceFactory.getCurriculumService().create(data);
+          // New document or default data - create it
+          const curriculumData = {
+            ...data,
+            isVisible: true,
+            order: data.weekNumber || 1
+          };
+          await CMSServiceFactory.getCurriculumService().create(curriculumData);
         }
       }
       
@@ -293,7 +300,10 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
         sectionName="Curriculum Timeline"
         onEdit={() => handleEdit('curriculum')}
       >
-        <CurriculumTimeline items={curriculum} />
+        <CurriculumTimeline 
+          items={curriculum} 
+          onEdit={(item) => handleEdit('curriculum', item)}
+        />
       </EditableSection>
 
       {/* Testimonials Section */}

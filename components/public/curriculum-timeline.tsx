@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useAdmin } from '@/lib/cms/admin-context';
 
 interface CurriculumItem {
   id: string;
@@ -13,9 +14,11 @@ interface CurriculumItem {
 
 interface CurriculumTimelineProps {
   items: CurriculumItem[];
+  onEdit?: (item?: CurriculumItem) => void;
 }
 
-export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
+export default function CurriculumTimeline({ items, onEdit }: CurriculumTimelineProps) {
+  const { isAdminMode } = useAdmin();
   const [activeWeek, setActiveWeek] = useState<number | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -25,7 +28,7 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
   
   // Default curriculum data from your specification
   const defaultCurriculum = [
-    { id: 'week-1', weekNumber: 1, title: 'Orientation', description: 'Set the foundation for your entrepreneurial journey.', icon: 'fas fa-flag-checkered', order: 1 },
+    { id: 'week-1', weekNumber: 1, title: 'Orientation', description: 'Set the foundation for your entrepreneurial journey.', icon: 'fas fa-compass', order: 1 },
     { id: 'week-2', weekNumber: 2, title: 'Choosing Partners', description: 'Learn to build a strong, reliable team.', icon: 'fas fa-handshake', order: 2 },
     { id: 'week-3', weekNumber: 3, title: 'Ideation Process', description: 'Develop and refine your business idea.', icon: 'fas fa-lightbulb', order: 3 },
     { id: 'week-4', weekNumber: 4, title: 'Lean Model Canvas', description: 'Master the fundamental framework for a startup.', icon: 'fas fa-drafting-compass', order: 4 },
@@ -34,17 +37,45 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
     { id: 'week-7', weekNumber: 7, title: 'Market Analysis', description: 'Validate your concept with data-driven insights.', icon: 'fas fa-chart-line', order: 7 },
     { id: 'week-8', weekNumber: 8, title: 'Business Plan', description: 'Create a clear, actionable roadmap for growth.', icon: 'fas fa-map', order: 8 },
     { id: 'week-9', weekNumber: 9, title: 'Storytelling & Branding', description: 'Learn to communicate your mission and vision effectively.', icon: 'fas fa-bullhorn', order: 9 },
-    { id: 'week-10', weekNumber: 10, title: 'Presentations', description: 'Prepare to pitch your business with confidence.', icon: 'fas fa-presentation', order: 10 }
+    { id: 'week-10', weekNumber: 10, title: 'Presentations', description: 'Prepare to pitch your business with confidence.', icon: 'fas fa-flag-checkered', order: 10 }
   ];
 
-  // Use CMS items if available, otherwise use default data
-  const displayItems = items.length > 0 ? items : defaultCurriculum;
+  // Merge CMS items with default data - show database items where they exist, default items elsewhere
+  const mergeItemsWithDefaults = () => {
+    const merged = [...defaultCurriculum];
+    
+    // Replace default items with CMS items where they exist
+    items.forEach(cmsItem => {
+      const defaultIndex = merged.findIndex(defaultItem => 
+        defaultItem.weekNumber === cmsItem.weekNumber
+      );
+      if (defaultIndex !== -1) {
+        merged[defaultIndex] = cmsItem;
+      } else {
+        // If CMS item has a week number not in defaults, add it
+        merged.push(cmsItem);
+      }
+    });
+    
+    return merged;
+  };
+  
+  const displayItems = mergeItemsWithDefaults();
   const sortedItems = displayItems.sort((a, b) => a.order - b.order);
 
   // Handle week selection and navigation
-  const handleWeekClick = (weekNumber: number) => {
+  const handleWeekClick = (weekNumber: number, e?: React.MouseEvent) => {
+    e?.stopPropagation();
     setActiveWeek(weekNumber);
     setShowPopup(true);
+  };
+
+  // Handle edit click
+  const handleEditClick = (item: CurriculumItem, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(item);
+    }
   };
 
   const navigateWeek = (direction: 'prev' | 'next') => {
@@ -288,7 +319,7 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
                   <div
                     key={item.id}
                     className="relative cursor-pointer transition-all duration-300 transform hover:scale-105"
-                    onClick={() => handleWeekClick(item.weekNumber)}
+                    onClick={(e) => handleWeekClick(item.weekNumber, e)}
                   >
                     {/* Mission Badge */}
                     <div className={`relative p-4 rounded-xl border-2 transition-all duration-300 ${
@@ -330,6 +361,17 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
                         } animate-pulse`}></div>
                       </div>
 
+                      {/* Edit Button - Admin Only */}
+                      {isAdminMode && (
+                        <button
+                          onClick={(e) => handleEditClick(item, e)}
+                          className="absolute -top-2 -left-2 w-6 h-6 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-xs transition-colors shadow-lg z-10"
+                          title="Edit this week"
+                        >
+                          <i className="fas fa-edit"></i>
+                        </button>
+                      )}
+
                       {/* Active Mission Overlay */}
                       {activeWeek === item.weekNumber && (
                         <div className="absolute inset-0 border-2 border-white rounded-xl animate-pulse opacity-50"></div>
@@ -350,7 +392,7 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
               <div 
                 key={item.id} 
                 className="relative flex items-start mb-8"
-                onClick={() => handleWeekClick(item.weekNumber)}
+                onClick={(e) => handleWeekClick(item.weekNumber, e)}
               >
                 {/* Week circle */}
                 <div className="relative z-10 flex-shrink-0 w-12 h-12 bg-blue-950 rounded-full flex items-center justify-center shadow-lg">
@@ -383,6 +425,17 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
                       </div>
                     )}
                   </div>
+
+                  {/* Edit Button - Mobile Admin Only */}
+                  {isAdminMode && (
+                    <button
+                      onClick={(e) => handleEditClick(item, e)}
+                      className="absolute top-4 right-4 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-10"
+                      title="Edit this week"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
