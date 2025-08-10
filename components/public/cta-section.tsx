@@ -17,7 +17,7 @@ export default function CTASection({
   buttonLink 
 }: CTASectionProps) {
   return (
-    <section className="py-16 px-4 bg-gradient-to-r from-gray-900 to-black text-white">
+    <section className="py-16 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">
           {title}

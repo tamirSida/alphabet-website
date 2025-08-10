@@ -20,7 +20,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
     <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-950 mb-4">
             Hear From Our Community
           </h2>
         </div>
@@ -53,7 +53,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
                   </div>
                 )}
                 <div>
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-semibold text-blue-950">
                     {testimonial.author}
                   </p>
                   <p className="text-sm text-gray-600">
