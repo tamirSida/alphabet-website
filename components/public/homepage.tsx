@@ -76,6 +76,7 @@ function AlphaBetHomepageContent() {
 
   // Edit handlers
   const handleEdit = useCallback((type: string, item?: any) => {
+    console.log('Opening edit modal for:', type, 'with item:', item); // Debug log
     setEditingType(type);
     setEditingItem(item);
     setEditModalOpen(true);
@@ -189,7 +190,11 @@ function AlphaBetHomepageContent() {
         <>
           <EditableSection
             sectionName="Mission"
-            onEdit={() => handleEdit('content')}
+            onEdit={() => handleEdit('content', {
+              title: "Our Mission",
+              content: "You've demonstrated courage, discipline, and leadership in the most challenging environments. Now, we're here to help you apply those same traits to the world of entrepreneurship.\n\nThe Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empowering combat veterans. We provide a practical, hands-on education in entrepreneurship, giving you the foundation of a top-tier MBA, but with a curriculum built for founders. Our goal is to bridge the gap between military service and the startup ecosystem, creating a new generation of veteran-led companies that drive innovation and create a lasting impact.",
+              type: "mission"
+            })}
           >
             <ContentSection
               title="Our Mission"
@@ -202,7 +207,11 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
 
           <EditableSection
             sectionName="Why Alpha-Bet"
-            onEdit={() => handleEdit('content')}
+            onEdit={() => handleEdit('content', {
+              title: "Why Alpha-Bet?",
+              content: "This isn't a traditional classroom. This is a community of like-minded individuals who share your unique experiences and understand the 'battle-tested' approach to problem-solving. We bring together the best of both worlds:\n\n• A Proven Network: Gain direct access to the Version Bravo ecosystem—a powerful network of successful founders, academic leaders, and investors from both the US and Israel. This is the only platform uniting elite US and Israeli operators.\n\n• Veteran-to-Veteran Mentorship: Learn from successful entrepreneurs and combat veterans who have walked a similar path. Our team of instructors and mentors are not just academics; they are successful founders with a proven track record.\n\n• Your Fast-Track to Success: As an Alpha-Bet graduate, you'll receive a priority application to the Version Bravo accelerator, which includes an investment. Version Bravo is a dedicated venture fund and accelerator run by combat veterans for combat veterans.",
+              type: "why-alpha-bet"
+            })}
           >
             <ContentSection
               title="Why Alpha-Bet?"
@@ -219,7 +228,11 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
 
           <EditableSection
             sectionName="Who Should Apply"
-            onEdit={() => handleEdit('content')}
+            onEdit={() => handleEdit('content', {
+              title: "Who Should Apply?",
+              content: "The Alpha-Bet program is for a select group of mission-driven veterans ready for their next challenge. This program is for you if you are:\n\n• A combat veteran of the US or Israel.\n• Post-service and ready to transition your skills into the business world.\n• Interested in entrepreneurship and seeking the foundational knowledge to get started.\n• In the ideation phase, whether you have a business idea or are looking to find a partner and develop one.\n• Committed to a rigorous, 10-week online program of training and practical workshops.",
+              type: "who-should-apply"
+            })}
           >
             <ContentSection
               title="Who Should Apply?"
@@ -236,7 +249,11 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
 
           <EditableSection
             sectionName="What You'll Gain"
-            onEdit={() => handleEdit('content')}
+            onEdit={() => handleEdit('content', {
+              title: "What You'll Gain",
+              content: "The Alpha-Bet program is designed to transform your ideas and military experience into a solid foundation for entrepreneurial success. By the end of the program, you will:\n\n• Build a Strong Team: Develop a startup with a strong team of peers. The program provides an opportunity to meet and work with other mission-driven veterans.\n\n• Gain Confidence & Knowledge: Gain the confidence and foundational knowledge for a career in entrepreneurship. You will leave with a practical understanding of the entrepreneurial process, from ideation to venture creation.\n\n• Experience Real-World Pitching: Get experience presenting a startup to real investors.\n\n• Receive Priority for Acceleration & Funding: Receive a priority application to the Version Bravo accelerator, which includes investment. This gives you a direct path to the next level of funding and mentorship.",
+              type: "what-you-gain"
+            })}
           >
             <ContentSection
               title="What You'll Gain"
@@ -283,6 +300,7 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
 
       {/* Edit Modal */}
       <EditModal
+        key={editingItem?.id || 'new'} // Force re-render when editing different items
         isOpen={editModalOpen}
         onClose={() => {
           setEditModalOpen(false);

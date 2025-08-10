@@ -37,20 +37,20 @@ export default function EditModal({
   const [formData, setFormData] = useState<any>({});
   const [saving, setSaving] = useState(false);
 
-  // Initialize form data when modal opens
+  // Initialize form data when modal opens or when there's no form data
   if (isOpen && Object.keys(formData).length === 0) {
-    const initData: any = {
-      isVisible: true,
-      order: 1,
-      ...initialData
-    };
+    const initData: any = {};
     
+    // First, set all field values from initialData or defaults
     fields.forEach(field => {
-      if (initData[field.key] === undefined) {
-        initData[field.key] = field.value || '';
-      }
+      initData[field.key] = initialData?.[field.key] || field.value || '';
     });
     
+    // Then set the standard fields
+    initData.isVisible = initialData?.isVisible ?? true;
+    initData.order = initialData?.order ?? 1;
+    
+    console.log('Initializing form data with:', initData, 'from initialData:', initialData); // Debug log
     setFormData(initData);
   }
 
