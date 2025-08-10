@@ -69,7 +69,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             // Create new CMS user document - auto-activate
             const newCmsUser: Omit<CMSUser, 'id'> = {
               email: firebaseUser.email || '',
-              role: 'admin',
+              role: 'admin', // All authenticated users are admins
               isActive: true,
               createdAt: new Date(),
               lastLogin: new Date()

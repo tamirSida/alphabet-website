@@ -4,15 +4,24 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { userService } from '@/lib/cms/user-service';
 import { CMSUser } from '@/lib/types/cms';
 import { useAdmin } from '@/lib/cms/admin-context';
-import { UserPlus, UserCheck, UserX, Shield, Edit } from 'lucide-react';
+import { UserPlus, UserCheck, UserX, Shield, Edit, Mail, Lock } from 'lucide-react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase/config';
 
 export default function UsersAdminPage() {
   const { cmsUser } = useAdmin();
   const [users, setUsers] = useState<CMSUser[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [createFormData, setCreateFormData] = useState({
+    email: '',
+    password: '',
+    role: 'admin' as 'admin' | 'editor'
+  });
 
   const isMainAdmin = cmsUser?.role === 'admin';
 
@@ -71,15 +80,153 @@ export default function UsersAdminPage() {
     }
   };
 
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isMainAdmin) return;
+    
+    setLoading(true);
+    try {
+      // Create Firebase user account
+      const userCredential = await createUserWithEmailAndPassword(
+        auth, 
+        createFormData.email, 
+        createFormData.password
+      );
+      
+      // Create CMS user record
+      await userService.createUser({
+        id: userCredential.user.uid,
+        email: createFormData.email,
+        role: createFormData.role,
+        isActive: true,
+        createdAt: new Date(),
+        lastLogin: new Date()
+      });
+      
+      // Reset form and refresh users
+      setCreateFormData({ email: '', password: '', role: 'admin' });
+      setShowCreateForm(false);
+      await fetchUsers();
+      
+      alert('Admin account created successfully!');
+    } catch (error: any) {
+      console.error('Error creating user:', error);
+      alert(`Error creating user: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const pendingUsers = users.filter(user => !user.isActive);
   const activeUsers = users.filter(user => user.isActive);
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">User Management</h1>
-        <p className="text-gray-600">Manage CMS user access and permissions</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold">User Management</h1>
+          <p className="text-gray-600">Manage CMS user access and permissions</p>
+        </div>
+        {isMainAdmin && (
+          <Button
+            onClick={() => setShowCreateForm(!showCreateForm)}
+            className="flex items-center gap-2"
+          >
+            <UserPlus className="h-4 w-4" />
+            Create New Admin
+          </Button>
+        )}
       </div>
+
+      {/* Create User Form */}
+      {showCreateForm && isMainAdmin && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <UserPlus className="h-5 w-5" />
+              Create New Admin Account
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleCreateUser} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
+                </label>
+                <Input
+                  type="email"
+                  value={createFormData.email}
+                  onChange={(e) => setCreateFormData(prev => ({
+                    ...prev,
+                    email: e.target.value
+                  }))}
+                  placeholder="admin@example.com"
+                  required
+                  disabled={loading}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Password
+                </label>
+                <Input
+                  type="password"
+                  value={createFormData.password}
+                  onChange={(e) => setCreateFormData(prev => ({
+                    ...prev,
+                    password: e.target.value
+                  }))}
+                  placeholder="Minimum 6 characters"
+                  minLength={6}
+                  required
+                  disabled={loading}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Role
+                </label>
+                <select
+                  value={createFormData.role}
+                  onChange={(e) => setCreateFormData(prev => ({
+                    ...prev,
+                    role: e.target.value as 'admin' | 'editor'
+                  }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  disabled={loading}
+                >
+                  <option value="admin">Admin (Full Access)</option>
+                  <option value="editor">Editor (Content Only)</option>
+                </select>
+              </div>
+              
+              <div className="flex gap-3 pt-4">
+                <Button 
+                  type="submit" 
+                  disabled={loading}
+                  className="flex items-center gap-2"
+                >
+                  <UserPlus className="h-4 w-4" />
+                  {loading ? 'Creating...' : 'Create Account'}
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  onClick={() => {
+                    setShowCreateForm(false);
+                    setCreateFormData({ email: '', password: '', role: 'admin' });
+                  }}
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
 
       {!isMainAdmin && (
         <Card className="border-yellow-200 bg-yellow-50">
