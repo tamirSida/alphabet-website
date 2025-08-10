@@ -41,10 +41,21 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
   const displayItems = items.length > 0 ? items : defaultCurriculum;
   const sortedItems = displayItems.sort((a, b) => a.order - b.order);
 
-  // Handle week selection
+  // Handle week selection and navigation
   const handleWeekClick = (weekNumber: number) => {
     setActiveWeek(weekNumber);
     setShowPopup(true);
+  };
+
+  const navigateWeek = (direction: 'prev' | 'next') => {
+    if (!activeWeek) return;
+    
+    const currentIndex = sortedItems.findIndex(item => item.weekNumber === activeWeek);
+    if (direction === 'prev' && currentIndex > 0) {
+      setActiveWeek(sortedItems[currentIndex - 1].weekNumber);
+    } else if (direction === 'next' && currentIndex < sortedItems.length - 1) {
+      setActiveWeek(sortedItems[currentIndex + 1].weekNumber);
+    }
   };
 
   const closePopup = () => {
@@ -394,56 +405,86 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
 
         {/* Mission Briefing Popup Modal */}
         {showPopup && activeWeek && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gradient-to-br from-gray-800 to-blue-950 rounded-2xl shadow-2xl border-2 border-blue-700 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-white bg-opacity-10 backdrop-blur-md flex items-center justify-center z-50 p-4">
+            <div className="bg-gradient-to-br from-gray-800 to-blue-950 rounded-xl shadow-2xl border-2 border-blue-700 max-w-lg w-full max-h-[70vh] overflow-y-auto transform transition-all duration-300 scale-100">
               {/* Modal Header */}
-              <div className="flex justify-between items-center p-6 border-b border-blue-700">
-                <h4 className="text-2xl font-bold text-white font-mono">
-                  MISSION WEEK {activeWeek}: {sortedItems.find(item => item.weekNumber === activeWeek)?.title.toUpperCase()}
-                </h4>
+              <div className="flex justify-between items-center p-4 border-b border-blue-700">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-blue-400 text-blue-950 rounded-full flex items-center justify-center font-bold text-sm">
+                    {activeWeek}
+                  </div>
+                  <h4 className="text-lg font-bold text-white font-mono truncate">
+                    {sortedItems.find(item => item.weekNumber === activeWeek)?.title.toUpperCase()}
+                  </h4>
+                </div>
                 <button
                   onClick={closePopup}
-                  className="text-blue-300 hover:text-white transition-colors text-2xl"
+                  className="text-blue-300 hover:text-white transition-colors text-xl"
                 >
                   <i className="fas fa-times"></i>
                 </button>
               </div>
 
+              {/* Navigation Controls */}
+              <div className="flex justify-between items-center p-4 border-b border-blue-700 bg-gradient-to-r from-gray-900 to-blue-900">
+                <button
+                  onClick={() => navigateWeek('prev')}
+                  disabled={sortedItems.findIndex(item => item.weekNumber === activeWeek) === 0}
+                  className="flex items-center space-x-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-mono text-sm"
+                >
+                  <i className="fas fa-chevron-left"></i>
+                  <span>PREV</span>
+                </button>
+                
+                <div className="flex items-center space-x-2 text-blue-200 font-mono text-sm">
+                  <span>WEEK {activeWeek} OF {sortedItems.length}</span>
+                </div>
+                
+                <button
+                  onClick={() => navigateWeek('next')}
+                  disabled={sortedItems.findIndex(item => item.weekNumber === activeWeek) === sortedItems.length - 1}
+                  className="flex items-center space-x-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-mono text-sm"
+                >
+                  <span>NEXT</span>
+                  <i className="fas fa-chevron-right"></i>
+                </button>
+              </div>
+
               {/* Modal Content */}
-              <div className="p-8">
+              <div className="p-6">
                 {(() => {
                   const selectedWeek = sortedItems.find(item => item.weekNumber === activeWeek);
                   if (!selectedWeek) return null;
                   
                   return (
-                    <div className="bg-gradient-to-br from-blue-900 to-gray-800 rounded-xl p-6 border-2 border-blue-400 shadow-2xl">
+                    <div className="bg-gradient-to-br from-blue-900 to-gray-800 rounded-lg p-5 border border-blue-400 shadow-xl">
                       {/* Mission Header */}
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="w-16 h-16 bg-blue-400 text-blue-950 rounded-full border-2 border-blue-200 flex items-center justify-center font-bold text-xl">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-blue-400 text-blue-950 rounded-full border border-blue-200 flex items-center justify-center font-bold text-lg">
                           {selectedWeek.weekNumber}
                         </div>
                         {selectedWeek.icon && (
-                          <i className={`${selectedWeek.icon} text-4xl text-blue-300`}></i>
+                          <i className={`${selectedWeek.icon} text-3xl text-blue-300`}></i>
                         )}
                       </div>
 
-                      <h3 className="text-2xl font-bold mb-4 font-mono text-white">
+                      <h3 className="text-xl font-bold mb-3 font-mono text-white">
                         {selectedWeek.title.toUpperCase()}
                       </h3>
                       
-                      <p className="leading-relaxed text-blue-100 mb-6">
+                      <p className="leading-relaxed text-blue-100 mb-4 text-sm">
                         {selectedWeek.description}
                       </p>
 
-                      <div className="pt-4 border-t border-blue-400">
+                      <div className="pt-3 border-t border-blue-400">
                         <div className="flex items-center justify-between text-blue-200">
                           <div className="flex items-center">
-                            <i className="fas fa-clock mr-2"></i>
-                            <span className="text-sm font-medium font-mono">WEEK {selectedWeek.weekNumber} OBJECTIVE</span>
+                            <i className="fas fa-clock mr-2 text-xs"></i>
+                            <span className="text-xs font-medium font-mono">WEEK {selectedWeek.weekNumber} OBJECTIVE</span>
                           </div>
                           <div className="flex items-center">
-                            <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                            <span className="text-xs font-mono">READY FOR DEPLOYMENT</span>
+                            <span className="w-1.5 h-1.5 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                            <span className="text-xs font-mono">READY</span>
                           </div>
                         </div>
                       </div>
@@ -453,13 +494,13 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
               </div>
 
               {/* Modal Footer */}
-              <div className="p-6 border-t border-blue-700 bg-gradient-to-r from-gray-900 to-blue-900">
+              <div className="p-4 border-t border-blue-700 bg-gradient-to-r from-gray-900 to-blue-900">
                 <button
                   onClick={closePopup}
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 font-mono"
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 font-mono text-sm"
                 >
                   <i className="fas fa-check mr-2"></i>
-                  MISSION ACKNOWLEDGED
+                  ACKNOWLEDGED
                 </button>
               </div>
             </div>
