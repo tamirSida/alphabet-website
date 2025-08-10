@@ -317,7 +317,7 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
                       )}
 
                       {/* Mission Title */}
-                      <div className={`text-center text-xs font-bold font-mono ${
+                      <div className={`text-center text-xs font-bold font-mono whitespace-nowrap ${
                         activeWeek === item.weekNumber ? 'text-white' : 'text-blue-200'
                       }`}>
                         {item.title.toUpperCase()}
@@ -405,7 +405,7 @@ export default function CurriculumTimeline({ items }: CurriculumTimelineProps) {
 
         {/* Mission Briefing Popup Modal */}
         {showPopup && activeWeek && (
-          <div className="fixed inset-0 bg-white bg-opacity-10 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50 p-4">
             <div className="bg-gradient-to-br from-gray-800 to-blue-950 rounded-xl shadow-2xl border-2 border-blue-700 max-w-lg w-full max-h-[70vh] overflow-y-auto transform transition-all duration-300 scale-100">
               {/* Modal Header */}
               <div className="flex justify-between items-center p-4 border-b border-blue-700">
