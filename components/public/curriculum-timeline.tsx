@@ -25,6 +25,7 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
   const [showContent, setShowContent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const mobileCardRef = useRef<HTMLDivElement>(null);
   
   // Default curriculum data from your specification
   const defaultCurriculum = [
@@ -94,6 +95,45 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
     setActiveWeek(null);
   };
 
+  // Touch/swipe handlers for mobile
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (mobileCardRef.current) {
+        mobileCardRef.current.dataset.startX = touch.clientX.toString();
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touch = e.changedTouches[0];
+      const startX = mobileCardRef.current?.dataset.startX;
+      
+      if (startX && activeWeek) {
+        const diff = touch.clientX - parseInt(startX);
+        const threshold = 50;
+
+        if (diff > threshold) {
+          // Swipe right - previous
+          navigateWeek('prev');
+        } else if (diff < -threshold) {
+          // Swipe left - next
+          navigateWeek('next');
+        }
+      }
+    };
+
+    const cardRef = mobileCardRef.current;
+    if (cardRef) {
+      cardRef.addEventListener('touchstart', handleTouchStart);
+      cardRef.addEventListener('touchend', handleTouchEnd);
+
+      return () => {
+        cardRef.removeEventListener('touchstart', handleTouchStart);
+        cardRef.removeEventListener('touchend', handleTouchEnd);
+      };
+    }
+  }, [activeWeek]);
+
   // Intersection Observer for scroll detection
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -120,15 +160,19 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
     setTimeout(() => {
       setIsLoading(false);
       setShowContent(true);
+      // Only auto-select on mobile
+      if (window.innerWidth < 1024) {
+        setActiveWeek(1);
+      }
     }, 2500); // Show loading for 2.5 seconds
   };
 
   return (
-    <section ref={sectionRef} className="py-16 px-4 bg-gradient-to-br from-blue-50 via-white to-indigo-50 relative overflow-hidden">
+    <section ref={sectionRef} className="py-16 px-4 bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Always show header */}
         <div className="text-center mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-950 mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             The Alpha-Bet Curriculum
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -141,14 +185,14 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
           <div className="relative min-h-[600px]">
             {/* Blurred Mission Control Center Background */}
             <div className="absolute inset-0 filter blur-sm opacity-50">
-              <div className="bg-gradient-to-r from-gray-900 via-blue-950 to-gray-900 rounded-2xl shadow-2xl border-2 border-blue-900 p-8">
+              <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-black rounded-2xl shadow-2xl border-2 border-gray-600 p-8">
                 <div className="text-center text-white mb-8">
                   <div className="flex items-center justify-center mb-4">
                     <i className="fas fa-shield-alt text-3xl mr-4"></i>
                     <h3 className="text-2xl font-bold font-mono">MISSION CONTROL CENTER</h3>
                     <i className="fas fa-shield-alt text-3xl ml-4"></i>
                   </div>
-                  <p className="text-blue-200 font-mono">SELECT TRAINING MODULE FOR DETAILED BRIEFING</p>
+                  <p className="text-gray-300 font-mono">SELECT TRAINING MODULE FOR DETAILED BRIEFING</p>
                 </div>
 
                 {/* Blurred Mission Status Grid */}
@@ -157,14 +201,14 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                     <div key={`loading-${i}`} className="relative">
                       <div className="relative p-4 rounded-xl border-2 bg-gray-800 border-gray-600">
                         <div className="text-center mb-3">
-                          <div className="w-12 h-12 mx-auto rounded-full border-2 flex items-center justify-center font-bold text-lg bg-blue-950 text-white border-blue-400">
+                          <div className="w-12 h-12 mx-auto rounded-full border-2 flex items-center justify-center font-bold text-lg bg-gray-900 text-white border-gray-400">
                             {i + 1}
                           </div>
                         </div>
                         <div className="text-center mb-2">
-                          <i className="fas fa-cog text-xl text-blue-400"></i>
+                          <i className="fas fa-cog text-xl text-gray-400"></i>
                         </div>
-                        <div className="text-center text-xs font-bold font-mono text-blue-200">
+                        <div className="text-center text-xs font-bold font-mono text-gray-300">
                           LOADING...
                         </div>
                       </div>
@@ -175,32 +219,49 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
             </div>
 
             {/* Loading Status Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center z-10">
-              <div className="text-center bg-gradient-to-br from-gray-900 via-gray-800 to-black bg-opacity-95 p-8 rounded border-2 border-white" style={{fontFamily: 'monospace'}}>
+            <div className="absolute inset-0 flex items-center justify-center z-10 px-4">
+              <div className="text-center bg-gradient-to-br from-gray-900 via-gray-800 to-black bg-opacity-95 p-4 sm:p-8 rounded border-2 border-white max-w-sm sm:max-w-none w-full sm:w-auto" style={{fontFamily: 'monospace'}}>
                 {/* Retro Header */}
-                <div className="text-white text-xl font-bold mb-6">
+                <div className="text-white text-lg sm:text-xl font-bold mb-4 sm:mb-6">
                   <span className="animate-pulse">DECRYPTING FILES...</span>
                 </div>
                 
                 {/* 32-bit Style Loading Bar */}
-                <div className="w-96 mx-auto mb-6">
+                <div className="w-full sm:w-96 mx-auto mb-4 sm:mb-6">
                   <div className="bg-gray-900 border-2 border-white p-1 rounded">
-                    <div className="h-8 bg-gray-900 flex items-center relative overflow-hidden">
-                      {/* Animated loading blocks */}
+                    <div className="h-6 sm:h-8 bg-gray-900 flex items-center relative overflow-hidden">
+                      {/* Animated loading blocks - responsive */}
                       <div className="flex w-full h-full">
-                        {Array.from({ length: 20 }).map((_, i) => (
-                          <div
-                            key={`block-${i}`}
-                            className="flex-1 h-full bg-white opacity-70 border-r border-gray-600"
-                            style={{
-                              animation: `loadBlock 2s ease-in-out infinite`,
-                              animationDelay: `${i * 100}ms`
-                            }}
-                          ></div>
-                        ))}
+                        {/* Mobile: 12 blocks */}
+                        <div className="flex w-full h-full sm:hidden">
+                          {Array.from({ length: 12 }).map((_, i) => (
+                            <div
+                              key={`mobile-block-${i}`}
+                              className="flex-1 h-full bg-white opacity-70 border-r border-gray-600"
+                              style={{
+                                animation: `loadBlock 2s ease-in-out infinite`,
+                                animationDelay: `${i * 100}ms`
+                              }}
+                            ></div>
+                          ))}
+                        </div>
+                        
+                        {/* Desktop: 20 blocks */}
+                        <div className="hidden sm:flex w-full h-full">
+                          {Array.from({ length: 20 }).map((_, i) => (
+                            <div
+                              key={`desktop-block-${i}`}
+                              className="flex-1 h-full bg-white opacity-70 border-r border-gray-600"
+                              style={{
+                                animation: `loadBlock 2s ease-in-out infinite`,
+                                animationDelay: `${i * 100}ms`
+                              }}
+                            ></div>
+                          ))}
+                        </div>
                       </div>
                       {/* Loading text overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center text-gray-900 text-sm font-bold">
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-900 text-xs sm:text-sm font-bold">
                         <span className="animate-pulse">LOADING...</span>
                       </div>
                     </div>
@@ -208,14 +269,14 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                 </div>
 
                 {/* Status */}
-                <div className="bg-white text-gray-900 px-4 py-2 rounded font-bold text-lg mb-4">
+                <div className="bg-white text-gray-900 px-3 sm:px-4 py-2 rounded font-bold text-sm sm:text-lg mb-3 sm:mb-4">
                   <span className="animate-pulse">STATUS: MISSION PARAMETERS LOADED</span>
                 </div>
 
-                {/* Simple file list */}
-                <div className="text-white text-sm space-y-1">
+                {/* Simple file list - fewer items on mobile */}
+                <div className="text-white text-xs sm:text-sm space-y-1">
                   <div className="animate-pulse">► curriculum_week_01.dat</div>
-                  <div className="animate-pulse">► curriculum_week_02.dat</div>
+                  <div className="animate-pulse hidden sm:block">► curriculum_week_02.dat</div>
                   <div className="animate-pulse">► mission_briefing.enc</div>
                 </div>
 
@@ -236,172 +297,233 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
           </div>
         )}
 
-        {/* Military-Themed Main Content */}
+        {/* Desktop: Mission Control Center */}
         {showContent && (
-          <div className="animate-fade-in" style={{ animation: 'fadeIn 0.8s ease-in-out' }}>
-            <style jsx>{`
-              @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-              }
-            `}</style>
-
-            {/* Mission Command Center */}
-            <div className="bg-gradient-to-r from-gray-900 via-blue-950 to-gray-900 rounded-2xl shadow-2xl border-2 border-blue-900 p-8 mb-12">
-              <div className="text-center text-white mb-8">
-                <div className="flex items-center justify-center mb-4">
-                  <i className="fas fa-shield-alt text-3xl mr-4"></i>
-                  <h3 className="text-2xl font-bold font-mono">MISSION CONTROL CENTER</h3>
-                  <i className="fas fa-shield-alt text-3xl ml-4"></i>
+          <>
+            {/* Desktop View */}
+            <div className="hidden lg:block">
+              <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-black rounded-2xl shadow-2xl border-2 border-gray-600 p-8 mb-12">
+                <div className="text-center text-white mb-8">
+                  <div className="flex items-center justify-center mb-4">
+                    <i className="fas fa-shield-alt text-3xl mr-4"></i>
+                    <h3 className="text-2xl font-bold font-mono">MISSION CONTROL CENTER</h3>
+                    <i className="fas fa-shield-alt text-3xl ml-4"></i>
+                  </div>
+                  <p className="text-gray-300 font-mono">SELECT TRAINING MODULE FOR DETAILED BRIEFING</p>
                 </div>
-                <p className="text-blue-200 font-mono">SELECT TRAINING MODULE FOR DETAILED BRIEFING</p>
+
+                {/* Mission Status Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+                  {sortedItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="relative cursor-pointer transition-all duration-300 transform hover:scale-105"
+                      onClick={(e) => handleWeekClick(item.weekNumber, e)}
+                    >
+                      {/* Mission Badge */}
+                      <div className={`relative p-4 rounded-xl border-2 transition-all duration-300 ${
+                        activeWeek === item.weekNumber 
+                          ? 'bg-gray-700 border-gray-400 shadow-2xl' 
+                          : 'bg-gray-800 border-gray-600 hover:border-gray-400'
+                      }`}>
+                        {/* Week Number */}
+                        <div className="text-center mb-3">
+                          <div className={`w-12 h-12 mx-auto rounded-full border-2 flex items-center justify-center font-bold text-lg ${
+                            activeWeek === item.weekNumber
+                              ? 'bg-white text-gray-900 border-white'
+                              : 'bg-gray-900 text-white border-gray-400'
+                          }`}>
+                            {item.weekNumber}
+                          </div>
+                        </div>
+
+                        {/* Mission Icon */}
+                        {item.icon && (
+                          <div className="text-center mb-2">
+                            <i className={`${item.icon} text-xl ${
+                              activeWeek === item.weekNumber ? 'text-white' : 'text-gray-300'
+                            }`}></i>
+                          </div>
+                        )}
+
+                        {/* Mission Title */}
+                        <div className={`text-center text-xs font-bold font-mono whitespace-nowrap ${
+                          activeWeek === item.weekNumber ? 'text-white' : 'text-gray-200'
+                        }`}>
+                          {item.title.toUpperCase()}
+                        </div>
+
+                        {/* Edit Button - Admin Only */}
+                        {isAdminMode && (
+                          <button
+                            onClick={(e) => handleEditClick(item, e)}
+                            className="absolute -top-2 -left-2 w-6 h-6 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-xs transition-colors shadow-lg z-10"
+                            title="Edit this week"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </button>
+                        )}
+
+                        {/* Active Mission Overlay */}
+                        {activeWeek === item.weekNumber && (
+                          <div className="absolute inset-0 border-2 border-white rounded-xl animate-pulse opacity-50"></div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {/* Mission Status Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-                {sortedItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="relative cursor-pointer transition-all duration-300 transform hover:scale-105"
-                    onClick={(e) => handleWeekClick(item.weekNumber, e)}
-                  >
-                    {/* Mission Badge */}
-                    <div className={`relative p-4 rounded-xl border-2 transition-all duration-300 ${
-                      activeWeek === item.weekNumber 
-                        ? 'bg-blue-600 border-blue-400 shadow-2xl' 
-                        : 'bg-gray-800 border-gray-600 hover:border-blue-400'
-                    }`}>
-                      {/* Week Number */}
-                      <div className="text-center mb-3">
-                        <div className={`w-12 h-12 mx-auto rounded-full border-2 flex items-center justify-center font-bold text-lg ${
-                          activeWeek === item.weekNumber
-                            ? 'bg-white text-blue-950 border-white'
-                            : 'bg-blue-950 text-white border-blue-400'
-                        }`}>
-                          {item.weekNumber}
-                        </div>
-                      </div>
-
-                      {/* Mission Icon */}
-                      {item.icon && (
-                        <div className="text-center mb-2">
-                          <i className={`${item.icon} text-xl ${
-                            activeWeek === item.weekNumber ? 'text-white' : 'text-blue-400'
-                          }`}></i>
-                        </div>
-                      )}
-
-                      {/* Mission Title */}
-                      <div className={`text-center text-xs font-bold font-mono whitespace-nowrap ${
-                        activeWeek === item.weekNumber ? 'text-white' : 'text-blue-200'
-                      }`}>
-                        {item.title.toUpperCase()}
-                      </div>
-
-
-                      {/* Edit Button - Admin Only */}
-                      {isAdminMode && (
-                        <button
-                          onClick={(e) => handleEditClick(item, e)}
-                          className="absolute -top-2 -left-2 w-6 h-6 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-xs transition-colors shadow-lg z-10"
-                          title="Edit this week"
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                      )}
-
-                      {/* Active Mission Overlay */}
-                      {activeWeek === item.weekNumber && (
-                        <div className="absolute inset-0 border-2 border-white rounded-xl animate-pulse opacity-50"></div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+              {/* Desktop CTA */}
+              <div className="text-center">
+                <div className="inline-flex items-center bg-gray-900 text-white px-8 py-4 rounded-full shadow-lg border border-gray-600">
+                  <i className="fas fa-graduation-cap mr-3 text-xl"></i>
+                  <span className="text-lg font-semibold">10-Week Program</span>
+                </div>
+                <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+                  Rigorous, practical training designed to turn your idea into a viable business
+                </p>
               </div>
             </div>
 
-        {/* Mobile: Vertical Timeline */}
-        <div className="block lg:hidden">
-          <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-blue-950"></div>
-            
-            {sortedItems.map((item, index) => (
-              <div 
-                key={item.id} 
-                className="relative flex items-start mb-8"
-                onClick={(e) => handleWeekClick(item.weekNumber, e)}
-              >
-                {/* Week circle */}
-                <div className="relative z-10 flex-shrink-0 w-12 h-12 bg-blue-950 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-white text-sm font-bold">
-                    W{item.weekNumber}
-                  </span>
-                </div>
-                
-                {/* Content card */}
+            {/* Mobile: Slide Interface */}
+            <div className="block lg:hidden">
+              {activeWeek && (
                 <div 
-                  className={`ml-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 border-2 ${
-                    activeWeek === item.weekNumber ? 'border-blue-950 shadow-2xl scale-105' : 'border-gray-200'
-                  }`}
+                  ref={mobileCardRef}
+                  className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-2xl border-2 border-gray-600 max-w-lg mx-auto transform transition-all duration-300"
                 >
-                  <div className="p-6">
-                    <div className="flex items-center mb-3">
-                      {item.icon && (
-                        <i className={`${item.icon} text-blue-950 text-xl mr-3`}></i>
-                      )}
-                      <h3 className="text-xl font-bold text-blue-950">{item.title}</h3>
-                    </div>
-                    <p className="text-gray-700 leading-relaxed">{item.description}</p>
-                    
-                    {activeWeek === item.weekNumber && (
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <div className="flex items-center text-blue-950">
-                          <i className="fas fa-clock mr-2"></i>
-                          <span className="text-sm font-medium">Week {item.weekNumber} Focus</span>
-                        </div>
+                  {/* Mobile Header */}
+                  <div className="flex justify-between items-center p-4 border-b border-gray-600">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-white text-gray-900 rounded-full flex items-center justify-center font-bold text-sm">
+                        {activeWeek}
                       </div>
+                      <h4 className="text-lg font-bold text-white font-mono truncate">
+                        {sortedItems.find(item => item.weekNumber === activeWeek)?.title.toUpperCase()}
+                      </h4>
+                    </div>
+                    {isAdminMode && (
+                      <button
+                        onClick={(e) => handleEditClick(sortedItems.find(item => item.weekNumber === activeWeek)!, e)}
+                        className="w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg"
+                        title="Edit this week"
+                      >
+                        <i className="fas fa-edit"></i>
+                      </button>
                     )}
                   </div>
 
-                  {/* Edit Button - Mobile Admin Only */}
-                  {isAdminMode && (
-                    <button
-                      onClick={(e) => handleEditClick(item, e)}
-                      className="absolute top-4 right-4 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-10"
-                      title="Edit this week"
-                    >
-                      <i className="fas fa-edit"></i>
-                    </button>
-                  )}
+                  {/* Navigation Pills */}
+                  <div className="p-4 border-b border-gray-600 bg-gradient-to-r from-gray-900 to-black">
+                    <div className="flex flex-wrap justify-center gap-2 mb-4">
+                      {sortedItems.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => setActiveWeek(item.weekNumber)}
+                          className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all duration-300 ${
+                            activeWeek === item.weekNumber
+                              ? 'bg-white text-gray-900 border-white shadow-lg'
+                              : 'bg-transparent text-white border-gray-400 hover:bg-gray-400 hover:text-gray-900'
+                          }`}
+                        >
+                          {item.weekNumber}
+                        </button>
+                      ))}
+                    </div>
+                    
+                    {/* Arrow Navigation */}
+                    <div className="flex justify-between items-center">
+                      <button
+                        onClick={() => navigateWeek('prev')}
+                        disabled={sortedItems.findIndex(item => item.weekNumber === activeWeek) === 0}
+                        className="flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-mono text-sm"
+                      >
+                        <i className="fas fa-chevron-left"></i>
+                        <span>PREV</span>
+                      </button>
+                      
+                      <div className="flex items-center space-x-2 text-gray-300 font-mono text-sm">
+                        <span>WEEK {activeWeek} OF {sortedItems.length}</span>
+                      </div>
+                      
+                      <button
+                        onClick={() => navigateWeek('next')}
+                        disabled={sortedItems.findIndex(item => item.weekNumber === activeWeek) === sortedItems.length - 1}
+                        className="flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-mono text-sm"
+                      >
+                        <span>NEXT</span>
+                        <i className="fas fa-chevron-right"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Mobile Content */}
+                  <div className="p-6">
+                    {(() => {
+                      const currentWeek = sortedItems.find(item => item.weekNumber === activeWeek);
+                      if (!currentWeek) return null;
+                      
+                      return (
+                        <div className="bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg p-5 border border-gray-500 shadow-xl">
+                          {/* Week Header */}
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="w-12 h-12 bg-white text-gray-900 rounded-full border border-gray-300 flex items-center justify-center font-bold text-lg">
+                              {currentWeek.weekNumber}
+                            </div>
+                            {currentWeek.icon && (
+                              <i className={`${currentWeek.icon} text-3xl text-gray-300`}></i>
+                            )}
+                          </div>
+
+                          <h3 className="text-xl font-bold mb-3 font-mono text-white">
+                            {currentWeek.title.toUpperCase()}
+                          </h3>
+                          
+                          <p className="leading-relaxed text-gray-200 mb-4 text-sm">
+                            {currentWeek.description}
+                          </p>
+
+                          <div className="pt-3 border-t border-gray-500">
+                            <div className="flex items-center justify-between text-gray-300">
+                              <div className="flex items-center">
+                                <i className="fas fa-clock mr-2 text-xs"></i>
+                                <span className="text-xs font-medium font-mono">WEEK {currentWeek.weekNumber} OBJECTIVE</span>
+                              </div>
+                              <div className="flex items-center">
+                                <span className="w-1.5 h-1.5 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                                <span className="text-xs font-mono">READY</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Mobile Footer */}
+                  <div className="p-4 border-t border-gray-600 bg-gradient-to-r from-gray-900 to-black">
+                    <div className="text-center">
+                      <div className="text-gray-300 font-mono text-xs">
+                        <i className="fas fa-hand-paper mr-2"></i>
+                        SWIPE LEFT/RIGHT TO NAVIGATE
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-
-        {/* Bottom CTA */}
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center bg-blue-950 text-white px-8 py-4 rounded-full shadow-lg">
-            <i className="fas fa-graduation-cap mr-3 text-xl"></i>
-            <span className="text-lg font-semibold">10-Week Program</span>
-          </div>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            Rigorous, practical training designed to turn your idea into a viable business
-          </p>
-        </div>
-          </div>
+              )}
+            </div>
+          </>
         )}
 
         {/* Mission Briefing Popup Modal */}
         {showPopup && activeWeek && (
           <div className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50 p-4">
-            <div className="bg-gradient-to-br from-gray-800 to-blue-950 rounded-xl shadow-2xl border-2 border-blue-700 max-w-lg w-full max-h-[70vh] overflow-y-auto transform transition-all duration-300 scale-100">
-              {/* Modal Header */}
-              <div className="flex justify-between items-center p-4 border-b border-blue-700">
+            <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-2xl border-2 border-gray-600 max-w-lg w-full max-h-[80vh] overflow-y-auto transform transition-all duration-300 scale-100">
+              {/* Modal Header with Close */}
+              <div className="flex justify-between items-center p-4 border-b border-gray-600">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-blue-400 text-blue-950 rounded-full flex items-center justify-center font-bold text-sm">
+                  <div className="w-8 h-8 bg-white text-gray-900 rounded-full flex items-center justify-center font-bold text-sm">
                     {activeWeek}
                   </div>
                   <h4 className="text-lg font-bold text-white font-mono truncate">
@@ -410,35 +532,54 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                 </div>
                 <button
                   onClick={closePopup}
-                  className="text-blue-300 hover:text-white transition-colors text-xl"
+                  className="text-gray-300 hover:text-white transition-colors text-xl"
                 >
                   <i className="fas fa-times"></i>
                 </button>
               </div>
 
-              {/* Navigation Controls */}
-              <div className="flex justify-between items-center p-4 border-b border-blue-700 bg-gradient-to-r from-gray-900 to-blue-900">
-                <button
-                  onClick={() => navigateWeek('prev')}
-                  disabled={sortedItems.findIndex(item => item.weekNumber === activeWeek) === 0}
-                  className="flex items-center space-x-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-mono text-sm"
-                >
-                  <i className="fas fa-chevron-left"></i>
-                  <span>PREV</span>
-                </button>
-                
-                <div className="flex items-center space-x-2 text-blue-200 font-mono text-sm">
-                  <span>WEEK {activeWeek} OF {sortedItems.length}</span>
+              {/* Week Navigation Pills */}
+              <div className="p-4 border-b border-gray-600 bg-gradient-to-r from-gray-900 to-black">
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                  {sortedItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveWeek(item.weekNumber)}
+                      className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all duration-300 ${
+                        activeWeek === item.weekNumber
+                          ? 'bg-white text-gray-900 border-white shadow-lg'
+                          : 'bg-transparent text-white border-gray-400 hover:bg-gray-400 hover:text-gray-900'
+                      }`}
+                    >
+                      {item.weekNumber}
+                    </button>
+                  ))}
                 </div>
                 
-                <button
-                  onClick={() => navigateWeek('next')}
-                  disabled={sortedItems.findIndex(item => item.weekNumber === activeWeek) === sortedItems.length - 1}
-                  className="flex items-center space-x-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-mono text-sm"
-                >
-                  <span>NEXT</span>
-                  <i className="fas fa-chevron-right"></i>
-                </button>
+                {/* Arrow Navigation */}
+                <div className="flex justify-between items-center">
+                  <button
+                    onClick={() => navigateWeek('prev')}
+                    disabled={sortedItems.findIndex(item => item.weekNumber === activeWeek) === 0}
+                    className="flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-mono text-sm"
+                  >
+                    <i className="fas fa-chevron-left"></i>
+                    <span>PREV</span>
+                  </button>
+                  
+                  <div className="flex items-center space-x-2 text-gray-300 font-mono text-sm">
+                    <span>WEEK {activeWeek} OF {sortedItems.length}</span>
+                  </div>
+                  
+                  <button
+                    onClick={() => navigateWeek('next')}
+                    disabled={sortedItems.findIndex(item => item.weekNumber === activeWeek) === sortedItems.length - 1}
+                    className="flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-mono text-sm"
+                  >
+                    <span>NEXT</span>
+                    <i className="fas fa-chevron-right"></i>
+                  </button>
+                </div>
               </div>
 
               {/* Modal Content */}
@@ -448,14 +589,14 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                   if (!selectedWeek) return null;
                   
                   return (
-                    <div className="bg-gradient-to-br from-blue-900 to-gray-800 rounded-lg p-5 border border-blue-400 shadow-xl">
+                    <div className="bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg p-5 border border-gray-500 shadow-xl">
                       {/* Mission Header */}
                       <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-blue-400 text-blue-950 rounded-full border border-blue-200 flex items-center justify-center font-bold text-lg">
+                        <div className="w-12 h-12 bg-white text-gray-900 rounded-full border border-gray-300 flex items-center justify-center font-bold text-lg">
                           {selectedWeek.weekNumber}
                         </div>
                         {selectedWeek.icon && (
-                          <i className={`${selectedWeek.icon} text-3xl text-blue-300`}></i>
+                          <i className={`${selectedWeek.icon} text-3xl text-gray-300`}></i>
                         )}
                       </div>
 
@@ -463,12 +604,12 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                         {selectedWeek.title.toUpperCase()}
                       </h3>
                       
-                      <p className="leading-relaxed text-blue-100 mb-4 text-sm">
+                      <p className="leading-relaxed text-gray-200 mb-4 text-sm">
                         {selectedWeek.description}
                       </p>
 
-                      <div className="pt-3 border-t border-blue-400">
-                        <div className="flex items-center justify-between text-blue-200">
+                      <div className="pt-3 border-t border-gray-500">
+                        <div className="flex items-center justify-between text-gray-300">
                           <div className="flex items-center">
                             <i className="fas fa-clock mr-2 text-xs"></i>
                             <span className="text-xs font-medium font-mono">WEEK {selectedWeek.weekNumber} OBJECTIVE</span>
@@ -485,10 +626,10 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
               </div>
 
               {/* Modal Footer */}
-              <div className="p-4 border-t border-blue-700 bg-gradient-to-r from-gray-900 to-blue-900">
+              <div className="p-4 border-t border-gray-600 bg-gradient-to-r from-gray-900 to-black">
                 <button
                   onClick={closePopup}
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 font-mono text-sm"
+                  className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 font-mono text-sm"
                 >
                   <i className="fas fa-check mr-2"></i>
                   ACKNOWLEDGED
