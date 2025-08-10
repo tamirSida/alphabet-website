@@ -23,7 +23,7 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
   const [showPopup, setShowPopup] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [showContent, setShowContent] = useState(false);
-  const [revealStage, setRevealStage] = useState(0); // 0: hidden, 1: appearing, 2: disappearing, 3: show content
+  const [isLoading, setIsLoading] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   
   // Default curriculum data from your specification
@@ -98,9 +98,9 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && revealStage === 0) {
+        if (entry.isIntersecting && !isVisible) {
           setIsVisible(true);
-          startRevealAnimation();
+          startLoadingAnimation();
         }
       },
       { threshold: 0.3 }
@@ -111,23 +111,16 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
     }
 
     return () => observer.disconnect();
-  }, [revealStage]);
+  }, [isVisible]);
 
-  // Reveal animation sequence - extended duration
-  const startRevealAnimation = () => {
-    // Stage 1: Radar sweep and target acquisition (longer)
-    setRevealStage(1);
+  // Loading animation sequence
+  const startLoadingAnimation = () => {
+    setIsLoading(true);
     
     setTimeout(() => {
-      // Stage 2: Battle plan decryption (longer)
-      setRevealStage(2);
-      
-      setTimeout(() => {
-        // Stage 3: Show military-themed content
-        setRevealStage(3);
-        setShowContent(true);
-      }, 1500); // Increased from 800ms
-    }, 2500); // Increased from 1500ms
+      setIsLoading(false);
+      setShowContent(true);
+    }, 2500); // Show loading for 2.5 seconds
   };
 
   return (
@@ -143,152 +136,57 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
           </p>
         </div>
 
-        {/* Epic Reveal Animation */}
-        {isVisible && !showContent && (
-          <div className="flex items-center justify-center min-h-[500px] relative">
-            {/* Stage 1: Radar Sweep Effect */}
-            {revealStage === 1 && (
-              <div className="relative">
-                {/* Radar circles */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-96 h-96 border-2 border-blue-950 rounded-full animate-ping opacity-30"></div>
-                  <div className="w-72 h-72 border-2 border-blue-950 rounded-full animate-ping opacity-50 absolute" style={{animationDelay: '0.3s'}}></div>
-                  <div className="w-48 h-48 border-2 border-blue-950 rounded-full animate-ping opacity-70 absolute" style={{animationDelay: '0.6s'}}></div>
+        {/* Loading Overlay with Blurred Mission Control */}
+        {isVisible && isLoading && (
+          <div className="relative min-h-[600px]">
+            {/* Blurred Mission Control Center Background */}
+            <div className="absolute inset-0 filter blur-sm opacity-50">
+              <div className="bg-gradient-to-r from-gray-900 via-blue-950 to-gray-900 rounded-2xl shadow-2xl border-2 border-blue-900 p-8">
+                <div className="text-center text-white mb-8">
+                  <div className="flex items-center justify-center mb-4">
+                    <i className="fas fa-shield-alt text-3xl mr-4"></i>
+                    <h3 className="text-2xl font-bold font-mono">MISSION CONTROL CENTER</h3>
+                    <i className="fas fa-shield-alt text-3xl ml-4"></i>
+                  </div>
+                  <p className="text-blue-200 font-mono">SELECT TRAINING MODULE FOR DETAILED BRIEFING</p>
+                </div>
+
+                {/* Blurred Mission Status Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+                  {Array.from({ length: 10 }).map((_, i) => (
+                    <div key={`loading-${i}`} className="relative">
+                      <div className="relative p-4 rounded-xl border-2 bg-gray-800 border-gray-600">
+                        <div className="text-center mb-3">
+                          <div className="w-12 h-12 mx-auto rounded-full border-2 flex items-center justify-center font-bold text-lg bg-blue-950 text-white border-blue-400">
+                            {i + 1}
+                          </div>
+                        </div>
+                        <div className="text-center mb-2">
+                          <i className="fas fa-cog text-xl text-blue-400"></i>
+                        </div>
+                        <div className="text-center text-xs font-bold font-mono text-blue-200">
+                          LOADING...
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Loading Status Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-950 mb-4 font-mono">
+                  <span className="animate-pulse">STATUS: MISSION PARAMETERS LOADED</span>
                 </div>
                 
-                {/* Sweeping radar line */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div 
-                    className="w-48 h-0.5 bg-gradient-to-r from-transparent via-blue-950 to-transparent origin-left animate-spin"
-                    style={{animationDuration: '2s', transformOrigin: 'center'}}
-                  ></div>
+                {/* Progress bar */}
+                <div className="w-80 mx-auto h-2 bg-gray-300 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-blue-950 to-blue-700 animate-pulse"></div>
                 </div>
-
-                {/* Week targets appearing */}
-                <div className="relative grid grid-cols-2 md:grid-cols-5 gap-8">
-                  {Array.from({ length: 10 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="transform transition-all duration-300"
-                      style={{ 
-                        opacity: 0,
-                        animation: `targetLock 0.5s ease-out ${i * 150}ms forwards`
-                      }}
-                    >
-                      <div className="relative">
-                        <div className="w-16 h-16 bg-blue-950 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-2xl">
-                          {i + 1}
-                        </div>
-                        {/* Target crosshairs */}
-                        <div className="absolute inset-0 border-2 border-blue-950 rounded-full animate-pulse opacity-60"></div>
-                        <div className="absolute inset-2 border border-blue-950 rounded-full animate-pulse opacity-40"></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <style jsx>{`
-                  @keyframes targetLock {
-                    0% { 
-                      opacity: 0; 
-                      transform: scale(0) rotate(180deg); 
-                    }
-                    50% { 
-                      opacity: 1; 
-                      transform: scale(1.2) rotate(90deg); 
-                    }
-                    100% { 
-                      opacity: 1; 
-                      transform: scale(1) rotate(0deg); 
-                    }
-                  }
-                `}</style>
               </div>
-            )}
-
-            {/* Stage 2: Battle Plan Decryption */}
-            {revealStage === 2 && (
-              <div className="text-center relative">
-                {/* Matrix-style background */}
-                <div className="absolute inset-0 overflow-hidden opacity-20">
-                  {Array.from({ length: 20 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute text-blue-950 text-xs font-mono animate-pulse"
-                      style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 2}s`
-                      }}
-                    >
-                      {Math.random() > 0.5 ? '01010101' : '10101010'}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Decryption progress */}
-                <div className="relative z-10">
-                  <div className="mb-8">
-                    <div className="text-2xl font-bold text-blue-950 mb-4 font-mono">
-                      <span className="animate-pulse">DECRYPTING BATTLE PLAN</span>
-                    </div>
-                    
-                    {/* Progress bar */}
-                    <div className="w-80 mx-auto h-2 bg-gray-300 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-blue-950 to-blue-700 transition-all duration-1000"
-                        style={{width: '100%', animation: 'progress 1.5s ease-out'}}
-                      ></div>
-                    </div>
-                    
-                    <div className="mt-4 text-blue-950 font-mono text-sm">
-                      <span className="animate-pulse">STATUS: MISSION PARAMETERS LOADED</span>
-                    </div>
-                  </div>
-
-                  {/* Holographic week display */}
-                  <div className="grid grid-cols-5 gap-4 max-w-md mx-auto">
-                    {Array.from({ length: 10 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="relative"
-                        style={{
-                          animation: `hologram 0.8s ease-out ${i * 80}ms forwards`
-                        }}
-                      >
-                        <div className="w-12 h-12 border-2 border-blue-950 rounded-full flex items-center justify-center font-bold text-sm bg-blue-50">
-                          W{i + 1}
-                        </div>
-                        {/* Holographic lines */}
-                        <div className="absolute inset-0 opacity-60">
-                          <div className="w-full h-0.5 bg-blue-950 absolute top-1/2 animate-pulse"></div>
-                          <div className="h-full w-0.5 bg-blue-950 absolute left-1/2 animate-pulse"></div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <style jsx>{`
-                  @keyframes progress {
-                    from { width: 0%; }
-                    to { width: 100%; }
-                  }
-                  @keyframes hologram {
-                    0% { 
-                      opacity: 0; 
-                      transform: translateY(20px) scale(0.8);
-                      filter: blur(4px);
-                    }
-                    100% { 
-                      opacity: 1; 
-                      transform: translateY(0) scale(1);
-                      filter: blur(0px);
-                    }
-                  }
-                `}</style>
-              </div>
-            )}
+            </div>
           </div>
         )}
 
