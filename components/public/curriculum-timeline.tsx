@@ -26,6 +26,7 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
   const [isLoading, setIsLoading] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const mobileCardRef = useRef<HTMLDivElement>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
   
   // Default curriculum data from your specification
   const defaultCurriculum = [
@@ -69,6 +70,51 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
     e?.stopPropagation();
     setActiveWeek(weekNumber);
     setShowPopup(true);
+  };
+
+  // Handle pill navigation with scroll detection
+  const handlePillClick = (weekNumber: number, e: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (!isScrolling) {
+      setActiveWeek(weekNumber);
+    }
+  };
+
+  // Touch handlers for navigation pills scroll detection
+  const handlePillTouchStart = (e: React.TouchEvent) => {
+    setIsScrolling(false);
+    const touch = e.touches[0];
+    const target = e.currentTarget as HTMLElement;
+    target.dataset.startX = touch.clientX.toString();
+    target.dataset.startY = touch.clientY.toString();
+    target.dataset.startTime = Date.now().toString();
+  };
+
+  const handlePillTouchMove = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    const target = e.currentTarget as HTMLElement;
+    const startX = target.dataset.startX;
+    const startY = target.dataset.startY;
+    
+    if (startX && startY) {
+      const deltaX = Math.abs(touch.clientX - parseInt(startX));
+      const deltaY = Math.abs(touch.clientY - parseInt(startY));
+      
+      // If we've moved more than 10px in any direction, consider it scrolling
+      if (deltaX > 10 || deltaY > 10) {
+        setIsScrolling(true);
+      }
+    }
+  };
+
+  const handlePillTouchEnd = (weekNumber: number) => {
+    // Small delay to allow scroll detection to complete
+    setTimeout(() => {
+      if (!isScrolling) {
+        setActiveWeek(weekNumber);
+      }
+      setIsScrolling(false);
+    }, 50);
   };
 
   // Handle edit click
@@ -426,7 +472,10 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                       {sortedItems.map((item) => (
                         <button
                           key={item.id}
-                          onClick={() => setActiveWeek(item.weekNumber)}
+                          onClick={(e) => handlePillClick(item.weekNumber, e)}
+                          onTouchStart={handlePillTouchStart}
+                          onTouchMove={handlePillTouchMove}
+                          onTouchEnd={() => handlePillTouchEnd(item.weekNumber)}
                           className={`w-8 h-8 flex-shrink-0 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all duration-300 ${
                             activeWeek === item.weekNumber
                               ? 'bg-white text-gray-900 border-white shadow-lg'
@@ -550,7 +599,10 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                   {sortedItems.map((item) => (
                     <button
                       key={item.id}
-                      onClick={() => setActiveWeek(item.weekNumber)}
+                      onClick={(e) => handlePillClick(item.weekNumber, e)}
+                      onTouchStart={handlePillTouchStart}
+                      onTouchMove={handlePillTouchMove}
+                      onTouchEnd={() => handlePillTouchEnd(item.weekNumber)}
                       className={`w-8 h-8 flex-shrink-0 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all duration-300 ${
                         activeWeek === item.weekNumber
                           ? 'bg-white text-gray-900 border-white shadow-lg'
