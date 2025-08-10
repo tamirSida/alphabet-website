@@ -1,0 +1,44 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow authenticated users to read/write all content collections
+    match /hero-sections/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /content-sections/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /team-members/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /testimonials/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /curriculum-items/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    match /call-to-actions/{document} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Allow authenticated users to read/write their own user document
+    match /cms-users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // Allow any authenticated user to read other users (for user management)
+      allow read: if request.auth != null;
+      // Allow any authenticated user to write other users (for user management)
+      allow write: if request.auth != null;
+    }
+    
+    // Allow public read access to all collections (for the public website)
+    match /{path=**} {
+      allow read: if true;
+    }
+  }
+}
