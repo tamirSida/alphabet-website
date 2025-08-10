@@ -291,6 +291,12 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                       opacity: 1;
                     }
                   }
+                  .scrollbar-hide {
+                    -webkit-overflow-scrolling: touch;
+                  }
+                  .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                  }
                 `}</style>
               </div>
             </div>
@@ -416,12 +422,12 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
 
                   {/* Navigation Pills */}
                   <div className="p-4 border-b border-gray-600 bg-gradient-to-r from-gray-900 to-black">
-                    <div className="flex flex-wrap justify-center gap-2 mb-4">
+                    <div className="flex overflow-x-auto gap-2 mb-4 pb-2 scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
                       {sortedItems.map((item) => (
                         <button
                           key={item.id}
                           onClick={() => setActiveWeek(item.weekNumber)}
-                          className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all duration-300 ${
+                          className={`w-8 h-8 flex-shrink-0 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all duration-300 ${
                             activeWeek === item.weekNumber
                               ? 'bg-white text-gray-900 border-white shadow-lg'
                               : 'bg-transparent text-white border-gray-400 hover:bg-gray-400 hover:text-gray-900'
@@ -540,12 +546,12 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
 
               {/* Week Navigation Pills */}
               <div className="p-4 border-b border-gray-600 bg-gradient-to-r from-gray-900 to-black">
-                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                <div className="flex overflow-x-auto gap-2 mb-4 pb-2 scrollbar-hide" style={{scrollbarWidth: 'none', msOverflowStyle: 'none'}}>
                   {sortedItems.map((item) => (
                     <button
                       key={item.id}
                       onClick={() => setActiveWeek(item.weekNumber)}
-                      className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all duration-300 ${
+                      className={`w-8 h-8 flex-shrink-0 rounded-full border-2 flex items-center justify-center font-bold text-xs transition-all duration-300 ${
                         activeWeek === item.weekNumber
                           ? 'bg-white text-gray-900 border-white shadow-lg'
                           : 'bg-transparent text-white border-gray-400 hover:bg-gray-400 hover:text-gray-900'
