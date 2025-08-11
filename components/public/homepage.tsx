@@ -109,6 +109,28 @@ function AlphaBetHomepageContent() {
           };
           await CMSServiceFactory.getCurriculumService().create(curriculumData);
         }
+      } else if (editingType === 'team') {
+        if (editingItem) {
+          await CMSServiceFactory.getTeamMemberService().update(editingItem.id, data);
+        } else {
+          const teamData = {
+            ...data,
+            isVisible: true,
+            order: teamMembers.length + 1
+          };
+          await CMSServiceFactory.getTeamMemberService().create(teamData);
+        }
+      } else if (editingType === 'testimonial') {
+        if (editingItem) {
+          await CMSServiceFactory.getTestimonialService().update(editingItem.id, data);
+        } else {
+          const testimonialData = {
+            ...data,
+            isVisible: true,
+            order: testimonials.length + 1
+          };
+          await CMSServiceFactory.getTestimonialService().create(testimonialData);
+        }
       }
       
       await loadContent();
@@ -140,6 +162,22 @@ function AlphaBetHomepageContent() {
           { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'Enter week title' },
           { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter week description...' },
           { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-rocket' }
+        ];
+      case 'team':
+        return [
+          { key: 'name', label: 'Name', type: 'text' as const, required: true, placeholder: 'Enter full name' },
+          { key: 'role', label: 'Role', type: 'text' as const, required: true, placeholder: 'e.g., Founder, Mentor, Advisor' },
+          { key: 'bio', label: 'Biography', type: 'textarea' as const, required: true, placeholder: 'Enter biography...' },
+          { key: 'image', label: 'Profile Image URL', type: 'url' as const, required: false, placeholder: 'https://...' },
+          { key: 'linkedinUrl', label: 'LinkedIn Profile URL', type: 'url' as const, required: false, placeholder: 'https://linkedin.com/in/...' }
+        ];
+      case 'testimonial':
+        return [
+          { key: 'quote', label: 'Quote', type: 'textarea' as const, required: true, placeholder: 'Enter testimonial quote...' },
+          { key: 'author', label: 'Author Name', type: 'text' as const, required: true, placeholder: 'Enter author name' },
+          { key: 'title', label: 'Job Title', type: 'text' as const, required: true, placeholder: 'e.g., CEO, Founder' },
+          { key: 'company', label: 'Company', type: 'text' as const, required: false, placeholder: 'Enter company name' },
+          { key: 'image', label: 'Profile Image URL', type: 'url' as const, required: false, placeholder: 'https://...' }
         ];
       default:
         return [];
@@ -293,7 +331,12 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
       )}
 
       {/* Team Section */}
-      <TeamSection members={teamMembers} />
+      <EditableSection
+        sectionName="Team"
+        onEdit={() => handleEdit('team')}
+      >
+        <TeamSection members={teamMembers} />
+      </EditableSection>
 
       {/* Curriculum Timeline */}
       <EditableSection
@@ -307,7 +350,12 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
       </EditableSection>
 
       {/* Testimonials Section */}
-      <TestimonialsSection testimonials={testimonials} />
+      <EditableSection
+        sectionName="Testimonials"
+        onEdit={() => handleEdit('testimonial')}
+      >
+        <TestimonialsSection testimonials={testimonials} />
+      </EditableSection>
 
       {/* Call to Action */}
       {cta ? (
