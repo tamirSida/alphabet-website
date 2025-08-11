@@ -6,7 +6,8 @@ import {
   TeamMember, 
   Testimonial, 
   CurriculumItem, 
-  CallToAction 
+  CallToAction,
+  Qualification
 } from '@/lib/types/cms';
 
 export class HeroService extends BaseFirestoreService<HeroSection> {
@@ -70,6 +71,12 @@ export class CallToActionService extends BaseFirestoreService<CallToAction> {
   }
 }
 
+export class QualificationService extends BaseFirestoreService<Qualification> {
+  constructor() {
+    super('qualifications');
+  }
+}
+
 // Service factory for easy instantiation
 export class CMSServiceFactory {
   private static instances: Map<string, any> = new Map();
@@ -114,5 +121,12 @@ export class CMSServiceFactory {
       this.instances.set('cta', new CallToActionService());
     }
     return this.instances.get('cta');
+  }
+
+  static getQualificationService(): QualificationService {
+    if (!this.instances.has('qualification')) {
+      this.instances.set('qualification', new QualificationService());
+    }
+    return this.instances.get('qualification');
   }
 }

@@ -72,13 +72,25 @@ export interface CallToAction {
   updatedAt: Date;
 }
 
+export interface Qualification {
+  id: string;
+  title: string;
+  description: string;
+  icon: string; // Font Awesome icon class (e.g., "fas fa-shield-alt")
+  order: number;
+  isVisible: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type ContentType = 
   | 'hero'
   | 'content-section'
   | 'team-member'
   | 'testimonial'
   | 'curriculum-item'
-  | 'call-to-action';
+  | 'call-to-action'
+  | 'qualification';
 
 export interface CMSUser {
   id: string;

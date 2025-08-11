@@ -7,6 +7,7 @@ import TeamSection from './team-section';
 import TestimonialsSection from './testimonials-section';
 import CurriculumTimeline from './curriculum-timeline';
 import CTASection from './cta-section';
+import WhoShouldApplySection from './who-should-apply-section';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
 import EditableSection from '@/components/admin/editable-section';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
@@ -20,7 +21,8 @@ import {
   TeamMember,
   Testimonial,
   CurriculumItem,
-  CallToAction
+  CallToAction,
+  Qualification
 } from '@/lib/types/cms';
 
 function AlphaBetHomepageContent() {
@@ -30,6 +32,7 @@ function AlphaBetHomepageContent() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [curriculum, setCurriculum] = useState<CurriculumItem[]>([]);
   const [cta, setCTA] = useState<CallToAction | null>(null);
+  const [qualifications, setQualifications] = useState<Qualification[]>([]);
   const [loading, setLoading] = useState(true);
   
   // Modal state
@@ -51,14 +54,16 @@ function AlphaBetHomepageContent() {
         teamData,
         testimonialData,
         curriculumData,
-        ctaData
+        ctaData,
+        qualificationData
       ] = await Promise.all([
         CMSServiceFactory.getHeroService().getActiveHero(),
         CMSServiceFactory.getContentSectionService().getVisible(),
         CMSServiceFactory.getTeamMemberService().getFeaturedMembers(),
         CMSServiceFactory.getTestimonialService().getFeaturedTestimonials(),
         CMSServiceFactory.getCurriculumService().getVisible(),
-        CMSServiceFactory.getCallToActionService().getActiveCallToAction()
+        CMSServiceFactory.getCallToActionService().getActiveCallToAction(),
+        CMSServiceFactory.getQualificationService().getVisible()
       ]);
 
       setHero(heroData);
@@ -67,6 +72,7 @@ function AlphaBetHomepageContent() {
       setTestimonials(testimonialData);
       setCurriculum(curriculumData);
       setCTA(ctaData);
+      setQualifications(qualificationData);
     } catch (error) {
       console.error('Error loading content:', error);
     } finally {
@@ -131,6 +137,17 @@ function AlphaBetHomepageContent() {
           };
           await CMSServiceFactory.getTestimonialService().create(testimonialData);
         }
+      } else if (editingType === 'qualification') {
+        if (editingItem && editingItem.id && !editingItem.id.startsWith('qual-')) {
+          await CMSServiceFactory.getQualificationService().update(editingItem.id, data);
+        } else {
+          const qualificationData = {
+            ...data,
+            isVisible: true,
+            order: data.order || qualifications.length + 1
+          };
+          await CMSServiceFactory.getQualificationService().create(qualificationData);
+        }
       }
       
       await loadContent();
@@ -178,6 +195,13 @@ function AlphaBetHomepageContent() {
           { key: 'title', label: 'Job Title', type: 'text' as const, required: true, placeholder: 'e.g., CEO, Founder' },
           { key: 'company', label: 'Company', type: 'text' as const, required: false, placeholder: 'Enter company name' },
           { key: 'image', label: 'Profile Image URL', type: 'url' as const, required: false, placeholder: 'https://...' }
+        ];
+      case 'qualification':
+        return [
+          { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Combat Veteran Status' },
+          { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter qualification description...' },
+          { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-shield-alt' },
+          { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-5' }
         ];
       default:
         return [];
@@ -284,24 +308,14 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
             />
           </EditableSection>
 
+          {/* Who Should Apply Section */}
           <EditableSection
             sectionName="Who Should Apply"
-            onEdit={() => handleEdit('content', {
-              title: "Who Should Apply?",
-              content: "The Alpha-Bet program is for a select group of mission-driven veterans ready for their next challenge. This program is for you if you are:\n\n• A combat veteran of the US or Israel.\n• Post-service and ready to transition your skills into the business world.\n• Interested in entrepreneurship and seeking the foundational knowledge to get started.\n• In the ideation phase, whether you have a business idea or are looking to find a partner and develop one.\n• Committed to a rigorous, 10-week online program of training and practical workshops.",
-              type: "who-should-apply"
-            })}
+            onEdit={() => handleEdit('qualification')}
           >
-            <ContentSection
-              title="Who Should Apply?"
-              content="The Alpha-Bet program is for a select group of mission-driven veterans ready for their next challenge. This program is for you if you are:
-
-• A combat veteran of the US or Israel.
-• Post-service and ready to transition your skills into the business world.
-• Interested in entrepreneurship and seeking the foundational knowledge to get started.
-• In the ideation phase, whether you have a business idea or are looking to find a partner and develop one.
-• Committed to a rigorous, 10-week online program of training and practical workshops."
-              type="who-should-apply"
+            <WhoShouldApplySection 
+              qualifications={qualifications} 
+              onEdit={(qualification) => handleEdit('qualification', qualification)}
             />
           </EditableSection>
 
