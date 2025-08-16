@@ -95,28 +95,25 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
     };
   }, []);
 
+
   // Handle week click to expand/collapse (no decrypting after initial load)
   const handleWeekClick = (weekNumber: number) => {
     if (!isLoaded) return; // Don't allow clicks during decrypting
     
-    // Check if mobile (screen width < 768px)
-    const isMobile = window.innerWidth < 768;
+    // Open modal for mobile (will be hidden on desktop via CSS)
+    const displayItems = mergeItemsWithDefaults();
+    const item = displayItems.find(item => item.weekNumber === weekNumber);
+    if (item) {
+      setMobileModalItem(item);
+      setMobileModalOpen(true);
+    }
     
-    if (isMobile) {
-      // Open modal on mobile
-      const displayItems = mergeItemsWithDefaults();
-      const item = displayItems.find(item => item.weekNumber === weekNumber);
-      if (item) {
-        setMobileModalItem(item);
-        setMobileModalOpen(true);
-      }
+    // Handle desktop inline expansion
+    if (expandedWeek === weekNumber) {
+      setExpandedWeek(null);
+      setMobileModalOpen(false); // Also close modal if open
     } else {
-      // Inline expansion on desktop
-      if (expandedWeek === weekNumber) {
-        setExpandedWeek(null);
-      } else {
-        setExpandedWeek(weekNumber);
-      }
+      setExpandedWeek(weekNumber);
     }
   };
 
@@ -479,7 +476,7 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
       {/* Mobile Modal for Week Details */}
       {mobileModalOpen && mobileModalItem && (
         <div 
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm md:hidden flex items-center justify-center z-50 p-4"
           onClick={() => setMobileModalOpen(false)}
         >
           <div 
@@ -509,9 +506,10 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
               </div>
               <button
                 onClick={() => setMobileModalOpen(false)}
-                className="w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors"
+                className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors hover:scale-110 active:scale-95"
+                aria-label="Close details"
               >
-                <i className="fas fa-times"></i>
+                <i className="fas fa-times text-lg"></i>
               </button>
             </div>
 

@@ -8,35 +8,42 @@ This document tracks all placeholder content in the Alpha-Bet website that needs
 
 | Type | Current Value | Location | Status | Priority |
 |------|---------------|----------|--------|----------|
-| Email | `info@alphabetprogram.com` | `components/public/footer.tsx:79` | ❌ Needs Real Email | HIGH |
-| Email | `info@alphabetprogram.com` | `components/public/faq-section.tsx:222` | ❌ Needs Real Email | HIGH |
-| Phone | `+1 (555) 123-4567` | `components/public/footer.tsx:83` | ❌ Needs Real Phone | HIGH |
+| Email | `info@alphabetprogram.com` | `components/public/footer.tsx` (line ~79) | ❌ Needs Real Email | HIGH |
+| Phone | `+1 (555) 123-4567` | `components/public/footer.tsx` (line ~83) | ❌ Needs Real Phone | HIGH |
 
 ### 🔗 Social Media Links
 
 | Platform | Current Value | Location | Status | Priority |
 |----------|---------------|----------|--------|----------|
-| LinkedIn | `https://linkedin.com` | `components/public/footer.tsx:38` | ❌ Needs Real URL | HIGH |
-| Twitter | `https://twitter.com` | `components/public/footer.tsx:46` | ❌ Needs Real URL | HIGH |
+| LinkedIn | `https://linkedin.com` | `components/public/footer.tsx` (line ~38) | ❌ Needs Real URL | HIGH |
+| Twitter | `https://twitter.com` | `components/public/footer.tsx` (line ~46) | ❌ Needs Real URL | HIGH |
 
 ### 👥 Team Members (CMS Manageable)
 
 | Content | Location | Status | Priority |
 |---------|----------|--------|----------|
-| Team Member 1 Info | Default CMS content in team components | ❌ Needs Real Bio | HIGH |
-| Team Member 2 Info | Default CMS content in team components | ❌ Needs Real Bio | HIGH |
-| Team Member 3 Info | Default CMS content in team components | ❌ Needs Real Bio | HIGH |
+| Team Member 1 Info | Default CMS content in `/team` page | ❌ Needs Real Bio | HIGH |
+| Team Member 2 Info | Default CMS content in `/team` page | ❌ Needs Real Bio | HIGH |
+| Team Member 3 Info | Default CMS content in `/team` page | ❌ Needs Real Bio | HIGH |
 
-**Note**: Team members can be updated via CMS admin interface at `/admin/team`
+**Note**: Team members can be updated via CMS admin interface by adding `?admin=true` to `/team` page
 
 ### 💬 Testimonials (CMS Manageable)
 
-| Content | Status | Priority |
-|---------|--------|----------|
-| Veteran Testimonial 1 | ❌ Needs Real Testimonial | HIGH |
-| Veteran Testimonial 2 | ❌ Needs Real Testimonial | HIGH |
+| Content | Location | Status | Priority |
+|---------|----------|--------|----------|
+| Veteran Testimonial 1 | Default CMS content on homepage | ❌ Needs Real Testimonial | HIGH |
+| Veteran Testimonial 2 | Default CMS content on homepage | ❌ Needs Real Testimonial | HIGH |
 
-**Note**: Testimonials can be updated via CMS admin interface
+**Note**: Testimonials can be updated via CMS admin interface on homepage with `?admin=true`
+
+### ❓ FAQ Content (CMS Manageable)
+
+| Content | Location | Status | Priority |
+|---------|----------|--------|----------|
+| FAQ Items | Default FAQ content on homepage | ✅ Good Default Content | MEDIUM |
+
+**Note**: FAQ content is comprehensive but can be customized via CMS with delete/edit functionality
 
 ## ⚠️ **FORM PLACEHOLDERS** (Medium Priority - UX)
 
@@ -44,8 +51,8 @@ This document tracks all placeholder content in the Alpha-Bet website that needs
 
 | Field | Current Value | Location | Status | Priority |
 |-------|---------------|----------|--------|----------|
-| Email Placeholder | `your.email@example.com` | `app/apply/page.tsx:184` | ❌ Consider Better Example | MEDIUM |
-| Phone Placeholder | `+1 (555) 123-4567` | `app/apply/page.tsx:199` | ❌ Consider Better Example | MEDIUM |
+| Email Placeholder | `your.email@example.com` | `/apply` page form | ❌ Consider Better Example | MEDIUM |
+| Phone Placeholder | `+1 (555) 123-4567` | `/apply` page form | ❌ Consider Better Example | MEDIUM |
 
 ## 🔧 **ADMIN PLACEHOLDERS** (Low Priority - Internal Use)
 
@@ -69,15 +76,16 @@ This document tracks all placeholder content in the Alpha-Bet website that needs
 ## 📋 **COMPLETION CHECKLIST**
 
 ### Phase 1: Critical Contact Information
-- [ ] Replace `info@alphabetprogram.com` with real email address
-- [ ] Replace `+1 (555) 123-4567` with real phone number
-- [ ] Replace LinkedIn URL with real company LinkedIn
-- [ ] Replace Twitter URL with real company Twitter/X
+- [ ] Replace `info@alphabetprogram.com` with real email address (footer)
+- [ ] Replace `+1 (555) 123-4567` with real phone number (footer)
+- [ ] Replace LinkedIn URL with real company LinkedIn (footer)
+- [ ] Replace Twitter URL with real company Twitter/X (footer)
 
 ### Phase 2: Content (Via CMS Admin)
-- [ ] Add real team member profiles via `/admin/team`
-- [ ] Add real veteran testimonials via CMS admin
-- [ ] Review and update FAQ content if needed
+- [ ] Add real team member profiles via `/team?admin=true`
+- [ ] Add real veteran testimonials via homepage `?admin=true`
+- [ ] Customize FAQ content if needed via homepage `?admin=true`
+- [ ] Update qualification requirements if needed via `/qualifications?admin=true`
 
 ### Phase 3: UX Improvements
 - [ ] Update application form placeholder emails to realistic examples
@@ -87,18 +95,22 @@ This document tracks all placeholder content in the Alpha-Bet website that needs
 - [ ] Confirm "Version Bravo" branding is intentional
 - [ ] Test all contact methods work correctly
 - [ ] Verify all social media links are active
+- [ ] Test mobile popup functionality on curriculum page
+- [ ] Verify logo displays correctly on all devices
 
 ## 🚀 **QUICK FIX GUIDE**
 
 ### To Update Contact Information:
-1. **Email**: Edit `components/public/footer.tsx` line 79 and `components/public/faq-section.tsx` line 222
-2. **Phone**: Edit `components/public/footer.tsx` line 83
-3. **Social Media**: Edit `components/public/footer.tsx` lines 38 and 46
+1. **Email**: Edit `components/public/footer.tsx` (around line 79)
+2. **Phone**: Edit `components/public/footer.tsx` (around line 83)
+3. **Social Media**: Edit `components/public/footer.tsx` (around lines 38 and 46)
 
-### To Update Team/Testimonials:
-1. Go to `yourdomain.com?admin=true`
-2. Login to admin panel
-3. Use CMS interface to add real content
+### To Update Content via CMS:
+1. **Homepage**: Go to `yourdomain.com/?admin=true` for hero, testimonials, FAQ
+2. **Team**: Go to `yourdomain.com/team?admin=true` for team member profiles
+3. **Curriculum**: Go to `yourdomain.com/curriculum?admin=true` for curriculum content
+4. **Qualifications**: Go to `yourdomain.com/qualifications?admin=true` for requirements
+5. **Application**: Content managed through individual page routes
 
 ### To Test Changes:
 ```bash
@@ -106,8 +118,14 @@ npm run build  # Verify no errors
 npm run dev    # Test in development
 ```
 
+### Mobile Testing:
+- Test curriculum popup modals on mobile devices
+- Verify logo displays on mobile navigation
+- Check responsive design across all pages
+
 ---
 
 **Last Updated**: August 16, 2025  
 **Status**: 🔴 Multiple critical placeholders need replacement  
-**Next Action**: Replace contact information (Phase 1)
+**Next Action**: Replace contact information (Phase 1)  
+**Website Status**: ✅ Fully functional multi-page site with mobile optimization
