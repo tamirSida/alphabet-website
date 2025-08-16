@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export default function Navigation() {
@@ -30,10 +31,19 @@ export default function Navigation() {
           {/* Logo/Brand */}
           <Link href="/" className="flex items-center">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 flex items-center justify-center">
-                <img src="/logo.png" alt="Alpha-Bet Logo" className="w-10 h-10" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center relative">
+                <Image 
+                  src="/logo.png" 
+                  alt="Alpha-Bet Logo" 
+                  width={40}
+                  height={40}
+                  className="object-contain" 
+                  priority
+                  onError={() => console.log('Logo failed to load on mobile')}
+                  onLoad={() => console.log('Logo loaded successfully')}
+                />
               </div>
-              <span className="text-white font-bold text-xl">Alpha-Bet</span>
+              <span className="text-white font-bold text-lg sm:text-xl">Alpha-Bet</span>
             </div>
           </Link>
 

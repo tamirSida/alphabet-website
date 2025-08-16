@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useAdmin } from '@/lib/cms/admin-context';
 import { CurriculumItem } from '@/lib/types/cms';
 
@@ -17,6 +18,8 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
   const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingText, setLoadingText] = useState('INITIALIZING...');
+  const [mobileModalOpen, setMobileModalOpen] = useState(false);
+  const [mobileModalItem, setMobileModalItem] = useState<CurriculumItem | null>(null);
   
   // Default curriculum data from your specification
   const defaultCurriculum = [
@@ -96,10 +99,24 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
   const handleWeekClick = (weekNumber: number) => {
     if (!isLoaded) return; // Don't allow clicks during decrypting
     
-    if (expandedWeek === weekNumber) {
-      setExpandedWeek(null);
+    // Check if mobile (screen width < 768px)
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile) {
+      // Open modal on mobile
+      const displayItems = mergeItemsWithDefaults();
+      const item = displayItems.find(item => item.weekNumber === weekNumber);
+      if (item) {
+        setMobileModalItem(item);
+        setMobileModalOpen(true);
+      }
     } else {
-      setExpandedWeek(weekNumber);
+      // Inline expansion on desktop
+      if (expandedWeek === weekNumber) {
+        setExpandedWeek(null);
+      } else {
+        setExpandedWeek(weekNumber);
+      }
     }
   };
 
@@ -151,8 +168,14 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
               {/* Military Header */}
               <div className="border-b border-gray-600 pb-4">
                 <div className="flex items-center justify-center gap-3 mb-2">
-                  <div className="w-10 h-10 flex items-center justify-center">
-                    <img src="/logo.png" alt="Alpha-Bet Logo" className="w-10 h-10" />
+                  <div className="w-10 h-10 flex items-center justify-center relative">
+                    <Image 
+                      src="/logo.png" 
+                      alt="Alpha-Bet Logo" 
+                      width={40}
+                      height={40}
+                      className="object-contain"
+                    />
                   </div>
                   <div className="text-left">
                     <div className="text-white font-bold text-lg tracking-wider font-mono">ALPHA-BET</div>
@@ -298,11 +321,17 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                         </h3>
                       </div>
                       <div className="text-white/60">
-                        {expandedWeek === item.weekNumber ? (
-                          <i className="fas fa-chevron-up text-lg transform transition-transform duration-300"></i>
-                        ) : (
-                          <i className="fas fa-chevron-down text-lg transform transition-transform duration-300"></i>
-                        )}
+                        {/* Show different icons for mobile vs desktop */}
+                        <div className="block md:hidden">
+                          <i className="fas fa-expand-alt text-lg"></i>
+                        </div>
+                        <div className="hidden md:block">
+                          {expandedWeek === item.weekNumber ? (
+                            <i className="fas fa-chevron-up text-lg transform transition-transform duration-300"></i>
+                          ) : (
+                            <i className="fas fa-chevron-down text-lg transform transition-transform duration-300"></i>
+                          )}
+                        </div>
                       </div>
                     </div>
                     
@@ -325,6 +354,14 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
                         <i className="fas fa-lightbulb mr-1"></i>
                         Practical Application
                       </span>
+                    </div>
+
+                    {/* Mobile tap indicator */}
+                    <div className="block md:hidden mt-4 pt-3 border-t border-white/10">
+                      <div className="flex items-center justify-center gap-2 text-white/60 text-xs">
+                        <i className="fas fa-hand-pointer"></i>
+                        <span>Tap to view full details</span>
+                      </div>
                     </div>
                   </div>
 
@@ -438,6 +475,134 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
           </div>
         </div>
       </div>
+
+      {/* Mobile Modal for Week Details */}
+      {mobileModalOpen && mobileModalItem && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setMobileModalOpen(false)}
+        >
+          <div 
+            className="bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-md rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto border border-white/20 shadow-2xl transform transition-all duration-300 ease-out animate-scale-in relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Popup indicator dots */}
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 flex gap-1">
+              <div className="w-2 h-2 bg-white/60 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-white/40 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+            </div>
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/20">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                  <i className={`${mobileModalItem.icon} text-white text-lg`}></i>
+                </div>
+                <div>
+                  <div className="text-xs text-white/70 font-medium uppercase tracking-wider">
+                    Week {mobileModalItem.weekNumber} of 10
+                  </div>
+                  <h3 className="text-lg font-bold text-white leading-tight">
+                    {mobileModalItem.title}
+                  </h3>
+                </div>
+              </div>
+              <button
+                onClick={() => setMobileModalOpen(false)}
+                className="w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              <p className="text-gray-200 leading-relaxed mb-6">
+                {mobileModalItem.description}
+              </p>
+
+              <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i className="fas fa-info-circle text-blue-300"></i>
+                What You'll Learn
+              </h4>
+
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <i className="fas fa-book text-blue-300 text-sm"></i>
+                  </div>
+                  <div>
+                    <div className="text-white font-medium text-sm">Core Concepts</div>
+                    <div className="text-gray-300 text-sm">Essential frameworks and methodologies</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <i className="fas fa-hammer text-green-300 text-sm"></i>
+                  </div>
+                  <div>
+                    <div className="text-white font-medium text-sm">Hands-On Practice</div>
+                    <div className="text-gray-300 text-sm">Real-world application exercises</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <i className="fas fa-comments text-purple-300 text-sm"></i>
+                  </div>
+                  <div>
+                    <div className="text-white font-medium text-sm">Peer Review</div>
+                    <div className="text-gray-300 text-sm">Collaborative feedback sessions</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <i className="fas fa-trophy text-orange-300 text-sm"></i>
+                  </div>
+                  <div>
+                    <div className="text-white font-medium text-sm">Milestone Achievement</div>
+                    <div className="text-gray-300 text-sm">Track your progress and wins</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick preview badges */}
+              <div className="mt-6 pt-4 border-t border-white/10">
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                    <i className="fas fa-clock mr-1"></i>
+                    Interactive Sessions
+                  </span>
+                  <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                    <i className="fas fa-users mr-1"></i>
+                    Peer Collaboration
+                  </span>
+                  <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                    <i className="fas fa-lightbulb mr-1"></i>
+                    Practical Application
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CSS for popup animation */}
+      <style jsx>{`
+        @keyframes scale-in {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-scale-in {
+          animation: scale-in 0.3s ease-out forwards;
+        }
+      `}</style>
     </section>
   );
 }

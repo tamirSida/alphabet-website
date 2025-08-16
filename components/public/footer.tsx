@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -23,8 +24,14 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 flex items-center justify-center">
-                <img src="/logo.png" alt="Alpha-Bet Logo" className="w-10 h-10" />
+              <div className="w-10 h-10 flex items-center justify-center relative">
+                <Image 
+                  src="/logo.png" 
+                  alt="Alpha-Bet Logo" 
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <span className="text-white font-bold text-xl">Alpha-Bet</span>
             </div>
