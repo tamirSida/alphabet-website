@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import CurriculumTimeline from '@/components/public/curriculum-timeline';
+import SEOHead from '@/components/seo/SEOHead';
 import BottomNavigation from '@/components/public/bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
 import EditableSection from '@/components/admin/editable-section';
@@ -131,38 +132,57 @@ export default function CurriculumPage() {
   }
 
   return (
-    <div className="relative">
-      {/* Discrete Admin Access Components */}
-      <DiscreteAdminAccess />
-      <DiscreteAdminDot />
-      <SimpleAdminToggle />
-      
-
-      {/* Curriculum Timeline */}
-      <CurriculumTimeline 
-        items={curriculum} 
-        onEdit={(item) => handleEdit(item)}
-        onEditHeader={handleEditHeader}
-        onEditCTA={handleEditCTA}
+    <>
+      <SEOHead
+        title="10-Week Curriculum - Alpha-Bet Entrepreneurship Program"
+        description="Explore Alpha-Bet's comprehensive 10-week curriculum: From idea to business plan. Learn lean methodology, customer discovery, networking, market analysis, and presentation skills designed for combat veterans."
+        keywords={[
+          '10-week entrepreneurship curriculum',
+          'startup curriculum veterans',
+          'business training program',
+          'lean methodology training',
+          'customer discovery course',
+          'business plan development',
+          'startup accelerator curriculum',
+          'entrepreneur training syllabus',
+          'military entrepreneur education',
+          'veteran business course'
+        ]}
+        canonical="/curriculum"
       />
+      <div className="relative">
+        {/* Discrete Admin Access Components */}
+        <DiscreteAdminAccess />
+        <DiscreteAdminDot />
+        <SimpleAdminToggle />
+        
 
-      {/* Bottom Navigation */}
-      <BottomNavigation currentPage="curriculum" />
+        {/* Curriculum Timeline */}
+        <CurriculumTimeline 
+          items={curriculum} 
+          onEdit={(item) => handleEdit(item)}
+          onEditHeader={handleEditHeader}
+          onEditCTA={handleEditCTA}
+        />
 
-      {/* Edit Modal */}
-      <EditModal
-        key={editingItem?.id || 'new'}
-        isOpen={editModalOpen}
-        onClose={() => {
-          setEditModalOpen(false);
-          setEditingItem(null);
-        }}
-        onSave={handleSave}
-        title={editingType === 'header' ? "Edit Curriculum Header" : editingType === 'cta' ? "Edit Curriculum CTA" : "Edit Curriculum Week"}
-        fields={getEditFields()}
-        initialData={editingItem}
-        loading={loading}
-      />
-    </div>
+        {/* Bottom Navigation */}
+        <BottomNavigation currentPage="curriculum" />
+
+        {/* Edit Modal */}
+        <EditModal
+          key={editingItem?.id || 'new'}
+          isOpen={editModalOpen}
+          onClose={() => {
+            setEditModalOpen(false);
+            setEditingItem(null);
+          }}
+          onSave={handleSave}
+          title={editingType === 'header' ? "Edit Curriculum Header" : editingType === 'cta' ? "Edit Curriculum CTA" : "Edit Curriculum Week"}
+          fields={getEditFields()}
+          initialData={editingItem}
+          loading={loading}
+        />
+      </div>
+    </>
   );
 }

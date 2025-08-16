@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import WhoShouldApplySection from '@/components/public/who-should-apply-section';
+import SEOHead from '@/components/seo/SEOHead';
 import BottomNavigation from '@/components/public/bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
@@ -104,36 +105,55 @@ export default function QualificationsPage() {
   }
 
   return (
-    <div className="relative">
-      {/* Discrete Admin Access Components */}
-      <DiscreteAdminAccess />
-      <DiscreteAdminDot />
-      <SimpleAdminToggle />
-      
-      {/* Qualifications Section */}
-      <WhoShouldApplySection 
-        qualifications={qualifications} 
-        onEdit={handleEdit}
-        onEditHeader={handleEditHeader}
+    <>
+      <SEOHead
+        title="Eligibility Requirements - Who Should Apply to Alpha-Bet"
+        description="Check if you qualify for Alpha-Bet: Free entrepreneurship program for US & Israeli combat veterans. Requirements include military service, business interest, and program commitment."
+        keywords={[
+          'Alpha-Bet eligibility',
+          'veteran program requirements',
+          'combat veteran qualifications',
+          'military entrepreneur eligibility',
+          'veteran startup program requirements',
+          'who can apply Alpha-Bet',
+          'veteran business program eligibility',
+          'military startup qualifications',
+          'entrepreneur program requirements',
+          'veteran accelerator eligibility'
+        ]}
+        canonical="/qualifications"
       />
+      <div className="relative">
+        {/* Discrete Admin Access Components */}
+        <DiscreteAdminAccess />
+        <DiscreteAdminDot />
+        <SimpleAdminToggle />
+        
+        {/* Qualifications Section */}
+        <WhoShouldApplySection 
+          qualifications={qualifications} 
+          onEdit={handleEdit}
+          onEditHeader={handleEditHeader}
+        />
 
-      {/* Bottom Navigation */}
-      <BottomNavigation currentPage="qualifications" />
+        {/* Bottom Navigation */}
+        <BottomNavigation currentPage="qualifications" />
 
-      {/* Edit Modal */}
-      <EditModal
-        key={editingItem?.id || 'new'}
-        isOpen={editModalOpen}
-        onClose={() => {
-          setEditModalOpen(false);
-          setEditingItem(null);
-        }}
-        onSave={handleSave}
-        title={editingType === 'header' ? "Edit Qualifications Section Header" : (editingItem?.title ? `Edit ${editingItem.title}` : "Add New Qualification")}
-        fields={editingType === 'header' ? headerFields : qualificationFields}
-        initialData={editingItem}
-        loading={loading}
-      />
-    </div>
+        {/* Edit Modal */}
+        <EditModal
+          key={editingItem?.id || 'new'}
+          isOpen={editModalOpen}
+          onClose={() => {
+            setEditModalOpen(false);
+            setEditingItem(null);
+          }}
+          onSave={handleSave}
+          title={editingType === 'header' ? "Edit Qualifications Section Header" : (editingItem?.title ? `Edit ${editingItem.title}` : "Add New Qualification")}
+          fields={editingType === 'header' ? headerFields : qualificationFields}
+          initialData={editingItem}
+          loading={loading}
+        />
+      </div>
+    </>
   );
 }

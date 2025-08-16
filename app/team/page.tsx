@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import TeamSection from '@/components/public/team-section';
+import SEOHead from '@/components/seo/SEOHead';
 import BottomNavigation from '@/components/public/bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
 import EditableSection from '@/components/admin/editable-section';
@@ -125,32 +126,51 @@ export default function TeamPage() {
   }
 
   return (
-    <div className="relative">
-      {/* Discrete Admin Access Components */}
-      <DiscreteAdminAccess />
-      <DiscreteAdminDot />
-      <SimpleAdminToggle />
-      
-      {/* Team Section */}
-      <TeamSection members={teamMembers} onEdit={handleEdit} onDelete={handleDelete} onEditHeader={handleEditHeader} />
-
-      {/* Bottom Navigation */}
-      <BottomNavigation currentPage="team" />
-
-      {/* Edit Modal */}
-      <EditModal
-        key={editingItem?.id || 'new'}
-        isOpen={editModalOpen}
-        onClose={() => {
-          setEditModalOpen(false);
-          setEditingItem(null);
-        }}
-        onSave={handleSave}
-        title={editingType === 'header' ? "Edit Team Section Header" : (editingItem?.name ? `Edit ${editingItem.name}` : "Add New Team Member")}
-        fields={editingType === 'header' ? headerFields : memberFields}
-        initialData={editingItem}
-        loading={loading}
+    <>
+      <SEOHead
+        title="Meet Our Team - Alpha-Bet Leadership & Mentors"
+        description="Meet the Alpha-Bet team: Combat veterans, successful entrepreneurs, and business leaders who mentor participants in our veteran entrepreneurship program. Learn from battle-tested leaders."
+        keywords={[
+          'Alpha-Bet team',
+          'veteran mentors',
+          'military entrepreneur mentors',
+          'veteran business leaders',
+          'combat veteran entrepreneurs',
+          'startup mentors veterans',
+          'military leadership team',
+          'veteran advisor network',
+          'entrepreneur mentorship',
+          'business mentor veterans'
+        ]}
+        canonical="/team"
       />
-    </div>
+      <div className="relative">
+        {/* Discrete Admin Access Components */}
+        <DiscreteAdminAccess />
+        <DiscreteAdminDot />
+        <SimpleAdminToggle />
+        
+        {/* Team Section */}
+        <TeamSection members={teamMembers} onEdit={handleEdit} onDelete={handleDelete} onEditHeader={handleEditHeader} />
+
+        {/* Bottom Navigation */}
+        <BottomNavigation currentPage="team" />
+
+        {/* Edit Modal */}
+        <EditModal
+          key={editingItem?.id || 'new'}
+          isOpen={editModalOpen}
+          onClose={() => {
+            setEditModalOpen(false);
+            setEditingItem(null);
+          }}
+          onSave={handleSave}
+          title={editingType === 'header' ? "Edit Team Section Header" : (editingItem?.name ? `Edit ${editingItem.name}` : "Add New Team Member")}
+          fields={editingType === 'header' ? headerFields : memberFields}
+          initialData={editingItem}
+          loading={loading}
+        />
+      </div>
+    </>
   );
 }

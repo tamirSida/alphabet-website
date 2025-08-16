@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import BottomNavigation from '@/components/public/bottom-navigation';
+import SEOHead from '@/components/seo/SEOHead';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
 
@@ -47,60 +48,67 @@ export default function ApplyPage() {
 
   if (submitted) {
     return (
-      <div className="relative">
-        {/* Discrete Admin Access Components */}
-        <DiscreteAdminAccess />
-        <DiscreteAdminDot />
-        <SimpleAdminToggle />
-        
-        {/* Success Message */}
-        <section className="py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white min-h-screen flex items-center">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8">
-              <i className="fas fa-check text-2xl text-white"></i>
+      <>
+        <SEOHead
+          title="Application Submitted - Alpha-Bet Program"
+          description="Thank you for applying to Alpha-Bet! Your application has been received and our team will contact you within 2-3 business days with next steps."
+          noindex={true}
+        />
+        <div className="relative">
+          {/* Discrete Admin Access Components */}
+          <DiscreteAdminAccess />
+          <DiscreteAdminDot />
+          <SimpleAdminToggle />
+          
+          {/* Success Message */}
+          <section className="py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white min-h-screen flex items-center">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8">
+                <i className="fas fa-check text-2xl text-white"></i>
+              </div>
+              
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+                Application Submitted!
+              </h1>
+              
+              <p className="text-lg sm:text-xl text-gray-300 leading-relaxed mb-8">
+                Thank you for your interest in the Alpha-Bet program. We've received your application and will review it carefully. 
+                Our team will contact you within 2-3 business days with next steps.
+              </p>
+              
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 mb-8">
+                <h3 className="text-xl font-bold mb-4">What happens next?</h3>
+                <ul className="text-left space-y-3 text-gray-300">
+                  <li className="flex items-start gap-3">
+                    <i className="fas fa-envelope text-green-400 mt-1"></i>
+                    <span>You'll receive a confirmation email within 24 hours</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <i className="fas fa-phone text-green-400 mt-1"></i>
+                    <span>Our team will schedule a preliminary interview</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <i className="fas fa-users text-green-400 mt-1"></i>
+                    <span>If selected, you'll meet with program leadership</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <i className="fas fa-rocket text-green-400 mt-1"></i>
+                    <span>Final candidates will be notified of acceptance</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <a
+                href="/"
+                className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:scale-105 transition-transform duration-300"
+              >
+                <i className="fas fa-home"></i>
+                <span>Return Home</span>
+              </a>
             </div>
-            
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
-              Application Submitted!
-            </h1>
-            
-            <p className="text-lg sm:text-xl text-gray-300 leading-relaxed mb-8">
-              Thank you for your interest in the Alpha-Bet program. We've received your application and will review it carefully. 
-              Our team will contact you within 2-3 business days with next steps.
-            </p>
-            
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 mb-8">
-              <h3 className="text-xl font-bold mb-4">What happens next?</h3>
-              <ul className="text-left space-y-3 text-gray-300">
-                <li className="flex items-start gap-3">
-                  <i className="fas fa-envelope text-green-400 mt-1"></i>
-                  <span>You'll receive a confirmation email within 24 hours</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <i className="fas fa-phone text-green-400 mt-1"></i>
-                  <span>Our team will schedule a preliminary interview</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <i className="fas fa-users text-green-400 mt-1"></i>
-                  <span>If selected, you'll meet with program leadership</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <i className="fas fa-rocket text-green-400 mt-1"></i>
-                  <span>Final candidates will be notified of acceptance</span>
-                </li>
-              </ul>
-            </div>
-            
-            <a
-              href="/"
-              className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:scale-105 transition-transform duration-300"
-            >
-              <i className="fas fa-home"></i>
-              <span>Return Home</span>
-            </a>
-          </div>
-        </section>
-      </div>
+          </section>
+        </div>
+      </>
     );
   }
 
