@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { X } from 'lucide-react';
+import { useState, useCallback, useEffect } from 'react';
+import { X, Undo, Redo } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,28 +36,71 @@ export default function EditModal({
 }: EditModalProps) {
   const [formData, setFormData] = useState<any>({});
   const [saving, setSaving] = useState(false);
+  
+  // Undo/Redo state
+  const [formHistory, setFormHistory] = useState<any[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(0);
 
-  // Initialize form data when modal opens or when there's no form data
-  if (isOpen && Object.keys(formData).length === 0) {
-    const initData: any = {};
-    
-    // First, set all field values from initialData or defaults
-    fields.forEach(field => {
-      initData[field.key] = initialData?.[field.key] || field.value || '';
-    });
-    
-    // Then set the standard fields
-    initData.isVisible = initialData?.isVisible ?? true;
-    initData.order = initialData?.order ?? 1;
-    
-    console.log('Initializing form data with:', initData, 'from initialData:', initialData); // Debug log
-    setFormData(initData);
-  }
+  // Initialize form data when modal opens
+  useEffect(() => {
+    if (isOpen && fields.length > 0) {
+      const initData: any = {};
+      
+      // First, set all field values from initialData or defaults
+      fields.forEach(field => {
+        initData[field.key] = initialData?.[field.key] || field.value || '';
+      });
+      
+      // Then set the standard fields
+      initData.isVisible = initialData?.isVisible ?? true;
+      initData.order = initialData?.order ?? 1;
+      
+      console.log('Initializing form data with:', initData, 'from initialData:', initialData);
+      setFormData(initData);
+      
+      // Initialize history with the initial state
+      setFormHistory([initData]);
+      setHistoryIndex(0);
+    }
+  }, [isOpen, fields, initialData]);
 
   // Reset form data when modal closes
-  if (!isOpen && Object.keys(formData).length > 0) {
-    setFormData({});
-  }
+  useEffect(() => {
+    if (!isOpen) {
+      setFormData({});
+      setFormHistory([]);
+      setHistoryIndex(0);
+    }
+  }, [isOpen]);
+
+  // Enhanced form data setter that tracks history
+  const updateFormData = useCallback((newData: any) => {
+    setFormData(newData);
+    
+    // Add to history (remove any future history if we're not at the end)
+    const newHistory = formHistory.slice(0, historyIndex + 1);
+    newHistory.push(newData);
+    setFormHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  }, [formHistory, historyIndex]);
+
+  // Undo function
+  const undo = useCallback(() => {
+    if (historyIndex > 0) {
+      const prevIndex = historyIndex - 1;
+      setHistoryIndex(prevIndex);
+      setFormData(formHistory[prevIndex]);
+    }
+  }, [historyIndex, formHistory]);
+
+  // Redo function
+  const redo = useCallback(() => {
+    if (historyIndex < formHistory.length - 1) {
+      const nextIndex = historyIndex + 1;
+      setHistoryIndex(nextIndex);
+      setFormData(formHistory[nextIndex]);
+    }
+  }, [historyIndex, formHistory]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,13 +123,39 @@ export default function EditModal({
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b">
           <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-            disabled={saving}
-          >
-            <X className="h-6 w-6" />
-          </button>
+          
+          {/* Undo/Redo Controls */}
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={undo}
+              disabled={saving || historyIndex === 0}
+              className="flex items-center gap-1"
+            >
+              <Undo className="h-4 w-4" />
+              Undo
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={redo}
+              disabled={saving || historyIndex >= formHistory.length - 1}
+              className="flex items-center gap-1"
+            >
+              <Redo className="h-4 w-4" />
+              Redo
+            </Button>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors ml-2"
+              disabled={saving}
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6">
@@ -100,10 +169,10 @@ export default function EditModal({
                 {field.type === 'textarea' ? (
                   <Textarea
                     value={formData[field.key] || ''}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
+                    onChange={(e) => updateFormData({
+                      ...formData,
                       [field.key]: e.target.value
-                    }))}
+                    })}
                     placeholder={field.placeholder}
                     required={field.required}
                     rows={4}
@@ -113,10 +182,10 @@ export default function EditModal({
                   <Input
                     type={field.type}
                     value={formData[field.key] || ''}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
+                    onChange={(e) => updateFormData({
+                      ...formData,
                       [field.key]: e.target.value
-                    }))}
+                    })}
                     placeholder={field.placeholder}
                     required={field.required}
                     className="w-full"
