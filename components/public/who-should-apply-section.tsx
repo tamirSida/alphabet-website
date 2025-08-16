@@ -115,62 +115,53 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
           </p>
         </div>
 
-        {/* Qualifications - Stepped Layout */}
-        <div className="space-y-6">
-          {displayQualifications.map((qualification, index) => (
-            <div
-              key={qualification.id}
-              className={`flex flex-col lg:flex-row items-center gap-6 lg:gap-12 ${
-                index % 2 === 1 ? 'lg:flex-row-reverse' : ''
-              }`}
-            >
-              {/* Number Circle */}
-              <div className="flex-shrink-0 relative">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center shadow-xl">
-                  <span className="text-xl sm:text-2xl font-bold text-gray-900">{qualification.order}</span>
-                </div>
-                <div className="absolute -inset-2 bg-white/20 rounded-full blur-lg"></div>
-              </div>
-
-              {/* Content Card */}
-              <div className="flex-1 relative">
-                {/* Admin Edit Button */}
-                {isAdminMode && (
-                  <button
-                    onClick={(e) => handleEditClick(qualification, e)}
-                    className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-20"
-                    title="Edit this qualification"
-                  >
-                    <i className="fas fa-edit"></i>
-                  </button>
-                )}
-                
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/20 shadow-xl hover:bg-white/15 transition-all duration-300 group">
+        {/* Qualifications - Checklist Layout */}
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 shadow-2xl">
+            <div className="space-y-4 sm:space-y-6">
+              {displayQualifications.map((qualification, index) => (
+                <div 
+                  key={qualification.id} 
+                  className="relative group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl hover:bg-white/5 transition-all duration-300"
+                >
+                  {/* Admin Edit Button */}
+                  {isAdminMode && (
+                    <button
+                      onClick={(e) => handleEditClick(qualification, e)}
+                      className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-20"
+                      title="Edit this qualification"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </button>
+                  )}
+                  
+                  {/* Checkbox */}
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-white rounded-md flex items-center justify-center bg-white/10 group-hover:bg-white/20 transition-colors duration-300">
+                      <i className="fas fa-check text-white text-xs sm:text-sm"></i>
+                    </div>
+                  </div>
+                  
                   {/* Icon */}
-                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
-                    <i className={`${qualification.icon} text-lg text-white`}></i>
+                  <div className="flex-shrink-0 mt-0.5">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                      <i className={`${qualification.icon} text-white text-base sm:text-lg`}></i>
+                    </div>
                   </div>
                   
-                  {/* Title */}
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 leading-tight">
-                    {qualification.title}
-                  </h3>
-                  
-                  {/* Description */}
-                  <p className="text-base sm:text-lg text-gray-200 leading-relaxed">
-                    {qualification.description}
-                  </p>
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-blue-100 transition-colors duration-300 leading-tight">
+                      {qualification.title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-gray-200 leading-relaxed group-hover:text-gray-100 transition-colors duration-300">
+                      {qualification.description}
+                    </p>
+                  </div>
                 </div>
-                
-                {/* Connecting Line (except for last item) */}
-                {index < displayQualifications.length - 1 && (
-                  <div className="hidden lg:block absolute top-full left-1/2 transform -translate-x-1/2 mt-6">
-                    <div className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"></div>
-                  </div>
-                )}
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
 
         {/* Bottom CTA */}
