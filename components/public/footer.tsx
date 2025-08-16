@@ -42,20 +42,12 @@ export default function Footer() {
             </p>
             <div className="mt-6 flex space-x-4">
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/school/versionbravo/posts/?feedView=all"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <i className="fab fa-linkedin text-xl"></i>
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <i className="fab fa-twitter text-xl"></i>
               </a>
             </div>
           </div>
@@ -84,10 +76,6 @@ export default function Footer() {
               <p>
                 <i className="fas fa-envelope mr-2"></i>
                 info@alphabetprogram.com
-              </p>
-              <p>
-                <i className="fas fa-phone mr-2"></i>
-                +1 (555) 123-4567
               </p>
             </div>
             

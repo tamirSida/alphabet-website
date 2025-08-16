@@ -78,9 +78,7 @@ export default function SEOHead({
         "description": "Version Bravo provides entrepreneurship programs and business development for combat veterans",
         "foundingDate": "2020",
         "sameAs": [
-          "https://www.linkedin.com/company/versionbravo",
-          "https://www.facebook.com/versionbravo",
-          "https://twitter.com/versionbravo"
+          "https://www.linkedin.com/school/versionbravo/posts/?feedView=all"
         ],
         "contactPoint": {
           "@type": "ContactPoint",
@@ -209,14 +207,6 @@ export default function SEOHead({
       <meta property="og:site_name" content="Alpha-Bet by Version Bravo" />
       <meta property="og:locale" content="en_US" />
       
-      {/* Twitter Card Tags */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={fullDescription} />
-      <meta name="twitter:image" content={fullOgImage} />
-      <meta name="twitter:image:alt" content="Alpha-Bet Logo - Entrepreneurship Program for Veterans" />
-      <meta name="twitter:site" content="@versionbravo" />
-      <meta name="twitter:creator" content="@versionbravo" />
       
       {/* Additional Meta Tags */}
       <meta name="theme-color" content="#111827" />
