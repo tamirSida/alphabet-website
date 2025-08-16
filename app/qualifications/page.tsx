@@ -58,12 +58,21 @@ export default function QualificationsPage() {
     }
   }, [editingItem, qualifications.length, loadContent]);
 
-  const getEditFields = () => [
-    { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Combat Veteran Status' },
-    { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter qualification description...' },
-    { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-shield-alt' },
-    { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-5' }
-  ];
+  const getEditFields = () => {
+    if (editingItem && editingItem.type === 'header') {
+      return [
+        { key: 'subtitle', label: 'Badge Text', type: 'text' as const, required: true, placeholder: 'e.g., QUALIFICATION CRITERIA' },
+        { key: 'title', label: 'Main Heading', type: 'text' as const, required: true, placeholder: 'e.g., Who Should Apply?' },
+        { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter section description...' }
+      ];
+    }
+    return [
+      { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Combat Veteran Status' },
+      { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter qualification description...' },
+      { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-shield-alt' },
+      { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-5' }
+    ];
+  };
 
   useEffect(() => {
     loadContent();
@@ -85,15 +94,21 @@ export default function QualificationsPage() {
       <SimpleAdminToggle />
       
       {/* Qualifications Section */}
-      <EditableSection
-        sectionName="Qualifications"
-        onEdit={() => handleEdit()}
-      >
-        <WhoShouldApplySection 
-          qualifications={qualifications} 
-          onEdit={(qualification) => handleEdit(qualification)}
-        />
-      </EditableSection>
+      <WhoShouldApplySection 
+        qualifications={qualifications} 
+        onEdit={(qualification) => handleEdit(qualification)}
+        onEditHeader={() => {
+          // Handle header editing - you can create a special header editing modal
+          // For now, just open the modal with header data
+          setEditingItem({ 
+            type: 'header',
+            title: 'Who Should Apply?',
+            subtitle: 'QUALIFICATION CRITERIA',
+            description: 'We\'re looking for exceptional veterans ready to transform their military experience into entrepreneurial success.'
+          });
+          setEditModalOpen(true);
+        }}
+      />
 
       {/* Bottom Navigation */}
       <BottomNavigation currentPage="qualifications" />

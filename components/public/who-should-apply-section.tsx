@@ -1,15 +1,27 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useAdmin } from '@/lib/cms/admin-context';
 import { Qualification } from '@/lib/types/cms';
 
 interface WhoShouldApplySectionProps {
   qualifications: Qualification[];
   onEdit?: (qualification?: Qualification) => void;
+  onEditHeader?: () => void;
 }
 
-export default function WhoShouldApplySection({ qualifications, onEdit }: WhoShouldApplySectionProps) {
+export default function WhoShouldApplySection({ qualifications, onEdit, onEditHeader }: WhoShouldApplySectionProps) {
   const { isAdminMode } = useAdmin();
+  const [animatedItems, setAnimatedItems] = useState<Set<string>>(new Set());
+  const [showItems, setShowItems] = useState(false);
+
+  // Trigger animations on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowItems(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Default qualifications if no CMS data
   const defaultQualifications: Qualification[] = [
@@ -85,12 +97,6 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
 
   const displayQualifications = mergeQualificationsWithDefaults();
 
-  const handleEditClick = (qualification: Qualification, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onEdit) {
-      onEdit(qualification);
-    }
-  };
 
   return (
     <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
@@ -100,7 +106,22 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
       
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 relative group">
+          {/* Header Edit Button */}
+          {isAdminMode && onEditHeader && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onEditHeader();
+              }}
+              className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 hover:bg-blue-400 text-white rounded-full flex items-center justify-center text-xs transition-all shadow-lg hover:shadow-xl hover:scale-110 z-[100] opacity-0 group-hover:opacity-100"
+              title="Edit header section"
+            >
+              <i className="fas fa-edit"></i>
+            </button>
+          )}
+          
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
             <div className="w-2 h-2 bg-white rounded-full"></div>
             <span className="text-white/80 text-sm font-medium tracking-wide">QUALIFICATION CRITERIA</span>
@@ -117,50 +138,114 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
 
         {/* Qualifications - Checklist Layout */}
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 shadow-2xl">
+          <div className={`bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 shadow-2xl transition-all duration-1000 ${
+            showItems ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
+          }`}>
             <div className="space-y-4 sm:space-y-6">
               {displayQualifications.map((qualification, index) => (
                 <div 
                   key={qualification.id} 
-                  className="relative group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl hover:bg-white/5 transition-all duration-300"
+                  className={`relative group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all duration-200 ${
+                    showItems 
+                      ? 'opacity-100 transform translate-x-0' 
+                      : 'opacity-0 transform -translate-x-12'
+                  }`}
+                  style={{ 
+                    transitionDelay: showItems ? '0ms' : `${index * 150 + 400}ms`,
+                    '--hover-bg': 'rgba(255, 255, 255, 0.05)'
+                  } as React.CSSProperties}
+                  onMouseEnter={(e) => {
+                    if (showItems) {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
+                  }}
                 >
                   {/* Admin Edit Button */}
                   {isAdminMode && (
                     <button
-                      onClick={(e) => handleEditClick(qualification, e)}
-                      className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-20"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Edit button clicked for:', qualification.title);
+                        if (onEdit) {
+                          onEdit(qualification);
+                        }
+                      }}
+                      className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-xs transition-all shadow-lg hover:shadow-xl hover:scale-110 z-[100]"
                       title="Edit this qualification"
                     >
                       <i className="fas fa-edit"></i>
                     </button>
                   )}
                   
-                  {/* Checkbox */}
+                  {/* Checkbox with animation */}
                   <div className="flex-shrink-0 mt-1">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-white rounded-md flex items-center justify-center bg-white/10 group-hover:bg-white/20 transition-colors duration-300">
-                      <i className="fas fa-check text-white text-xs sm:text-sm"></i>
+                    <div className={`w-5 h-5 sm:w-6 sm:h-6 border-2 border-white rounded-md flex items-center justify-center bg-white/10 group-hover:bg-white/20 transition-all duration-500 ${
+                      showItems ? 'scale-100 rotate-0' : 'scale-0 rotate-45'
+                    }`}
+                    style={{ 
+                      transitionDelay: `${index * 150 + 600}ms`
+                    }}>
+                      <i className={`fas fa-check text-white text-xs sm:text-sm transition-all duration-300 ${
+                        showItems ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
+                      }`}
+                      style={{ 
+                        transitionDelay: `${index * 150 + 800}ms`
+                      }}></i>
                     </div>
                   </div>
                   
-                  {/* Icon */}
+                  {/* Icon with bounce effect */}
                   <div className="flex-shrink-0 mt-0.5">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                      <i className={`${qualification.icon} text-white text-base sm:text-lg`}></i>
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-105 transition-all duration-600 ${
+                      showItems ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+                    }`}
+                    style={{ 
+                      transitionDelay: `${index * 150 + 700}ms`
+                    }}>
+                      <i className={`${qualification.icon} text-white text-base sm:text-lg transition-all duration-300 ${
+                        showItems ? 'scale-100' : 'scale-0'
+                      }`}
+                      style={{ 
+                        transitionDelay: `${index * 150 + 900}ms`
+                      }}></i>
                     </div>
                   </div>
                   
-                  {/* Content */}
+                  {/* Content with typewriter effect */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-blue-100 transition-colors duration-300 leading-tight">
+                    <h3 className={`text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-blue-100 transition-all duration-500 leading-tight ${
+                      showItems ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+                    }`}
+                    style={{ 
+                      transitionDelay: `${index * 150 + 800}ms`
+                    }}>
                       {qualification.title}
                     </h3>
-                    <p className="text-sm sm:text-base text-gray-200 leading-relaxed group-hover:text-gray-100 transition-colors duration-300">
+                    <p className={`text-sm sm:text-base text-gray-200 leading-relaxed group-hover:text-gray-100 transition-all duration-500 ${
+                      showItems ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
+                    }`}
+                    style={{ 
+                      transitionDelay: `${index * 150 + 900}ms`
+                    }}>
                       {qualification.description}
                     </p>
                   </div>
+
+                  {/* Shimmer effect on load */}
+                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/10 to-transparent transform transition-all duration-1000 pointer-events-none z-10 ${
+                    showItems ? 'translate-x-[200%] opacity-0' : '-translate-x-full opacity-100'
+                  }`}
+                  style={{ 
+                    transitionDelay: `${index * 150 + 1000}ms`
+                  }}></div>
                 </div>
               ))}
             </div>
+
           </div>
         </div>
 

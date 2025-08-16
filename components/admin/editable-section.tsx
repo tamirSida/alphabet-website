@@ -31,6 +31,7 @@ export default function EditableSection({
 }: EditableSectionProps) {
   const { isAdminMode } = useAdmin();
   const [isHovered, setIsHovered] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Don't show add buttons if not in admin mode
   if (!isAdminMode && isAddButton) {
@@ -48,17 +49,33 @@ export default function EditableSection({
     );
   }
 
+  const handleMouseEnter = () => {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
+    }
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setIsHovered(false);
+    }, 500); // Delay hiding for 500ms
+    setHoverTimeout(timeout);
+  };
+
   return (
     <div 
       className={`relative ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onClick={onClick}
+      style={{ paddingTop: '20px', paddingRight: '20px' }}
     >
       {children}
       
       {isHovered && (
-        <div className="absolute top-2 right-2 z-40 flex gap-2">
+        <div className="absolute top-2 right-2 z-50 flex gap-2">
           {/* Move Up Button */}
           {canMoveUp && onMoveUp && (
             <button
