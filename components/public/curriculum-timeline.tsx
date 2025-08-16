@@ -15,6 +15,8 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
   const [isDecrypting, setIsDecrypting] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingText, setLoadingText] = useState('INITIALIZING...');
   
   // Default curriculum data from your specification
   const defaultCurriculum = [
@@ -61,12 +63,33 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
 
   // Trigger decrypting animation on component mount (page load)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsDecrypting(false);
-      setIsLoaded(true);
-    }, 2000); // 2 second decrypting animation
+    const loadingStages = [
+      { progress: 0, text: 'Initiating Mission Briefing...', duration: 300 },
+      { progress: 25, text: 'Accessing Training Materials...', duration: 300 },
+      { progress: 50, text: 'Securing Communications...', duration: 300 },
+      { progress: 75, text: 'Finalizing Mission Prep...', duration: 300 },
+      { progress: 100, text: 'Mission Ready - Stand By', duration: 400 }
+    ];
 
-    return () => clearTimeout(timer);
+    let currentStage = 0;
+    const progressInterval = setInterval(() => {
+      if (currentStage < loadingStages.length) {
+        const stage = loadingStages[currentStage];
+        setLoadingProgress(stage.progress);
+        setLoadingText(stage.text);
+        currentStage++;
+      } else {
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          setIsDecrypting(false);
+          setIsLoaded(true);
+        }, 500);
+      }
+    }, 350);
+
+    return () => {
+      clearInterval(progressInterval);
+    };
   }, []);
 
   // Handle week click to expand/collapse (no decrypting after initial load)
@@ -111,24 +134,85 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
           </p>
         </div>
 
-        {/* Decrypting Animation */}
+        {/* Military Loading Screen */}
         {isDecrypting && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-gray-900 border border-white rounded-lg p-8 text-center font-mono">
-              <div className="text-white text-xl font-bold mb-4">
-                <span className="animate-pulse">DECRYPTING...</span>
+          <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center z-50">
+            {/* Military grid overlay */}
+            <div className="absolute inset-0 opacity-10" style={{
+              backgroundImage: `
+                linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: '50px 50px'
+            }}></div>
+            
+            {/* Fixed-size container to prevent resizing */}
+            <div className="relative bg-gray-900/90 border-2 border-gray-400 rounded-lg p-8 text-center w-96 h-80 flex flex-col justify-between shadow-2xl">
+              {/* Military Header */}
+              <div className="border-b border-gray-600 pb-4">
+                <div className="flex items-center justify-center gap-3 mb-2">
+                  <div className="w-8 h-8 bg-gray-400 rounded flex items-center justify-center">
+                    <i className="fas fa-shield-alt text-gray-900 text-lg"></i>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-white font-bold text-lg tracking-wider font-mono">ALPHA-BET</div>
+                    <div className="text-gray-400 text-xs font-mono tracking-widest">PROGRAM INITIALIZE</div>
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-center space-x-1 mb-4">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="w-2 h-8 bg-white animate-pulse"
-                    style={{ animationDelay: `${i * 100}ms` }}
-                  ></div>
-                ))}
+
+              {/* Mission Status */}
+              <div className="flex-1 flex flex-col justify-center">
+                <div className="text-gray-300 text-sm font-mono mb-4 uppercase tracking-wide">
+                  {loadingText}
+                </div>
+
+                {/* Military-style progress bar */}
+                <div className="mb-6">
+                  <div className="flex justify-between text-gray-400 text-xs font-mono mb-2 uppercase tracking-wider">
+                    <span>Mission Progress</span>
+                    <span>{loadingProgress}%</span>
+                  </div>
+                  
+                  <div className="w-full h-4 bg-gray-800 border border-gray-600 relative">
+                    <div 
+                      className="h-full bg-gradient-to-r from-gray-500 to-gray-300 transition-all duration-500 ease-out relative"
+                      style={{ width: `${loadingProgress}%` }}
+                    >
+                      {/* Military-style scan line */}
+                      <div className="absolute top-0 right-0 w-1 h-full bg-white opacity-75"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mission checklist */}
+                <div className="space-y-1 text-xs font-mono">
+                  <div className="flex items-center justify-between text-gray-400">
+                    <span>◦ SYSTEMS CHECK</span>
+                    <span className="text-gray-300">{loadingProgress > 0 ? '[✓]' : '[○]'}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-gray-400">
+                    <span>◦ SECURE CONNECTION</span>
+                    <span className="text-gray-300">{loadingProgress > 25 ? '[✓]' : '[○]'}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-gray-400">
+                    <span>◦ MISSION BRIEF READY</span>
+                    <span className="text-gray-300">{loadingProgress > 75 ? '[✓]' : '[○]'}</span>
+                  </div>
+                </div>
               </div>
-              <div className="text-white text-sm">
-                ► curriculum_data.enc
+
+              {/* Military footer */}
+              <div className="border-t border-gray-600 pt-4">
+                <div className="text-gray-500 text-xs font-mono tracking-widest">
+                  VETERAN AUTHORIZED ACCESS
+                </div>
+                {/* Tactical indicator dots */}
+                <div className="flex justify-center items-center gap-2 mt-3">
+                  <div className="w-2 h-2 bg-gray-400 animate-pulse" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 animate-pulse" style={{ animationDelay: '300ms' }}></div>
+                  <div className="w-2 h-2 bg-gray-400 animate-pulse" style={{ animationDelay: '600ms' }}></div>
+                </div>
               </div>
             </div>
           </div>
