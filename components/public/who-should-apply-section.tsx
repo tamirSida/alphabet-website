@@ -91,101 +91,98 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
   };
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(120,119,198,0.15),transparent_50%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05),transparent_50%)]"></div>
+      
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center mr-4 shadow-lg">
-              <i className="fas fa-crosshairs text-2xl text-gray-700"></i>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-              Who Should Apply?
-            </h2>
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+            <div className="w-2 h-2 bg-white rounded-full"></div>
+            <span className="text-white/80 text-sm font-medium tracking-wide">QUALIFICATION CRITERIA</span>
           </div>
-          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-            The Alpha-Bet program is for a select group of mission-driven veterans ready for their next challenge.
+          
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+            Who Should Apply?
+          </h2>
+          
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            We're looking for exceptional veterans ready to transform their military experience into entrepreneurial success.
           </p>
         </div>
 
-        {/* Qualifications Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Qualifications - Stepped Layout */}
+        <div className="space-y-6">
           {displayQualifications.map((qualification, index) => (
             <div
               key={qualification.id}
-              className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl border-2 border-gray-600 p-6 sm:p-8 transform transition-all duration-300 hover:scale-105 hover:border-gray-400 group relative"
+              className={`flex flex-col lg:flex-row items-center gap-6 lg:gap-12 ${
+                index % 2 === 1 ? 'lg:flex-row-reverse' : ''
+              }`}
             >
-              {/* Admin Edit Button */}
-              {isAdminMode && (
-                <button
-                  onClick={(e) => handleEditClick(qualification, e)}
-                  className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-10"
-                  title="Edit this qualification"
-                >
-                  <i className="fas fa-edit"></i>
-                </button>
-              )}
-
-              {/* Qualification Number Badge */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-12 h-12 bg-white text-gray-900 rounded-full flex items-center justify-center font-bold text-lg border-2 border-gray-300 shadow-lg">
-                  {qualification.order}
+              {/* Number Circle */}
+              <div className="flex-shrink-0 relative">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center shadow-xl">
+                  <span className="text-xl sm:text-2xl font-bold text-gray-900">{qualification.order}</span>
                 </div>
-                <div className="w-16 h-16 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full border-2 border-gray-500 flex items-center justify-center group-hover:border-gray-400 transition-colors shadow-lg">
-                  <i className={`${qualification.icon} text-2xl text-white`}></i>
-                </div>
+                <div className="absolute -inset-2 bg-white/20 rounded-full blur-lg"></div>
               </div>
 
-              {/* Content */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold text-white group-hover:text-gray-200 transition-colors leading-tight">
-                  {qualification.title}
-                </h3>
+              {/* Content Card */}
+              <div className="flex-1 relative">
+                {/* Admin Edit Button */}
+                {isAdminMode && (
+                  <button
+                    onClick={(e) => handleEditClick(qualification, e)}
+                    className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-20"
+                    title="Edit this qualification"
+                  >
+                    <i className="fas fa-edit"></i>
+                  </button>
+                )}
                 
-                <p className="text-gray-200 leading-relaxed">
-                  {qualification.description}
-                </p>
-              </div>
-
-              {/* Status Indicator */}
-              <div className="mt-6 pt-6 border-t border-gray-600">
-                <div className="flex items-center justify-between text-gray-400">
-                  <div className="flex items-center">
-                    <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                    <span className="text-xs font-mono">REQUIRED</span>
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/20 shadow-xl hover:bg-white/15 transition-all duration-300 group">
+                  {/* Icon */}
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
+                    <i className={`${qualification.icon} text-lg text-white`}></i>
                   </div>
-                  <div className="text-xs font-mono">
-                    QUALIFICATION #{qualification.order}
-                  </div>
+                  
+                  {/* Title */}
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 leading-tight">
+                    {qualification.title}
+                  </h3>
+                  
+                  {/* Description */}
+                  <p className="text-base sm:text-lg text-gray-200 leading-relaxed">
+                    {qualification.description}
+                  </p>
                 </div>
+                
+                {/* Connecting Line (except for last item) */}
+                {index < displayQualifications.length - 1 && (
+                  <div className="hidden lg:block absolute top-full left-1/2 transform -translate-x-1/2 mt-6">
+                    <div className="w-px h-12 bg-gradient-to-b from-white/30 to-transparent"></div>
+                  </div>
+                )}
               </div>
-
-              {/* Decorative Corner Elements */}
-              <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-gray-500 opacity-20"></div>
-              <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-gray-500 opacity-20"></div>
             </div>
           ))}
         </div>
 
-        {/* Bottom CTA Section */}
+        {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl border-2 border-gray-600 p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Think You're Ready?
+          <div className="max-w-3xl mx-auto bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-xl">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+              Ready for Your Next Mission?
             </h3>
-            <p className="text-gray-300 mb-6 leading-relaxed">
-              If you meet all five qualifications above, you're ready to begin your transformation from combat veteran to successful entrepreneur.
+            <p className="text-lg text-gray-200 leading-relaxed mb-6">
+              If you meet these qualifications, you're prepared to transform your military leadership into entrepreneurial excellence.
             </p>
-            <div className="flex justify-center items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-check-circle text-green-400 text-lg"></i>
-                <span className="text-sm font-mono text-gray-300">ALL QUALIFICATIONS MET</span>
-              </div>
-              <div className="w-0.5 h-6 bg-gray-600"></div>
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-arrow-right text-white text-lg"></i>
-                <span className="text-sm font-mono text-gray-300">PROCEED TO APPLICATION</span>
-              </div>
+            <div className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 text-gray-900 font-semibold hover:scale-105 transition-transform duration-300 cursor-pointer">
+              <span>Begin Application</span>
+              <i className="fas fa-arrow-right text-sm"></i>
             </div>
           </div>
         </div>
