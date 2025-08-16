@@ -86,7 +86,7 @@ export class CallToActionService extends BaseFirestoreService<CallToAction> {
 
 export class QualificationService extends BaseFirestoreService<Qualification> {
   constructor() {
-    super('qualifications');
+    super('qualification-items');
   }
 }
 

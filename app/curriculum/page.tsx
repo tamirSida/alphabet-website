@@ -88,15 +88,10 @@ export default function CurriculumPage() {
       
 
       {/* Curriculum Timeline */}
-      <EditableSection
-        sectionName="Curriculum Timeline"
-        onEdit={() => handleEdit()}
-      >
-        <CurriculumTimeline 
-          items={curriculum} 
-          onEdit={(item) => handleEdit(item)}
-        />
-      </EditableSection>
+      <CurriculumTimeline 
+        items={curriculum} 
+        onEdit={(item) => handleEdit(item)}
+      />
 
       {/* Bottom Navigation */}
       <BottomNavigation currentPage="curriculum" />

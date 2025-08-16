@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import WhoShouldApplySection from '@/components/public/who-should-apply-section';
 import BottomNavigation from '@/components/public/bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
-import EditableSection from '@/components/admin/editable-section';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
 import EditModal from '@/components/admin/edit-modal';
 import { CMSServiceFactory } from '@/lib/cms/content-services';
@@ -17,6 +16,7 @@ export default function QualificationsPage() {
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
+  const [editingType, setEditingType] = useState<'qualification' | 'header'>('qualification');
 
   // Enable URL-based admin access
   useUrlAdminAccess();
@@ -24,7 +24,7 @@ export default function QualificationsPage() {
   const loadContent = useCallback(async () => {
     try {
       setLoading(true);
-      const qualificationData = await CMSServiceFactory.getQualificationService().getVisible();
+      const qualificationData = await CMSServiceFactory.getQualificationService().getAll();
       setQualifications(qualificationData);
     } catch (error) {
       console.error('Error loading qualifications content:', error);
@@ -35,44 +35,61 @@ export default function QualificationsPage() {
 
   const handleEdit = useCallback((item?: Qualification) => {
     setEditingItem(item);
+    setEditingType('qualification');
+    setEditModalOpen(true);
+  }, []);
+
+  const handleEditHeader = useCallback(() => {
+    const defaultHeader = {
+      type: 'header',
+      subtitle: 'QUALIFICATION CRITERIA',
+      title: 'Who Should Apply?',
+      description: "We're looking for exceptional veterans ready to transform their military experience into entrepreneurial success."
+    };
+    setEditingItem(defaultHeader);
+    setEditingType('header');
     setEditModalOpen(true);
   }, []);
 
   const handleSave = useCallback(async (data: any) => {
     try {
-      if (editingItem && editingItem.id && !editingItem.id.startsWith('qual-')) {
-        await CMSServiceFactory.getQualificationService().update(editingItem.id, data);
+      if (editingType === 'header') {
+        // Save header data (for now, just log - in full implementation would save to CMS)
+        console.log('Saving header data:', data);
       } else {
-        const qualificationData = {
-          ...data,
-          isVisible: true,
-          order: data.order || qualifications.length + 1
-        };
-        await CMSServiceFactory.getQualificationService().create(qualificationData);
+        // Save qualification data
+        if (editingItem && editingItem.id && !editingItem.id.startsWith('qual-')) {
+          // Update existing CMS qualification
+          await CMSServiceFactory.getQualificationService().update(editingItem.id, data);
+        } else {
+          // Create new qualification
+          const qualificationData = {
+            ...data,
+            isVisible: true,
+            order: data.order || qualifications.length + 1
+          };
+          await CMSServiceFactory.getQualificationService().create(qualificationData);
+        }
+        await loadContent();
       }
-      
-      await loadContent();
     } catch (error) {
       console.error('Error saving:', error);
       throw error;
     }
-  }, [editingItem, qualifications.length, loadContent]);
+  }, [editingItem, editingType, qualifications.length, loadContent]);
 
-  const getEditFields = () => {
-    if (editingItem && editingItem.type === 'header') {
-      return [
-        { key: 'subtitle', label: 'Badge Text', type: 'text' as const, required: true, placeholder: 'e.g., QUALIFICATION CRITERIA' },
-        { key: 'title', label: 'Main Heading', type: 'text' as const, required: true, placeholder: 'e.g., Who Should Apply?' },
-        { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter section description...' }
-      ];
-    }
-    return [
-      { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Combat Veteran Status' },
-      { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter qualification description...' },
-      { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-shield-alt' },
-      { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-5' }
-    ];
-  };
+  const qualificationFields = useMemo(() => [
+    { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Combat Veteran Status' },
+    { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter qualification description...' },
+    { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-shield-alt' },
+    { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-5' }
+  ], []);
+
+  const headerFields = useMemo(() => [
+    { key: 'subtitle', label: 'Badge Text', type: 'text' as const, required: true, placeholder: 'e.g., QUALIFICATION CRITERIA' },
+    { key: 'title', label: 'Main Heading', type: 'text' as const, required: true, placeholder: 'e.g., Who Should Apply?' },
+    { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter section description...' }
+  ], []);
 
   useEffect(() => {
     loadContent();
@@ -96,18 +113,8 @@ export default function QualificationsPage() {
       {/* Qualifications Section */}
       <WhoShouldApplySection 
         qualifications={qualifications} 
-        onEdit={(qualification) => handleEdit(qualification)}
-        onEditHeader={() => {
-          // Handle header editing - you can create a special header editing modal
-          // For now, just open the modal with header data
-          setEditingItem({ 
-            type: 'header',
-            title: 'Who Should Apply?',
-            subtitle: 'QUALIFICATION CRITERIA',
-            description: 'We\'re looking for exceptional veterans ready to transform their military experience into entrepreneurial success.'
-          });
-          setEditModalOpen(true);
-        }}
+        onEdit={handleEdit}
+        onEditHeader={handleEditHeader}
       />
 
       {/* Bottom Navigation */}
@@ -122,8 +129,8 @@ export default function QualificationsPage() {
           setEditingItem(null);
         }}
         onSave={handleSave}
-        title="Edit Qualification"
-        fields={getEditFields()}
+        title={editingType === 'header' ? "Edit Qualifications Section Header" : (editingItem?.title ? `Edit ${editingItem.title}` : "Add New Qualification")}
+        fields={editingType === 'header' ? headerFields : qualificationFields}
         initialData={editingItem}
         loading={loading}
       />

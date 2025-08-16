@@ -96,9 +96,9 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 - `npm run typecheck` - TypeScript checking
 
 ## Firebase Configuration
-- **Collections**: hero-sections, content-sections, team-members, testimonials, curriculum-items, call-to-actions, faqs, qualifications
+- **Collections**: hero-sections, content-sections, team-members, testimonials, curriculum-items, call-to-actions, faqs, qualification-items
 - **Authentication**: Admin users for CMS access
-- **Security Rules**: Configured for admin-only writes, public reads
+- **Security Rules**: Wildcard pattern allowing authenticated users full access to all collections, public read access
 
 ## Key Features Implemented:
 - ✅ Complete multi-page website architecture with navigation
@@ -122,6 +122,9 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 - Fixed mobile logo display issues with Next.js Image components
 - Resolved hydration mismatches for better SSR compatibility
 - Enhanced mobile UX with proper popup indicators and animations
+- Fixed qualifications CMS permissions issue by simplifying Firestore rules
+- Completed team section integration with VBV data and military styling
+- Removed status icons from team cards and implemented founders-only first row layout
 
 ## Environment Variables Needed:
 ```
