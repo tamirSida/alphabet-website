@@ -75,6 +75,17 @@ export interface CallToAction {
   updatedAt: Date;
 }
 
+export interface TeamHeader {
+  id: string;
+  label: string; // "LEADERSHIP TEAM"
+  title: string; // "Meet the Team"
+  description: string; // "Battle-tested leaders..."
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface Qualification {
   id: string;
   title: string;
@@ -100,6 +111,7 @@ export type ContentType =
   | 'hero'
   | 'content-section'
   | 'team-member'
+  | 'team-header'
   | 'testimonial'
   | 'curriculum-item'
   | 'call-to-action'

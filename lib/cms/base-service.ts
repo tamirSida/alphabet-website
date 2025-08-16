@@ -5,6 +5,7 @@ import {
   getDoc, 
   addDoc, 
   updateDoc, 
+  setDoc,
   deleteDoc, 
   query, 
   where, 
@@ -79,10 +80,13 @@ export abstract class BaseFirestoreService<T extends { id: string }> {
   async update(id: string, data: Partial<Omit<T, 'id' | 'createdAt'>>): Promise<void> {
     try {
       const docRef = this.getDocRef(id);
-      await updateDoc(docRef, {
+      // Use setDoc with merge to create the document if it doesn't exist
+      await setDoc(docRef, {
         ...data,
-        updatedAt: new Date()
-      });
+        id,
+        updatedAt: new Date(),
+        createdAt: new Date() // Will be ignored if document exists due to merge
+      }, { merge: true });
     } catch (error) {
       console.error(`Error updating ${this.collectionName}:`, error);
       throw error;

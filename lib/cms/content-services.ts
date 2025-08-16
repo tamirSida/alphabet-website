@@ -4,6 +4,7 @@ import {
   HeroSection, 
   ContentSection, 
   TeamMember, 
+  TeamHeader,
   Testimonial, 
   CurriculumItem, 
   CallToAction,
@@ -42,6 +43,17 @@ export class TeamMemberService extends BaseFirestoreService<TeamMember> {
 
   async getFeaturedMembers(limit: number = 3): Promise<TeamMember[]> {
     return this.getVisible(limit);
+  }
+}
+
+export class TeamHeaderService extends BaseFirestoreService<TeamHeader> {
+  constructor() {
+    super('team-headers');
+  }
+
+  async getActiveHeader(): Promise<TeamHeader | null> {
+    const headers = await this.getVisible(1);
+    return headers.length > 0 ? headers[0] : null;
   }
 }
 
@@ -107,6 +119,13 @@ export class CMSServiceFactory {
       this.instances.set('team', new TeamMemberService());
     }
     return this.instances.get('team');
+  }
+
+  static getTeamHeaderService(): TeamHeaderService {
+    if (!this.instances.has('teamHeader')) {
+      this.instances.set('teamHeader', new TeamHeaderService());
+    }
+    return this.instances.get('teamHeader');
   }
 
   static getTestimonialService(): TestimonialService {

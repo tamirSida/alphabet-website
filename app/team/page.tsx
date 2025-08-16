@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import TeamSection from '@/components/public/team-section';
 import BottomNavigation from '@/components/public/bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
@@ -8,7 +8,7 @@ import EditableSection from '@/components/admin/editable-section';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
 import EditModal from '@/components/admin/edit-modal';
 import { CMSServiceFactory } from '@/lib/cms/content-services';
-import { TeamMember } from '@/lib/types/cms';
+import { TeamMember, TeamHeader } from '@/lib/types/cms';
 
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
@@ -17,6 +17,7 @@ export default function TeamPage() {
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
+  const [editingType, setEditingType] = useState<'member' | 'header'>('member');
 
   // Enable URL-based admin access
   useUrlAdminAccess();
@@ -35,36 +36,81 @@ export default function TeamPage() {
 
   const handleEdit = useCallback((item?: TeamMember) => {
     setEditingItem(item);
+    setEditingType('member');
+    setEditModalOpen(true);
+  }, []);
+
+  const handleEditHeader = useCallback(() => {
+    // For now, use default header data. In a full implementation, load from CMS
+    const defaultHeader = {
+      id: 'team-header-1',
+      label: "LEADERSHIP TEAM",
+      title: "Meet the Team",
+      description: "Battle-tested leaders and mentors who understand your journey and are committed to your success",
+      isVisible: true,
+      order: 1,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    setEditingItem(defaultHeader);
+    setEditingType('header');
     setEditModalOpen(true);
   }, []);
 
   const handleSave = useCallback(async (data: any) => {
     try {
-      if (editingItem) {
-        await CMSServiceFactory.getTeamMemberService().update(editingItem.id, data);
+      if (editingType === 'header') {
+        // Save header data (for now, just log - in full implementation would save to CMS)
+        console.log('Saving header data:', data);
+        // await CMSServiceFactory.getTeamHeaderService().update('team-header-1', data);
       } else {
-        const teamData = {
-          ...data,
-          isVisible: true,
-          order: teamMembers.length + 1
-        };
-        await CMSServiceFactory.getTeamMemberService().create(teamData);
+        // Save team member data
+        if (editingItem) {
+          await CMSServiceFactory.getTeamMemberService().update(editingItem.id, data);
+        } else {
+          const teamData = {
+            ...data,
+            isVisible: true,
+            order: teamMembers.length + 1
+          };
+          await CMSServiceFactory.getTeamMemberService().create(teamData);
+        }
+        await loadContent();
       }
-      
-      await loadContent();
     } catch (error) {
       console.error('Error saving:', error);
       throw error;
     }
-  }, [editingItem, teamMembers.length, loadContent]);
+  }, [editingItem, editingType, teamMembers.length, loadContent]);
 
-  const getEditFields = () => [
+  const handleDelete = useCallback(async (memberId: string) => {
+    if (window.confirm('Are you sure you want to delete this team member?')) {
+      try {
+        await CMSServiceFactory.getTeamMemberService().delete(memberId);
+        await loadContent();
+      } catch (error) {
+        console.error('Error deleting:', error);
+        throw error;
+      }
+    }
+  }, [loadContent]);
+
+  const memberFields = useMemo(() => [
     { key: 'name', label: 'Name', type: 'text' as const, required: true, placeholder: 'Enter full name' },
-    { key: 'role', label: 'Role', type: 'text' as const, required: true, placeholder: 'e.g., Founder, Mentor, Advisor' },
-    { key: 'bio', label: 'Biography', type: 'textarea' as const, required: true, placeholder: 'Enter biography...' },
-    { key: 'image', label: 'Profile Image URL', type: 'url' as const, required: false, placeholder: 'https://...' },
-    { key: 'linkedinUrl', label: 'LinkedIn Profile URL', type: 'url' as const, required: false, placeholder: 'https://linkedin.com/in/...' }
-  ];
+    { key: 'title', label: 'Title/Position', type: 'text' as const, required: false, placeholder: 'e.g., Co-Founder, Director, Lead' },
+    { key: 'role', label: 'Role (for compatibility)', type: 'text' as const, required: true, placeholder: 'e.g., Founder, Mentor, Advisor' },
+    { key: 'military', label: 'Military Background', type: 'text' as const, required: false, placeholder: 'e.g., Navy SEALs, IDF Paratrooper, or N/A' },
+    { key: 'bio', label: 'Biography', type: 'textarea' as const, required: false, placeholder: 'Enter biography...' },
+    { key: 'image', label: 'Profile Image (URL or path)', type: 'text' as const, required: false, placeholder: '/team/image.jpg or https://...' },
+    { key: 'linkedinUrl', label: 'LinkedIn Profile URL', type: 'url' as const, required: false, placeholder: 'https://linkedin.com/in/...' },
+    { key: 'isFounder', label: 'Is Founder?', type: 'checkbox' as const, required: false }
+  ], []);
+
+  const headerFields = useMemo(() => [
+    { key: 'label', label: 'Section Label', type: 'text' as const, required: true, placeholder: 'e.g., LEADERSHIP TEAM' },
+    { key: 'title', label: 'Section Title', type: 'text' as const, required: true, placeholder: 'e.g., Meet the Team' },
+    { key: 'description', label: 'Section Description', type: 'textarea' as const, required: true, placeholder: 'Enter section description...' }
+  ], []);
 
   useEffect(() => {
     loadContent();
@@ -86,12 +132,7 @@ export default function TeamPage() {
       <SimpleAdminToggle />
       
       {/* Team Section */}
-      <EditableSection
-        sectionName="Team"
-        onEdit={() => handleEdit()}
-      >
-        <TeamSection members={teamMembers} />
-      </EditableSection>
+      <TeamSection members={teamMembers} onEdit={handleEdit} onDelete={handleDelete} onEditHeader={handleEditHeader} />
 
       {/* Bottom Navigation */}
       <BottomNavigation currentPage="team" />
@@ -105,8 +146,8 @@ export default function TeamPage() {
           setEditingItem(null);
         }}
         onSave={handleSave}
-        title="Edit Team Member"
-        fields={getEditFields()}
+        title={editingType === 'header' ? "Edit Team Section Header" : (editingItem?.name ? `Edit ${editingItem.name}` : "Add New Team Member")}
+        fields={editingType === 'header' ? headerFields : memberFields}
         initialData={editingItem}
         loading={loading}
       />
