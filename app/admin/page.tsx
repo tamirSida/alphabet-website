@@ -66,12 +66,10 @@ export default function AdminDashboard() {
       );
       
       // Create CMS user record - all users are admins
-      await userService.createUser({
-        id: userCredential.user.uid,
+      await userService.create({
         email: createFormData.email,
         role: 'admin',
         isActive: true,
-        createdAt: new Date(),
         lastLogin: new Date()
       });
       

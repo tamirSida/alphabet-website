@@ -1,15 +1,7 @@
 'use client';
 
 import { useAdmin } from '@/lib/cms/admin-context';
-
-interface Qualification {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  order: number;
-  isVisible?: boolean;
-}
+import { Qualification } from '@/lib/types/cms';
 
 interface WhoShouldApplySectionProps {
   qualifications: Qualification[];
@@ -27,7 +19,9 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
       description: 'A combat veteran of the US or Israel.',
       icon: 'fas fa-shield-alt',
       order: 1,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
       id: 'qual-2', 
@@ -35,7 +29,9 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
       description: 'Post-service and ready to transition your skills into the business world.',
       icon: 'fas fa-exchange-alt',
       order: 2,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
       id: 'qual-3',
@@ -43,7 +39,9 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
       description: 'Interested in entrepreneurship and seeking the foundational knowledge to get started.',
       icon: 'fas fa-lightbulb',
       order: 3,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
       id: 'qual-4',
@@ -51,7 +49,9 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
       description: 'In the ideation phase, whether you have a business idea or are looking to find a partner and develop one.',
       icon: 'fas fa-brain',
       order: 4,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
       id: 'qual-5',
@@ -59,7 +59,9 @@ export default function WhoShouldApplySection({ qualifications, onEdit }: WhoSho
       description: 'Committed to a rigorous, 10-week online program of training and practical workshops.',
       icon: 'fas fa-calendar-check',
       order: 5,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   ];
 

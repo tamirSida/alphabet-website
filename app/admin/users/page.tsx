@@ -94,12 +94,10 @@ export default function UsersAdminPage() {
       );
       
       // Create CMS user record
-      await userService.createUser({
-        id: userCredential.user.uid,
+      await userService.create({
         email: createFormData.email,
         role: createFormData.role,
         isActive: true,
-        createdAt: new Date(),
         lastLogin: new Date()
       });
       

@@ -3,11 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import HeroSection from './hero-section';
 import ContentSection from './content-section';
-import TeamSection from './team-section';
-import TestimonialsSection from './testimonials-section';
-import CurriculumTimeline from './curriculum-timeline';
-import CTASection from './cta-section';
-import WhoShouldApplySection from './who-should-apply-section';
+import FAQSection from './faq-section';
+import BottomNavigation from './bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
 import EditableSection from '@/components/admin/editable-section';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
@@ -17,22 +14,21 @@ import EditModal from '@/components/admin/edit-modal';
 import { CMSServiceFactory } from '@/lib/cms/content-services';
 import { 
   HeroSection as HeroType, 
-  ContentSection as ContentType,
-  TeamMember,
-  Testimonial,
-  CurriculumItem,
-  CallToAction,
-  Qualification
+  ContentSection as ContentType
 } from '@/lib/types/cms';
+
+interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  order: number;
+  isVisible?: boolean;
+}
 
 function AlphaBetHomepageContent() {
   const [hero, setHero] = useState<HeroType | null>(null);
   const [contentSections, setContentSections] = useState<ContentType[]>([]);
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [curriculum, setCurriculum] = useState<CurriculumItem[]>([]);
-  const [cta, setCTA] = useState<CallToAction | null>(null);
-  const [qualifications, setQualifications] = useState<Qualification[]>([]);
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [loading, setLoading] = useState(true);
   
   // Modal state
@@ -47,32 +43,19 @@ function AlphaBetHomepageContent() {
     try {
       setLoading(true);
       
-      // Load all content in parallel
+      // Load content for homepage
       const [
         heroData,
-        contentData,
-        teamData,
-        testimonialData,
-        curriculumData,
-        ctaData,
-        qualificationData
+        contentData
       ] = await Promise.all([
         CMSServiceFactory.getHeroService().getActiveHero(),
-        CMSServiceFactory.getContentSectionService().getVisible(),
-        CMSServiceFactory.getTeamMemberService().getFeaturedMembers(),
-        CMSServiceFactory.getTestimonialService().getFeaturedTestimonials(),
-        CMSServiceFactory.getCurriculumService().getVisible(),
-        CMSServiceFactory.getCallToActionService().getActiveCallToAction(),
-        CMSServiceFactory.getQualificationService().getVisible()
+        CMSServiceFactory.getContentSectionService().getVisible()
       ]);
 
       setHero(heroData);
       setContentSections(contentData);
-      setTeamMembers(teamData);
-      setTestimonials(testimonialData);
-      setCurriculum(curriculumData);
-      setCTA(ctaData);
-      setQualifications(qualificationData);
+      // FAQs will be managed with default data
+      setFaqs([]);
     } catch (error) {
       console.error('Error loading content:', error);
     } finally {
@@ -97,63 +80,19 @@ function AlphaBetHomepageContent() {
           await CMSServiceFactory.getHeroService().create(data);
         }
       } else if (editingType === 'content') {
-        if (editingItem) {
+        if (editingItem && editingItem.id && !editingItem.id.startsWith('default-')) {
           await CMSServiceFactory.getContentSectionService().update(editingItem.id, data);
         } else {
-          await CMSServiceFactory.getContentSectionService().create(data);
-        }
-      } else if (editingType === 'curriculum') {
-        if (editingItem && editingItem.id && !editingItem.id.startsWith('week-')) {
-          // Existing Firestore document - update it
-          await CMSServiceFactory.getCurriculumService().update(editingItem.id, data);
-        } else {
-          // New document or default data - create it
-          const curriculumData = {
+          const contentData = {
             ...data,
             isVisible: true,
-            order: data.weekNumber || 1
+            order: contentSections.length + 1
           };
-          await CMSServiceFactory.getCurriculumService().create(curriculumData);
+          await CMSServiceFactory.getContentSectionService().create(contentData);
         }
-      } else if (editingType === 'team') {
-        if (editingItem) {
-          await CMSServiceFactory.getTeamMemberService().update(editingItem.id, data);
-        } else {
-          const teamData = {
-            ...data,
-            isVisible: true,
-            order: teamMembers.length + 1
-          };
-          await CMSServiceFactory.getTeamMemberService().create(teamData);
-        }
-      } else if (editingType === 'testimonial') {
-        if (editingItem) {
-          await CMSServiceFactory.getTestimonialService().update(editingItem.id, data);
-        } else {
-          const testimonialData = {
-            ...data,
-            isVisible: true,
-            order: testimonials.length + 1
-          };
-          await CMSServiceFactory.getTestimonialService().create(testimonialData);
-        }
-      } else if (editingType === 'qualification') {
-        if (editingItem && editingItem.id && !editingItem.id.startsWith('qual-')) {
-          await CMSServiceFactory.getQualificationService().update(editingItem.id, data);
-        } else {
-          const qualificationData = {
-            ...data,
-            isVisible: true,
-            order: data.order || qualifications.length + 1
-          };
-          await CMSServiceFactory.getQualificationService().create(qualificationData);
-        }
-      } else if (editingType === 'cta') {
-        if (editingItem && editingItem.id) {
-          await CMSServiceFactory.getCallToActionService().update(editingItem.id, data);
-        } else {
-          await CMSServiceFactory.getCallToActionService().create(data);
-        }
+      } else if (editingType === 'faq') {
+        // For now, FAQ editing is handled locally
+        console.log('FAQ save:', data);
       }
       
       await loadContent();
@@ -177,44 +116,13 @@ function AlphaBetHomepageContent() {
         return [
           { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'Enter section title' },
           { key: 'content', label: 'Content', type: 'textarea' as const, required: true, placeholder: 'Enter section content...' },
-          { key: 'type', label: 'Section Type', type: 'text' as const, required: true, placeholder: 'e.g., mission, why-alpha-bet, who-should-apply' }
+          { key: 'type', label: 'Section Type', type: 'text' as const, required: true, placeholder: 'e.g., mission, why-alpha-bet, what-you-gain' }
         ];
-      case 'curriculum':
+      case 'faq':
         return [
-          { key: 'weekNumber', label: 'Week Number', type: 'number' as const, required: true, placeholder: '1-10' },
-          { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'Enter week title' },
-          { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter week description...' },
-          { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-rocket' }
-        ];
-      case 'team':
-        return [
-          { key: 'name', label: 'Name', type: 'text' as const, required: true, placeholder: 'Enter full name' },
-          { key: 'role', label: 'Role', type: 'text' as const, required: true, placeholder: 'e.g., Founder, Mentor, Advisor' },
-          { key: 'bio', label: 'Biography', type: 'textarea' as const, required: true, placeholder: 'Enter biography...' },
-          { key: 'image', label: 'Profile Image URL', type: 'url' as const, required: false, placeholder: 'https://...' },
-          { key: 'linkedinUrl', label: 'LinkedIn Profile URL', type: 'url' as const, required: false, placeholder: 'https://linkedin.com/in/...' }
-        ];
-      case 'testimonial':
-        return [
-          { key: 'quote', label: 'Quote', type: 'textarea' as const, required: true, placeholder: 'Enter testimonial quote...' },
-          { key: 'author', label: 'Author Name', type: 'text' as const, required: true, placeholder: 'Enter author name' },
-          { key: 'title', label: 'Job Title', type: 'text' as const, required: true, placeholder: 'e.g., CEO, Founder' },
-          { key: 'company', label: 'Company', type: 'text' as const, required: false, placeholder: 'Enter company name' },
-          { key: 'image', label: 'Profile Image URL', type: 'url' as const, required: false, placeholder: 'https://...' }
-        ];
-      case 'qualification':
-        return [
-          { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Combat Veteran Status' },
-          { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter qualification description...' },
-          { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-shield-alt' },
-          { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-5' }
-        ];
-      case 'cta':
-        return [
-          { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'Enter call-to-action title' },
-          { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter call-to-action description...' },
-          { key: 'buttonText', label: 'Button Text', type: 'text' as const, required: true, placeholder: 'e.g., Apply Now' },
-          { key: 'buttonLink', label: 'Button Link', type: 'text' as const, required: false, placeholder: 'e.g., #apply or https://...' }
+          { key: 'question', label: 'Question', type: 'text' as const, required: true, placeholder: 'Enter the FAQ question' },
+          { key: 'answer', label: 'Answer', type: 'textarea' as const, required: true, placeholder: 'Enter the FAQ answer...' },
+          { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-10' }
         ];
       default:
         return [];
@@ -238,14 +146,14 @@ function AlphaBetHomepageContent() {
   const defaultHero = {
     headline: "From Battlefield to Business: Your Next Mission Starts Here.",
     subHeadline: "Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans, designed to equip you with the skills, network, and battle-tested mindset to build a successful startup. It's time to channel your experience into innovation.",
-    ctaText: "Apply Now",
-    ctaLink: "#apply"
+    ctaText: "Explore Program",
+    ctaLink: "/curriculum"
   };
 
   const activeHero = hero || defaultHero;
 
   return (
-    <main className="min-h-screen relative">
+    <div className="relative">
       {/* Discrete Admin Access Components */}
       <DiscreteAdminAccess />
       <DiscreteAdminDot />
@@ -266,26 +174,27 @@ function AlphaBetHomepageContent() {
       </EditableSection>
 
       {/* Content Sections */}
-      {contentSections.map((section) => (
-        <EditableSection
-          key={section.id}
-          sectionName="Content"
-          onEdit={() => handleEdit('content', section)}
-        >
-          <ContentSection
-            title={section.title}
-            content={section.content}
-            type={section.type}
-          />
-        </EditableSection>
-      ))}
-
-      {/* Default content if no CMS content exists */}
-      {contentSections.length === 0 && (
+      {contentSections.length > 0 ? (
+        contentSections.map((section) => (
+          <EditableSection
+            key={section.id}
+            sectionName="Content"
+            onEdit={() => handleEdit('content', section)}
+          >
+            <ContentSection
+              title={section.title}
+              content={section.content}
+              type={section.type}
+            />
+          </EditableSection>
+        ))
+      ) : (
         <>
+          {/* Default homepage content sections */}
           <EditableSection
             sectionName="Mission"
             onEdit={() => handleEdit('content', {
+              id: "default-mission",
               title: "Our Mission",
               content: "You've demonstrated courage, discipline, and leadership in the most challenging environments. Now, we're here to help you apply those same traits to the world of entrepreneurship.\n\nThe Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empowering combat veterans. We provide a practical, hands-on education in entrepreneurship, giving you the foundation of a top-tier MBA, but with a curriculum built for founders. Our goal is to bridge the gap between military service and the startup ecosystem, creating a new generation of veteran-led companies that drive innovation and create a lasting impact.",
               type: "mission"
@@ -303,6 +212,7 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
           <EditableSection
             sectionName="Why Alpha-Bet"
             onEdit={() => handleEdit('content', {
+              id: "default-why-alpha-bet",
               title: "Why Alpha-Bet?",
               content: "This isn't a traditional classroom. This is a community of like-minded individuals who share your unique experiences and understand the 'battle-tested' approach to problem-solving. We bring together the best of both worlds:\n\n• A Proven Network: Gain direct access to the Version Bravo ecosystem—a powerful network of successful founders, academic leaders, and investors from both the US and Israel. This is the only platform uniting elite US and Israeli operators.\n\n• Veteran-to-Veteran Mentorship: Learn from successful entrepreneurs and combat veterans who have walked a similar path. Our team of instructors and mentors are not just academics; they are successful founders with a proven track record.\n\n• Your Fast-Track to Success: As an Alpha-Bet graduate, you'll receive a priority application to the Version Bravo accelerator, which includes an investment. Version Bravo is a dedicated venture fund and accelerator run by combat veterans for combat veterans.",
               type: "why-alpha-bet"
@@ -321,20 +231,10 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
             />
           </EditableSection>
 
-          {/* Who Should Apply Section */}
-          <EditableSection
-            sectionName="Who Should Apply"
-            onEdit={() => handleEdit('qualification')}
-          >
-            <WhoShouldApplySection 
-              qualifications={qualifications} 
-              onEdit={(qualification) => handleEdit('qualification', qualification)}
-            />
-          </EditableSection>
-
           <EditableSection
             sectionName="What You'll Gain"
             onEdit={() => handleEdit('content', {
+              id: "default-what-you-gain",
               title: "What You'll Gain",
               content: "The Alpha-Bet program is designed to transform your ideas and military experience into a solid foundation for entrepreneurial success. By the end of the program, you will:\n\n• Build a Strong Team: Develop a startup with a strong team of peers. The program provides an opportunity to meet and work with other mission-driven veterans.\n\n• Gain Confidence & Knowledge: Gain the confidence and foundational knowledge for a career in entrepreneurship. You will leave with a practical understanding of the entrepreneurial process, from ideation to venture creation.\n\n• Experience Real-World Pitching: Get experience presenting a startup to real investors.\n\n• Receive Priority for Acceleration & Funding: Receive a priority application to the Version Bravo accelerator, which includes investment. This gives you a direct path to the next level of funding and mentorship.",
               type: "what-you-gain"
@@ -357,59 +257,19 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
         </>
       )}
 
-      {/* Team Section */}
+      {/* FAQ Section */}
       <EditableSection
-        sectionName="Team"
-        onEdit={() => handleEdit('team')}
+        sectionName="FAQ"
+        onEdit={() => handleEdit('faq')}
       >
-        <TeamSection members={teamMembers} />
-      </EditableSection>
-
-      {/* Curriculum Timeline */}
-      <EditableSection
-        sectionName="Curriculum Timeline"
-        onEdit={() => handleEdit('curriculum')}
-      >
-        <CurriculumTimeline 
-          items={curriculum} 
-          onEdit={(item) => handleEdit('curriculum', item)}
+        <FAQSection 
+          faqs={faqs} 
+          onEdit={(faq) => handleEdit('faq', faq)}
         />
       </EditableSection>
 
-      {/* Testimonials Section */}
-      <EditableSection
-        sectionName="Testimonials"
-        onEdit={() => handleEdit('testimonial')}
-      >
-        <TestimonialsSection testimonials={testimonials} />
-      </EditableSection>
-
-      {/* Call to Action */}
-      <EditableSection
-        sectionName="Call to Action"
-        onEdit={() => handleEdit('cta', cta || {
-          title: "Ready to Begin Your Next Mission?",
-          description: "The Alpha-Bet program is a free, selective program open to combat veterans of the US and Israel. The application process is competitive, and we're looking for individuals with a passion for innovation and the discipline to execute. Start your journey today.",
-          buttonText: "Apply Now",
-          buttonLink: "#apply"
-        })}
-      >
-        {cta ? (
-          <CTASection
-            title={cta.title}
-            description={cta.description}
-            buttonText={cta.buttonText}
-            buttonLink={cta.buttonLink}
-          />
-        ) : (
-          <CTASection
-            title="Ready to Begin Your Next Mission?"
-            description="The Alpha-Bet program is a free, selective program open to combat veterans of the US and Israel. The application process is competitive, and we're looking for individuals with a passion for innovation and the discipline to execute. Start your journey today."
-            buttonText="Apply Now"
-            buttonLink="#apply"
-          />
-        )}
-      </EditableSection>
+      {/* Bottom Navigation */}
+      <BottomNavigation currentPage="home" />
 
       {/* Edit Modal */}
       <EditModal
@@ -426,7 +286,7 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
         initialData={editingItem}
         loading={loading}
       />
-    </main>
+    </div>
   );
 }
 

@@ -2,15 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAdmin } from '@/lib/cms/admin-context';
-
-interface CurriculumItem {
-  id: string;
-  weekNumber: number;
-  title: string;
-  description: string;
-  icon?: string;
-  order: number;
-}
+import { CurriculumItem } from '@/lib/types/cms';
 
 interface CurriculumTimelineProps {
   items: CurriculumItem[];
@@ -25,16 +17,16 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
   
   // Default curriculum data from your specification
   const defaultCurriculum = [
-    { id: 'week-1', weekNumber: 1, title: 'Orientation', description: 'Set the foundation for your entrepreneurial journey.', icon: 'fas fa-compass', order: 1 },
-    { id: 'week-2', weekNumber: 2, title: 'Choosing Partners', description: 'Learn to build a strong, reliable team.', icon: 'fas fa-handshake', order: 2 },
-    { id: 'week-3', weekNumber: 3, title: 'Ideation Process', description: 'Develop and refine your business idea.', icon: 'fas fa-lightbulb', order: 3 },
-    { id: 'week-4', weekNumber: 4, title: 'Lean Model Canvas', description: 'Master the fundamental framework for a startup.', icon: 'fas fa-drafting-compass', order: 4 },
-    { id: 'week-5', weekNumber: 5, title: 'Customer Discovery', description: 'Understand your market and find product-market fit.', icon: 'fas fa-search', order: 5 },
-    { id: 'week-6', weekNumber: 6, title: 'Networking', description: 'Build powerful connections with investors, mentors, and peers.', icon: 'fas fa-network-wired', order: 6 },
-    { id: 'week-7', weekNumber: 7, title: 'Market Analysis', description: 'Validate your concept with data-driven insights.', icon: 'fas fa-chart-line', order: 7 },
-    { id: 'week-8', weekNumber: 8, title: 'Business Plan', description: 'Create a clear, actionable roadmap for growth.', icon: 'fas fa-map', order: 8 },
-    { id: 'week-9', weekNumber: 9, title: 'Storytelling & Branding', description: 'Learn to communicate your mission and vision effectively.', icon: 'fas fa-bullhorn', order: 9 },
-    { id: 'week-10', weekNumber: 10, title: 'Presentations', description: 'Prepare to pitch your business with confidence.', icon: 'fas fa-flag-checkered', order: 10 }
+    { id: 'week-1', weekNumber: 1, title: 'Orientation', description: 'Set the foundation for your entrepreneurial journey.', icon: 'fas fa-compass', order: 1, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
+    { id: 'week-2', weekNumber: 2, title: 'Choosing Partners', description: 'Learn to build a strong, reliable team.', icon: 'fas fa-handshake', order: 2, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
+    { id: 'week-3', weekNumber: 3, title: 'Ideation Process', description: 'Develop and refine your business idea.', icon: 'fas fa-lightbulb', order: 3, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
+    { id: 'week-4', weekNumber: 4, title: 'Lean Model Canvas', description: 'Master the fundamental framework for a startup.', icon: 'fas fa-drafting-compass', order: 4, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
+    { id: 'week-5', weekNumber: 5, title: 'Customer Discovery', description: 'Understand your market and find product-market fit.', icon: 'fas fa-search', order: 5, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
+    { id: 'week-6', weekNumber: 6, title: 'Networking', description: 'Build powerful connections with investors, mentors, and peers.', icon: 'fas fa-network-wired', order: 6, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
+    { id: 'week-7', weekNumber: 7, title: 'Market Analysis', description: 'Validate your concept with data-driven insights.', icon: 'fas fa-chart-line', order: 7, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
+    { id: 'week-8', weekNumber: 8, title: 'Business Plan', description: 'Create a clear, actionable roadmap for growth.', icon: 'fas fa-map', order: 8, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
+    { id: 'week-9', weekNumber: 9, title: 'Storytelling & Branding', description: 'Learn to communicate your mission and vision effectively.', icon: 'fas fa-bullhorn', order: 9, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
+    { id: 'week-10', weekNumber: 10, title: 'Presentations', description: 'Prepare to pitch your business with confidence.', icon: 'fas fa-flag-checkered', order: 10, isVisible: true, createdAt: new Date(), updatedAt: new Date() }
   ];
 
   // Merge CMS items with default data - show database items where they exist, default items elsewhere
@@ -47,10 +39,16 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
         defaultItem.weekNumber === cmsItem.weekNumber
       );
       if (defaultIndex !== -1) {
-        merged[defaultIndex] = cmsItem;
+        merged[defaultIndex] = {
+          ...cmsItem,
+          icon: cmsItem.icon || defaultCurriculum[defaultIndex].icon
+        };
       } else {
         // If CMS item has a week number not in defaults, add it
-        merged.push(cmsItem);
+        merged.push({
+          ...cmsItem,
+          icon: cmsItem.icon || 'fas fa-star'
+        });
       }
     });
     

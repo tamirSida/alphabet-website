@@ -202,7 +202,7 @@ export default function EditModal({
                 <Input
                   type="number"
                   value={formData.order || 1}
-                  onChange={(e) => setFormData(prev => ({
+                  onChange={(e) => setFormData((prev: any) => ({
                     ...prev,
                     order: parseInt(e.target.value) || 1
                   }))}
@@ -216,7 +216,7 @@ export default function EditModal({
                   type="checkbox"
                   id="isVisible"
                   checked={formData.isVisible !== false}
-                  onChange={(e) => setFormData(prev => ({
+                  onChange={(e) => setFormData((prev: any) => ({
                     ...prev,
                     isVisible: e.target.checked
                   }))}

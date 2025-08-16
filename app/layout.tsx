@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AdminProvider } from "@/lib/cms/admin-context";
+import Navigation from "@/components/public/navigation";
+import Footer from "@/components/public/footer";
 import "./globals.css";
 
 const inter = Inter({
@@ -38,7 +40,11 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased`}
       >
         <AdminProvider>
-          {children}
+          <Navigation />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <Footer />
         </AdminProvider>
       </body>
     </html>
