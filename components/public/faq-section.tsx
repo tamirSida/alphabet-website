@@ -118,20 +118,20 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
   };
 
   return (
-    <section className="py-16 sm:py-24 px-4 bg-white">
+    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-black via-gray-900 to-gray-800">
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 mb-6">
-            <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
-            <span className="text-gray-600 text-sm font-medium tracking-wide">FREQUENTLY ASKED QUESTIONS</span>
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+            <div className="w-2 h-2 bg-white rounded-full"></div>
+            <span className="text-white/80 text-sm font-medium tracking-wide">FREQUENTLY ASKED QUESTIONS</span>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Questions & Answers
           </h2>
           
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Get answers to common questions about the Alpha-Bet program and application process.
           </p>
         </div>
@@ -154,7 +154,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
           {displayFAQs.map((faq) => (
             <div
               key={faq.id}
-              className="relative bg-gray-50 rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300"
+              className="relative bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 overflow-hidden hover:bg-white/10 transition-all duration-300"
             >
               {/* Admin Buttons */}
               {isAdminMode && (
@@ -181,12 +181,12 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
               {/* Question Header */}
               <button
                 onClick={() => handleFAQClick(faq.id)}
-                className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-100 transition-colors"
+                className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
               >
-                <h3 className="text-lg font-semibold text-gray-900 pr-8 leading-tight">
+                <h3 className="text-lg font-semibold text-white pr-8 leading-tight">
                   {faq.question}
                 </h3>
-                <div className="flex-shrink-0 text-gray-500">
+                <div className="flex-shrink-0 text-gray-400">
                   {expandedFAQ === faq.id ? (
                     <i className="fas fa-chevron-up"></i>
                   ) : (
@@ -197,9 +197,9 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
 
               {/* Answer Content */}
               {expandedFAQ === faq.id && (
-                <div className="px-6 pb-5 border-t border-gray-200 bg-white">
+                <div className="px-6 pb-5 border-t border-white/10 bg-white/5">
                   <div className="pt-4">
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-200 leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>

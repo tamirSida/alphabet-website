@@ -20,7 +20,7 @@ export default function HeroSection({
 }: HeroSectionProps) {
   return (
     <section 
-      className="relative min-h-screen flex items-center justify-center px-4 py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-black"
+      className="relative min-h-screen flex items-center justify-center px-4 py-16"
       style={backgroundImage ? {
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
         backgroundSize: 'cover',
