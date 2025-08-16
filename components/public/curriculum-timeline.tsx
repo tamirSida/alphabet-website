@@ -8,9 +8,11 @@ import { CurriculumItem } from '@/lib/types/cms';
 interface CurriculumTimelineProps {
   items: CurriculumItem[];
   onEdit?: (item?: CurriculumItem) => void;
+  onEditHeader?: () => void;
+  onEditCTA?: () => void;
 }
 
-export default function CurriculumTimeline({ items, onEdit }: CurriculumTimelineProps) {
+export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEditCTA }: CurriculumTimelineProps) {
   const { isAdminMode } = useAdmin();
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const [isDecrypting, setIsDecrypting] = useState(true);
@@ -133,7 +135,22 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
       
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 relative group">
+          {/* Header Edit Button */}
+          {isAdminMode && onEditHeader && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onEditHeader();
+              }}
+              className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 hover:bg-blue-400 text-white rounded-full flex items-center justify-center text-xs transition-all shadow-lg hover:shadow-xl hover:scale-110 z-[100] opacity-0 group-hover:opacity-100"
+              title="Edit curriculum header"
+            >
+              <i className="fas fa-edit"></i>
+            </button>
+          )}
+          
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 mb-4">
             <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
             <span className="text-white/80 text-xs font-medium tracking-wide">10-WEEK CURRICULUM</span>
@@ -426,7 +443,22 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
 
         {/* Bottom Summary */}
         <div className="mt-16 text-center">
-          <div className="max-w-4xl mx-auto bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
+          <div className="max-w-4xl mx-auto bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl relative group">
+            {/* CTA Edit Button */}
+            {isAdminMode && onEditCTA && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onEditCTA();
+                }}
+                className="absolute -top-2 -right-2 w-8 h-8 bg-purple-500 hover:bg-purple-400 text-white rounded-full flex items-center justify-center text-xs transition-all shadow-lg hover:shadow-xl hover:scale-110 z-[100] opacity-0 group-hover:opacity-100"
+                title="Edit curriculum CTA section"
+              >
+                <i className="fas fa-edit"></i>
+              </button>
+            )}
+            
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
                 <i className="fas fa-rocket text-white text-lg"></i>
