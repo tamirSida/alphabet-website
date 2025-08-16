@@ -14,16 +14,9 @@ import EditModal from '@/components/admin/edit-modal';
 import { CMSServiceFactory } from '@/lib/cms/content-services';
 import { 
   HeroSection as HeroType, 
-  ContentSection as ContentType
+  ContentSection as ContentType,
+  FAQ
 } from '@/lib/types/cms';
-
-interface FAQ {
-  id: string;
-  question: string;
-  answer: string;
-  order: number;
-  isVisible?: boolean;
-}
 
 function AlphaBetHomepageContent() {
   const [hero, setHero] = useState<HeroType | null>(null);
@@ -46,16 +39,17 @@ function AlphaBetHomepageContent() {
       // Load content for homepage
       const [
         heroData,
-        contentData
+        contentData,
+        faqData
       ] = await Promise.all([
         CMSServiceFactory.getHeroService().getActiveHero(),
-        CMSServiceFactory.getContentSectionService().getVisible()
+        CMSServiceFactory.getContentSectionService().getVisible(),
+        CMSServiceFactory.getFAQService().getVisible()
       ]);
 
       setHero(heroData);
       setContentSections(contentData);
-      // FAQs will be managed with default data
-      setFaqs([]);
+      setFaqs(faqData);
     } catch (error) {
       console.error('Error loading content:', error);
     } finally {
@@ -70,6 +64,17 @@ function AlphaBetHomepageContent() {
     setEditingItem(item);
     setEditModalOpen(true);
   }, []);
+
+  const handleDelete = useCallback(async (type: string, item: any) => {
+    try {
+      if (type === 'faq' && item.id && !item.id.startsWith('faq-')) {
+        await CMSServiceFactory.getFAQService().delete(item.id);
+        await loadContent();
+      }
+    } catch (error) {
+      console.error('Error deleting:', error);
+    }
+  }, [loadContent]);
 
   const handleSave = useCallback(async (data: any) => {
     try {
@@ -91,8 +96,16 @@ function AlphaBetHomepageContent() {
           await CMSServiceFactory.getContentSectionService().create(contentData);
         }
       } else if (editingType === 'faq') {
-        // For now, FAQ editing is handled locally
-        console.log('FAQ save:', data);
+        if (editingItem && editingItem.id && !editingItem.id.startsWith('faq-')) {
+          await CMSServiceFactory.getFAQService().update(editingItem.id, data);
+        } else {
+          const faqData = {
+            ...data,
+            isVisible: true,
+            order: data.order || faqs.length + 1
+          };
+          await CMSServiceFactory.getFAQService().create(faqData);
+        }
       }
       
       await loadContent();
@@ -265,6 +278,7 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
         <FAQSection 
           faqs={faqs} 
           onEdit={(faq) => handleEdit('faq', faq)}
+          onDelete={(faq) => handleDelete('faq', faq)}
         />
       </EditableSection>
 

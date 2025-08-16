@@ -2,21 +2,15 @@
 
 import { useState } from 'react';
 import { useAdmin } from '@/lib/cms/admin-context';
-
-interface FAQ {
-  id: string;
-  question: string;
-  answer: string;
-  order: number;
-  isVisible?: boolean;
-}
+import { FAQ } from '@/lib/types/cms';
 
 interface FAQSectionProps {
   faqs: FAQ[];
   onEdit?: (faq?: FAQ) => void;
+  onDelete?: (faq: FAQ) => void;
 }
 
-export default function FAQSection({ faqs, onEdit }: FAQSectionProps) {
+export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) {
   const { isAdminMode } = useAdmin();
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
 
@@ -27,42 +21,54 @@ export default function FAQSection({ faqs, onEdit }: FAQSectionProps) {
       question: 'Who is eligible for the Alpha-Bet program?',
       answer: 'The program is designed for US and Israeli combat veterans who have completed their military service and are ready to transition their leadership skills into entrepreneurship. You should be in the ideation phase or early stages of developing a business concept.',
       order: 1,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
       id: 'faq-2',
       question: 'Is there any cost to participate?',
       answer: 'No, the Alpha-Bet program is completely free for qualifying veterans. This includes all workshops, mentorship sessions, resources, and networking opportunities throughout the 10-week program.',
       order: 2,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
       id: 'faq-3',
       question: 'What time commitment is required?',
       answer: 'The program requires approximately 8-10 hours per week over 10 weeks. This includes live workshops, self-paced learning modules, peer collaboration sessions, and practical assignments to develop your business concept.',
       order: 3,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
       id: 'faq-4',
       question: 'Is the program conducted online or in-person?',
       answer: 'The Alpha-Bet program is conducted entirely online, making it accessible to veterans regardless of location. All workshops, mentorship sessions, and networking events are held virtually using modern collaboration platforms.',
       order: 4,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
       id: 'faq-5',
       question: 'Do I need to have a business idea already?',
       answer: 'Not necessarily. While some participants come with existing ideas, others join to find co-founders and develop concepts together. The program includes dedicated ideation workshops and partner-matching opportunities.',
       order: 5,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     {
       id: 'faq-6',
       question: 'What kind of support continues after graduation?',
       answer: 'Graduates join our exclusive alumni network with ongoing access to mentors, investors, and fellow veteran entrepreneurs. We also provide continued resources, quarterly check-ins, and opportunities for advanced workshops.',
       order: 6,
-      isVisible: true
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   ];
 
@@ -94,6 +100,13 @@ export default function FAQSection({ faqs, onEdit }: FAQSectionProps) {
     e.stopPropagation();
     if (onEdit) {
       onEdit(faq);
+    }
+  };
+
+  const handleDeleteClick = (faq: FAQ, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete && confirm('Are you sure you want to delete this FAQ?')) {
+      onDelete(faq);
     }
   };
 
@@ -142,15 +155,26 @@ export default function FAQSection({ faqs, onEdit }: FAQSectionProps) {
               key={faq.id}
               className="relative bg-gray-50 rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300"
             >
-              {/* Admin Edit Button */}
+              {/* Admin Buttons */}
               {isAdminMode && (
-                <button
-                  onClick={(e) => handleEditClick(faq, e)}
-                  className="absolute top-4 right-4 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-10"
-                  title="Edit this FAQ"
-                >
-                  <i className="fas fa-edit"></i>
-                </button>
+                <div className="absolute top-4 right-4 flex gap-2 z-10">
+                  <button
+                    onClick={(e) => handleEditClick(faq, e)}
+                    className="w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg"
+                    title="Edit this FAQ"
+                  >
+                    <i className="fas fa-edit"></i>
+                  </button>
+                  {!faq.id.startsWith('faq-') && (
+                    <button
+                      onClick={(e) => handleDeleteClick(faq, e)}
+                      className="w-8 h-8 bg-red-500 hover:bg-red-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg"
+                      title="Delete this FAQ"
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  )}
+                </div>
               )}
 
               {/* Question Header */}

@@ -84,10 +84,10 @@ export function DiscreteAdminDot({ className = '' }: { className?: string }) {
         onClick={handleDotClick}
         className={`w-2 h-2 rounded-full bg-gray-300 cursor-default opacity-20 hover:opacity-40 transition-opacity ${className}`}
         style={{ 
-          position: 'absolute', 
-          top: '10px', 
+          position: 'fixed', 
+          top: '80px', 
           right: '10px', 
-          zIndex: 9999 
+          zIndex: 30 
         }}
         title=""
       />

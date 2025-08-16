@@ -83,6 +83,16 @@ export interface Qualification {
   updatedAt: Date;
 }
 
+export interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  order: number;
+  isVisible: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type ContentType = 
   | 'hero'
   | 'content-section'
