@@ -1,21 +1,37 @@
 'use client';
 
 import { useState } from 'react';
+import { useAdmin } from '@/lib/cms/admin-context';
+
+interface Highlight {
+  id: string;
+  text: string;
+  order: number;
+}
 
 interface ContentSectionProps {
   title: string;
   content: string;
   type?: string;
   className?: string;
+  onEditBrief?: () => void;
+  onEditHighlight?: (highlight?: Highlight, index?: number) => void;
+  onDeleteHighlight?: (highlight: Highlight, index: number) => void;
+  onAddHighlight?: () => void;
 }
 
 export default function ContentSection({ 
   title, 
   content, 
   type,
-  className = '' 
+  className = '',
+  onEditBrief,
+  onEditHighlight,
+  onDeleteHighlight,
+  onAddHighlight
 }: ContentSectionProps) {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const { isAdminMode } = useAdmin();
 
   const getTypeConfig = (sectionType?: string) => {
     switch (sectionType) {
@@ -113,11 +129,22 @@ export default function ContentSection({
         </div>
 
         {/* Enhanced Content Layout */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        <div className={`${bullets.length > 0 ? 'space-y-12' : 'grid lg:grid-cols-2 gap-8 lg:gap-12 items-start'}`}>
           {/* Intro Section */}
           {intro && (
             <div className="space-y-6">
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-8 sm:p-10 hover:bg-white/10 transition-all duration-500 group">
+              <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-8 sm:p-10 hover:bg-white/10 transition-all duration-500 group">
+                {/* Admin Edit Button for Brief */}
+                {isAdminMode && onEditBrief && (
+                  <button
+                    onClick={onEditBrief}
+                    className="absolute top-4 right-4 w-8 h-8 bg-blue-500 hover:bg-blue-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-10"
+                    title="Edit Mission Brief"
+                  >
+                    <i className="fas fa-edit"></i>
+                  </button>
+                )}
+                
                 <div className="flex items-start gap-4 mb-6">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${config.accentColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <i className="fas fa-quote-left text-white text-lg"></i>
@@ -136,37 +163,81 @@ export default function ContentSection({
 
           {/* Enhanced Bullet Points */}
           {bullets.length > 0 && (
-            <div className="space-y-4">
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold text-white mb-2">Key Highlights</h3>
-                <div className={`w-20 h-1 bg-gradient-to-r ${config.accentColor} rounded-full`}></div>
-              </div>
-              
-              {bullets.map((bullet, index) => (
-                <div
-                  key={index}
-                  className="group relative bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all duration-300 cursor-default"
-                  onMouseEnter={() => setHoveredItem(index)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`relative w-10 h-10 rounded-lg bg-gradient-to-br ${config.accentColor} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-all duration-300 ${hoveredItem === index ? config.glowColor + ' shadow-lg' : ''}`}>
-                      <i className="fas fa-check text-white text-sm font-bold"></i>
-                      {hoveredItem === index && (
-                        <div className={`absolute inset-0 rounded-lg bg-gradient-to-br ${config.accentColor} opacity-30 animate-ping`}></div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-gray-200 leading-relaxed group-hover:text-white transition-colors duration-300">
-                        {bullet}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {/* Hover effect border */}
-                  <div className={`absolute inset-0 rounded-xl border-2 border-transparent group-hover:border-gradient-to-r ${config.accentColor} opacity-0 group-hover:opacity-30 transition-opacity duration-300`}></div>
+            <div className="space-y-6">
+              {/* Admin Add Highlight Button */}
+              {isAdminMode && onAddHighlight && (
+                <div className="flex justify-end mb-6">
+                  <button
+                    onClick={onAddHighlight}
+                    className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-colors shadow-lg"
+                    title="Add New Highlight"
+                  >
+                    <i className="fas fa-plus"></i>
+                    <span>Add</span>
+                  </button>
                 </div>
-              ))}
+              )}
+              
+              {/* Grid Layout for Highlights */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+                {bullets.map((bullet, index) => {
+                const highlight: Highlight = {
+                  id: `highlight-${index}`,
+                  text: bullet,
+                  order: index
+                };
+                
+                return (
+                  <div
+                    key={index}
+                    className="group relative bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all duration-300 cursor-default"
+                    onMouseEnter={() => setHoveredItem(index)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                  >
+                    {/* Admin Edit/Delete Buttons for Individual Highlights */}
+                    {isAdminMode && (
+                      <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                        {onEditHighlight && (
+                          <button
+                            onClick={() => onEditHighlight(highlight, index)}
+                            className="w-7 h-7 bg-blue-500 hover:bg-blue-400 text-white rounded-full flex items-center justify-center text-xs transition-colors shadow-lg"
+                            title="Edit this highlight"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </button>
+                        )}
+                        {onDeleteHighlight && bullets.length > 1 && (
+                          <button
+                            onClick={() => onDeleteHighlight(highlight, index)}
+                            className="w-7 h-7 bg-red-500 hover:bg-red-400 text-white rounded-full flex items-center justify-center text-xs transition-colors shadow-lg"
+                            title="Delete this highlight"
+                          >
+                            <i className="fas fa-trash"></i>
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    
+                    <div className="flex items-start gap-4">
+                      <div className={`relative w-10 h-10 rounded-lg bg-gradient-to-br ${config.accentColor} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-all duration-300 ${hoveredItem === index ? config.glowColor + ' shadow-lg' : ''}`}>
+                        <i className="fas fa-check text-white text-sm font-bold"></i>
+                        {hoveredItem === index && (
+                          <div className={`absolute inset-0 rounded-lg bg-gradient-to-br ${config.accentColor} opacity-30 animate-ping`}></div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-gray-200 leading-relaxed group-hover:text-white transition-colors duration-300">
+                          {bullet}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {/* Hover effect border */}
+                    <div className={`absolute inset-0 rounded-xl border-2 border-transparent group-hover:border-gradient-to-r ${config.accentColor} opacity-0 group-hover:opacity-30 transition-opacity duration-300`}></div>
+                  </div>
+                );
+                })}
+              </div>
             </div>
           )}
         </div>

@@ -183,7 +183,7 @@ export default function PrivacyPolicyPage() {
           </div>
         </section>
 
-        <BottomNavigation currentPage="" />
+        <BottomNavigation currentPage="home" />
         
         {/* Footer */}
         <Footer />

@@ -104,7 +104,7 @@ export default function TeamPage() {
     { key: 'bio', label: 'Biography', type: 'textarea' as const, required: false, placeholder: 'Enter biography...' },
     { key: 'image', label: 'Profile Image (URL or path)', type: 'text' as const, required: false, placeholder: '/team/image.jpg or https://...' },
     { key: 'linkedinUrl', label: 'LinkedIn Profile URL', type: 'url' as const, required: false, placeholder: 'https://linkedin.com/in/...' },
-    { key: 'isFounder', label: 'Is Founder?', type: 'checkbox' as const, required: false }
+    { key: 'isFounder', label: 'Is Founder? (true/false)', type: 'text' as const, required: false, placeholder: 'true or false' }
   ], []);
 
   const headerFields = useMemo(() => [
