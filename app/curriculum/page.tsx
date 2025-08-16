@@ -86,23 +86,6 @@ export default function CurriculumPage() {
       <DiscreteAdminDot />
       <SimpleAdminToggle />
       
-      {/* Page Header */}
-      <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-            <span className="text-white/80 text-sm font-medium tracking-wide">10-WEEK PROGRAM</span>
-          </div>
-          
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Program Curriculum
-          </h1>
-          
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            A comprehensive 10-week journey from military leadership to entrepreneurial excellence. Each week builds practical skills for startup success.
-          </p>
-        </div>
-      </section>
 
       {/* Curriculum Timeline */}
       <EditableSection

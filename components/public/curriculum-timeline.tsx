@@ -12,8 +12,9 @@ interface CurriculumTimelineProps {
 export default function CurriculumTimeline({ items, onEdit }: CurriculumTimelineProps) {
   const { isAdminMode } = useAdmin();
   const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
-  const [isDecrypting, setIsDecrypting] = useState(false);
-  const [hasStartedDecryption, setHasStartedDecryption] = useState(false);
+  const [isDecrypting, setIsDecrypting] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
   
   // Default curriculum data from your specification
   const defaultCurriculum = [
@@ -58,21 +59,24 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
   const displayItems = mergeItemsWithDefaults();
   const sortedItems = displayItems.sort((a, b) => a.order - b.order);
 
-  // Handle week click to expand/collapse
+  // Trigger decrypting animation on component mount (page load)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsDecrypting(false);
+      setIsLoaded(true);
+    }, 2000); // 2 second decrypting animation
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Handle week click to expand/collapse (no decrypting after initial load)
   const handleWeekClick = (weekNumber: number) => {
+    if (!isLoaded) return; // Don't allow clicks during decrypting
+    
     if (expandedWeek === weekNumber) {
       setExpandedWeek(null);
     } else {
-      if (!hasStartedDecryption) {
-        setIsDecrypting(true);
-        setHasStartedDecryption(true);
-        setTimeout(() => {
-          setIsDecrypting(false);
-          setExpandedWeek(weekNumber);
-        }, 1500);
-      } else {
-        setExpandedWeek(weekNumber);
-      }
+      setExpandedWeek(weekNumber);
     }
   };
 
@@ -130,180 +134,222 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
           </div>
         )}
 
-        {/* Curriculum Timeline - Linear Layout */}
-        <div className="space-y-3">
+        {/* Curriculum Timeline - Side-to-Side Layout */}
+        <div className={`space-y-8 transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-30'}`}>
           {sortedItems.map((item, index) => (
             <div
               key={item.id}
-              className={`flex flex-col lg:flex-row items-start gap-3 lg:gap-8 ${
+              className={`flex flex-col lg:flex-row items-center gap-6 lg:gap-12 ${
                 index % 2 === 1 ? 'lg:flex-row-reverse' : ''
               }`}
+              onMouseEnter={() => isLoaded && setHoveredWeek(item.weekNumber)}
+              onMouseLeave={() => isLoaded && setHoveredWeek(null)}
             >
-              {/* Mobile: Integrated Number */}
-              <div className="flex lg:hidden w-full">
-                <div className="flex-1 relative">
-                  {/* Admin Edit Button - Mobile */}
-                  {isAdminMode && (
-                    <button
-                      onClick={(e) => handleEditClick(item, e)}
-                      className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-xs transition-colors shadow-lg z-20"
-                      title="Edit this week"
-                    >
-                      <i className="fas fa-edit"></i>
-                    </button>
-                  )}
-                  
-                  <div className="bg-white/10 backdrop-blur-md rounded-lg border border-white/20 shadow-lg hover:bg-white/15 transition-all duration-300 cursor-pointer"
-                       onClick={() => handleWeekClick(item.weekNumber)}>
-                    
-                    {/* Mobile Collapsed View */}
-                    <div className="p-3">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="w-8 h-8 bg-white rounded-md flex items-center justify-center">
-                          <span className="text-sm font-bold text-gray-900">{item.weekNumber}</span>
-                        </div>
-                        <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center">
-                          <i className={`${item.icon} text-sm text-white`}></i>
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-base font-bold text-white leading-tight">
-                            {item.title}
-                          </h3>
-                        </div>
-                        <div className="text-white/60">
-                          {expandedWeek === item.weekNumber ? (
-                            <i className="fas fa-chevron-up text-xs"></i>
-                          ) : (
-                            <i className="fas fa-chevron-down text-xs"></i>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <p className="text-gray-200 text-xs leading-relaxed ml-11">
-                        {item.description}
-                      </p>
-                    </div>
-
-                    {/* Mobile Expanded Details */}
-                    {expandedWeek === item.weekNumber && (
-                      <div className="border-t border-white/20 p-3 bg-white/5">
-                        <div className="space-y-2 ml-11">
-                          <div className="flex items-center gap-2">
-                            <i className="fas fa-calendar-alt text-white/60 text-xs"></i>
-                            <span className="text-gray-200 text-xs">Week {item.weekNumber} of 10-week program</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <i className="fas fa-clock text-white/60 text-xs"></i>
-                            <span className="text-gray-200 text-xs">Intensive practical workshops</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <i className="fas fa-target text-white/60 text-xs"></i>
-                            <span className="text-gray-200 text-xs">Hands-on application with real business scenarios</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+              {/* Week Number Circle */}
+              <div className="flex-shrink-0 relative">
+                <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center shadow-xl transition-all duration-500 ${
+                  isLoaded ? 'cursor-pointer' : 'cursor-not-allowed'
+                } ${
+                  hoveredWeek === item.weekNumber && isLoaded
+                    ? 'bg-gradient-to-br from-white via-blue-50 to-blue-100 scale-110' 
+                    : 'bg-white'
+                }`}
+                onClick={() => handleWeekClick(item.weekNumber)}>
+                  <div className="text-center">
+                    <div className="text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wide">Week</div>
+                    <div className="text-xl sm:text-2xl font-bold text-gray-900">{item.weekNumber}</div>
                   </div>
+                </div>
+                <div className={`absolute -inset-3 rounded-full blur-xl transition-all duration-500 ${
+                  hoveredWeek === item.weekNumber ? 'bg-blue-200/40' : 'bg-white/20'
+                }`}></div>
+                
+                {/* Progress indicator */}
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                 </div>
               </div>
 
-              {/* Desktop: Separate Number and Card */}
-              <div className="hidden lg:flex lg:flex-row lg:items-start lg:gap-8 w-full">
-                {/* Week Number Circle - Desktop */}
-                <div className="flex-shrink-0 relative">
-                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-105 transition-transform"
-                       onClick={() => handleWeekClick(item.weekNumber)}>
-                    <span className="text-xl font-bold text-gray-900">{item.weekNumber}</span>
-                  </div>
-                  <div className="absolute -inset-1 bg-white/20 rounded-full blur-md"></div>
-                </div>
-
-                {/* Content Card - Desktop */}
-                <div className="flex-1 relative">
-                  {/* Admin Edit Button - Desktop */}
-                  {isAdminMode && (
-                    <button
-                      onClick={(e) => handleEditClick(item, e)}
-                      className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-xs transition-colors shadow-lg z-20"
-                      title="Edit this week"
-                    >
-                      <i className="fas fa-edit"></i>
-                    </button>
-                  )}
+              {/* Content Card */}
+              <div className="flex-1 relative group">
+                {/* Admin Edit Button */}
+                {isAdminMode && (
+                  <button
+                    onClick={(e) => handleEditClick(item, e)}
+                    className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-20"
+                    title="Edit this week"
+                  >
+                    <i className="fas fa-edit"></i>
+                  </button>
+                )}
+                
+                <div className={`relative overflow-hidden rounded-2xl border shadow-xl transition-all duration-500 ${
+                  isLoaded ? 'cursor-pointer' : 'cursor-not-allowed'
+                } ${
+                  (hoveredWeek === item.weekNumber || expandedWeek === item.weekNumber) && isLoaded
+                    ? 'bg-gradient-to-br from-white/15 via-white/10 to-white/5 border-white/30 shadow-2xl scale-105'
+                    : 'bg-white/10 border-white/20 hover:bg-white/15'
+                } backdrop-blur-md`}
+                onClick={() => handleWeekClick(item.weekNumber)}>
                   
-                  <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-lg hover:bg-white/15 transition-all duration-300 cursor-pointer"
-                       onClick={() => handleWeekClick(item.weekNumber)}>
+                  {/* Gradient overlay for extra visual interest */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative p-6 sm:p-8">
+                    {/* Icon and Week Indicator */}
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                        hoveredWeek === item.weekNumber 
+                          ? 'bg-white/30 scale-110' 
+                          : 'bg-white/20 group-hover:scale-105'
+                      }`}>
+                        <i className={`${item.icon} text-xl text-white`}></i>
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-xs text-white/70 font-medium uppercase tracking-wider mb-1">
+                          Week {item.weekNumber} of 10
+                        </div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight group-hover:text-blue-100 transition-colors">
+                          {item.title}
+                        </h3>
+                      </div>
+                      <div className="text-white/60">
+                        {expandedWeek === item.weekNumber ? (
+                          <i className="fas fa-chevron-up text-lg transform transition-transform duration-300"></i>
+                        ) : (
+                          <i className="fas fa-chevron-down text-lg transform transition-transform duration-300"></i>
+                        )}
+                      </div>
+                    </div>
                     
-                    {/* Desktop Collapsed View */}
-                    <div className="p-5">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                          <i className={`${item.icon} text-base text-white`}></i>
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-xl font-bold text-white leading-tight">
-                            Week {item.weekNumber}: {item.title}
-                          </h3>
-                        </div>
-                        <div className="text-white/60">
-                          {expandedWeek === item.weekNumber ? (
-                            <i className="fas fa-chevron-up"></i>
-                          ) : (
-                            <i className="fas fa-chevron-down"></i>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <p className="text-gray-200 text-sm leading-relaxed">
-                        {item.description}
-                      </p>
-                    </div>
+                    {/* Description */}
+                    <p className="text-base sm:text-lg text-gray-200 leading-relaxed mb-4">
+                      {item.description}
+                    </p>
 
-                    {/* Desktop Expanded Details */}
-                    {expandedWeek === item.weekNumber && (
-                      <div className="border-t border-white/20 p-5 bg-white/5">
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3">
-                            <i className="fas fa-calendar-alt text-white/60 text-sm"></i>
-                            <span className="text-gray-200 text-sm">Week {item.weekNumber} of 10-week program</span>
+                    {/* Quick preview badges */}
+                    <div className="flex flex-wrap gap-2">
+                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                        <i className="fas fa-clock mr-1"></i>
+                        Interactive Sessions
+                      </span>
+                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                        <i className="fas fa-users mr-1"></i>
+                        Peer Collaboration
+                      </span>
+                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                        <i className="fas fa-lightbulb mr-1"></i>
+                        Practical Application
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Expanded Details */}
+                  {expandedWeek === item.weekNumber && (
+                    <div className="border-t border-white/20 bg-white/5 backdrop-blur-sm">
+                      <div className="p-6 sm:p-8">
+                        <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                          <i className="fas fa-info-circle text-blue-300"></i>
+                          What You'll Learn
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="flex items-start gap-3">
+                            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                              <i className="fas fa-book text-blue-300 text-sm"></i>
+                            </div>
+                            <div>
+                              <div className="text-white font-medium text-sm">Core Concepts</div>
+                              <div className="text-gray-300 text-sm">Essential frameworks and methodologies</div>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <i className="fas fa-clock text-white/60 text-sm"></i>
-                            <span className="text-gray-200 text-sm">Intensive practical workshops</span>
+                          <div className="flex items-start gap-3">
+                            <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                              <i className="fas fa-hammer text-green-300 text-sm"></i>
+                            </div>
+                            <div>
+                              <div className="text-white font-medium text-sm">Hands-On Practice</div>
+                              <div className="text-gray-300 text-sm">Real-world application exercises</div>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <i className="fas fa-target text-white/60 text-sm"></i>
-                            <span className="text-gray-200 text-sm">Hands-on application with real business scenarios</span>
+                          <div className="flex items-start gap-3">
+                            <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                              <i className="fas fa-comments text-purple-300 text-sm"></i>
+                            </div>
+                            <div>
+                              <div className="text-white font-medium text-sm">Peer Review</div>
+                              <div className="text-gray-300 text-sm">Collaborative feedback sessions</div>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-3">
+                            <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                              <i className="fas fa-trophy text-orange-300 text-sm"></i>
+                            </div>
+                            <div>
+                              <div className="text-white font-medium text-sm">Milestone Achievement</div>
+                              <div className="text-gray-300 text-sm">Track your progress and wins</div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    )}
-                  </div>
-                  
-                  {/* Connecting Line (except for last item) */}
-                  {index < sortedItems.length - 1 && (
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3">
-                      <div className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent"></div>
                     </div>
                   )}
                 </div>
+                
+                {/* Connecting Line (except for last item) */}
+                {index < sortedItems.length - 1 && (
+                  <div className="hidden lg:block absolute top-full left-1/2 transform -translate-x-1/2 mt-6">
+                    <div className="w-px h-16 bg-gradient-to-b from-white/30 via-white/20 to-transparent"></div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
 
         {/* Bottom Summary */}
-        <div className="mt-8 text-center">
-          <div className="max-w-2xl mx-auto bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-md rounded-lg p-4 sm:p-5 border border-white/20 shadow-lg">
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
-              Transform Your Military Experience
-            </h3>
-            <p className="text-sm sm:text-base text-gray-200 leading-relaxed mb-3">
-              Our 10-week program bridges the gap between military leadership and entrepreneurial success.
+        <div className="mt-16 text-center">
+          <div className="max-w-4xl mx-auto bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                <i className="fas fa-rocket text-white text-lg"></i>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-white">
+                Your Entrepreneurial Journey Awaits
+              </h3>
+            </div>
+            
+            <p className="text-lg text-gray-200 leading-relaxed mb-8 max-w-2xl mx-auto">
+              Transform 10 weeks of intensive learning into a lifetime of entrepreneurial success. 
+              Each week builds on the last, creating a comprehensive foundation for your startup journey.
             </p>
-            <div className="inline-flex items-center gap-1.5 bg-white rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-gray-900 font-semibold hover:scale-105 transition-transform duration-300 cursor-pointer text-xs sm:text-sm">
-              <i className="fas fa-graduation-cap text-xs"></i>
-              <span>10-Week Program</span>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+              <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                <div className="text-3xl font-bold text-blue-300 mb-2">10</div>
+                <div className="text-white font-medium">Intensive Weeks</div>
+                <div className="text-gray-300 text-sm">Structured Learning Path</div>
+              </div>
+              <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                <div className="text-3xl font-bold text-green-300 mb-2">100+</div>
+                <div className="text-white font-medium">Practical Hours</div>
+                <div className="text-gray-300 text-sm">Hands-On Experience</div>
+              </div>
+              <div className="bg-white/10 rounded-xl p-4 border border-white/20">
+                <div className="text-3xl font-bold text-purple-300 mb-2">∞</div>
+                <div className="text-white font-medium">Network Value</div>
+                <div className="text-gray-300 text-sm">Lifelong Connections</div>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <div className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 text-gray-900 font-semibold hover:scale-105 transition-transform duration-300 cursor-pointer">
+                <i className="fas fa-graduation-cap"></i>
+                <span>Start Your Journey</span>
+              </div>
+              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-6 py-3 text-white font-semibold hover:bg-white/15 transition-all duration-300 cursor-pointer">
+                <i className="fas fa-calendar-alt"></i>
+                <span>10-Week Program</span>
+              </div>
             </div>
           </div>
         </div>
