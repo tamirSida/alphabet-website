@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAdmin } from '@/lib/cms/admin-context';
+import { EXTERNAL_URLS } from '@/lib/config/urls';
 import { FAQ } from '@/lib/types/cms';
 
 interface FAQSectionProps {
@@ -226,7 +227,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
                 <span>Contact Us</span>
               </a>
               <a
-                href="/apply"
+                href={EXTERNAL_URLS.APPLY_FORM}
                 className="inline-flex items-center gap-2 bg-white/10 text-white border border-white/20 px-6 py-3 rounded-full font-semibold hover:bg-white/15 transition-all duration-300"
               >
                 <i className="fas fa-rocket"></i>

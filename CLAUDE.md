@@ -45,8 +45,13 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 - `/team` - Team members page with member cards and bios
 - `/curriculum` - 10-week program curriculum with military loading animation
 - `/qualifications` - Eligibility requirements in clean checklist format
-- `/apply` - Complete application form with success state and validation
-- `/admin` - Admin dashboard for user management and content control
+- `/privacy` - Privacy policy page with comprehensive data protection information
+- `/terms` - Terms of service page with program guidelines and participant responsibilities
+
+### External Links (Configurable via `/lib/config/urls.ts`):
+- **Apply Form** - External application form URL (currently placeholder '#')
+- **LinkedIn** - VBV school page
+- **Contact Email** - Program contact email
 
 ## Content Types & CMS Integration
 
@@ -125,6 +130,8 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 - Fixed qualifications CMS permissions issue by simplifying Firestore rules
 - Completed team section integration with VBV data and military styling
 - Removed status icons from team cards and implemented founders-only first row layout
+- Removed local /apply page and created global URL configuration system for external links
+- Centralized external URLs in `/lib/config/urls.ts` for easy future updates
 
 ## Environment Variables Needed:
 ```

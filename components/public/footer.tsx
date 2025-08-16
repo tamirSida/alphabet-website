@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { EXTERNAL_URLS } from '@/lib/config/urls';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -9,7 +10,7 @@ export default function Footer() {
     { name: 'Team', href: '/team' },
     { name: 'Curriculum', href: '/curriculum' },
     { name: 'Qualifications', href: '/qualifications' },
-    { name: 'Apply', href: '/apply' },
+    { name: 'Apply', href: EXTERNAL_URLS.APPLY_FORM, external: true },
   ];
 
   const legalLinks = [
@@ -42,7 +43,7 @@ export default function Footer() {
             </p>
             <div className="mt-6 flex space-x-4">
               <a
-                href="https://www.linkedin.com/school/versionbravo/posts/?feedView=all"
+                href={EXTERNAL_URLS.LINKEDIN}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
@@ -58,12 +59,21 @@ export default function Footer() {
             <ul className="space-y-2">
               {navigationLinks.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-300 hover:text-white transition-colors text-sm"
-                  >
-                    {link.name}
-                  </Link>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      className="text-gray-300 hover:text-white transition-colors text-sm"
+                    >
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="text-gray-300 hover:text-white transition-colors text-sm"
+                    >
+                      {link.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

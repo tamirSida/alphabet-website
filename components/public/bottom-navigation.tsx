@@ -1,7 +1,8 @@
 import Link from 'next/link';
+import { EXTERNAL_URLS } from '@/lib/config/urls';
 
 interface BottomNavigationProps {
-  currentPage: 'home' | 'team' | 'curriculum' | 'qualifications' | 'apply';
+  currentPage: 'home' | 'team' | 'curriculum' | 'qualifications';
 }
 
 export default function BottomNavigation({ currentPage }: BottomNavigationProps) {
@@ -66,33 +67,16 @@ export default function BottomNavigation({ currentPage }: BottomNavigationProps)
           {
             title: 'Apply Now',
             description: 'Ready to join? Start your application today.',
-            href: '/apply',
+            href: EXTERNAL_URLS.APPLY_FORM,
             icon: 'fas fa-rocket',
-            primary: true
+            primary: true,
+            external: true
           },
           {
             title: 'Review Curriculum',
             description: 'Take another look at what you\'ll learn.',
             href: '/curriculum',
             icon: 'fas fa-graduation-cap',
-            primary: false
-          }
-        ];
-      
-      case 'apply':
-        return [
-          {
-            title: 'Review Program Details',
-            description: 'Take another look at our curriculum and requirements.',
-            href: '/curriculum',
-            icon: 'fas fa-graduation-cap',
-            primary: true
-          },
-          {
-            title: 'Meet the Team',
-            description: 'Get to know who will be guiding your journey.',
-            href: '/team',
-            icon: 'fas fa-users',
             primary: false
           }
         ];
@@ -119,16 +103,18 @@ export default function BottomNavigation({ currentPage }: BottomNavigationProps)
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {navigationItems.map((item, index) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`group block relative overflow-hidden rounded-xl border transition-all duration-300 hover:scale-105 ${
-                item.primary
-                  ? 'bg-white text-gray-900 border-white shadow-2xl'
-                  : 'bg-white/10 text-white border-white/20 hover:bg-white/15'
-              }`}
-            >
+          {navigationItems.map((item, index) => {
+            const Component = item.external ? 'a' : Link;
+            return (
+              <Component
+                key={item.href}
+                href={item.href}
+                className={`group block relative overflow-hidden rounded-xl border transition-all duration-300 hover:scale-105 ${
+                  item.primary
+                    ? 'bg-white text-gray-900 border-white shadow-2xl'
+                    : 'bg-white/10 text-white border-white/20 hover:bg-white/15'
+                }`}
+              >
               <div className="p-6 sm:p-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
@@ -158,22 +144,21 @@ export default function BottomNavigation({ currentPage }: BottomNavigationProps)
                   {item.description}
                 </p>
               </div>
-            </Link>
-          ))}
+            </Component>
+            );
+          })}
         </div>
 
-        {/* Always show Apply button if not on apply page */}
-        {currentPage !== 'apply' && (
-          <div className="text-center mt-12">
-            <Link
-              href="/apply"
-              className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:scale-105 transition-transform duration-300 shadow-xl"
-            >
-              <i className="fas fa-rocket"></i>
-              <span>Apply to Alpha-Bet</span>
-            </Link>
-          </div>
-        )}
+        {/* Always show Apply button */}
+        <div className="text-center mt-12">
+          <a
+            href={EXTERNAL_URLS.APPLY_FORM}
+            className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:scale-105 transition-transform duration-300 shadow-xl"
+          >
+            <i className="fas fa-rocket"></i>
+            <span>Apply to Alpha-Bet</span>
+          </a>
+        </div>
       </div>
     </section>
   );
