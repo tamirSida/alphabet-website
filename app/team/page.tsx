@@ -85,24 +85,6 @@ export default function TeamPage() {
       <DiscreteAdminDot />
       <SimpleAdminToggle />
       
-      {/* Page Header */}
-      <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-            <span className="text-white/80 text-sm font-medium tracking-wide">LEADERSHIP TEAM</span>
-          </div>
-          
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Meet Our Team
-          </h1>
-          
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Experienced veterans and entrepreneurs who understand your journey and are committed to your success.
-          </p>
-        </div>
-      </section>
-
       {/* Team Section */}
       <EditableSection
         sectionName="Team"

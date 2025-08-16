@@ -25,10 +25,13 @@ export interface ContentSection {
 export interface TeamMember {
   id: string;
   name: string;
-  role: string;
-  bio: string;
+  title?: string; // Job title/role
+  role: string; // For backwards compatibility
+  bio?: string;
   image?: string;
+  military?: string; // Military background
   linkedinUrl?: string;
+  isFounder?: boolean; // Whether they're a founder
   order: number;
   isVisible: boolean;
   createdAt: Date;

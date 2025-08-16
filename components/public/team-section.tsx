@@ -1,130 +1,281 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { useAdmin } from '@/lib/cms/admin-context';
 
 interface TeamMember {
   id: string;
   name: string;
+  title?: string;
   role: string;
-  bio: string;
+  bio?: string;
   image?: string;
+  military?: string;
   linkedinUrl?: string;
+  isFounder?: boolean;
+  order: number;
+  isVisible: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface TeamSectionProps {
   members: TeamMember[];
   showAll?: boolean;
+  onEdit?: (member?: TeamMember) => void;
 }
 
-export default function TeamSection({ members, showAll = false }: TeamSectionProps) {
-  const displayMembers = showAll ? members : members.slice(0, 3);
+export default function TeamSection({ members, showAll = false, onEdit }: TeamSectionProps) {
+  const { isAdminMode } = useAdmin();
+  const [hoveredMember, setHoveredMember] = useState<string | null>(null);
+
+  // Default team data from VBV
+  const defaultTeamMembers: TeamMember[] = [
+    {
+      id: 'nuri-golan',
+      name: "Nuri Golan",
+      title: "Co-Founder",
+      role: "Co-Founder",
+      bio: "Former Navy SEAL commander with extensive experience in special operations and team leadership. Co-founded Alpha-Bet to bridge military leadership skills with entrepreneurial success.",
+      image: "/team/nuri-golan.jpg",
+      military: "Captain (Res.) Shayetet-13 (IL Navy SEALs)",
+      linkedinUrl: "https://www.linkedin.com/in/nurigolan/",
+      isFounder: true,
+      order: 1,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'adam-weiner',
+      name: "Adam Weiner",
+      title: "Co-Founder", 
+      role: "Co-Founder",
+      bio: "Veteran IDF Paratrooper and accomplished entrepreneur. Passionate about empowering fellow veterans to transition their military expertise into successful business ventures.",
+      image: "/team/adam-weiner.jpg",
+      military: "IDF Paratrooper",
+      linkedinUrl: "https://www.linkedin.com/in/weineradam/",
+      isFounder: true,
+      order: 2,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'tommy-knapp',
+      name: "Prof. Tommy Knapp",
+      title: "US Academic Lead",
+      role: "US Academic Lead",
+      bio: "Distinguished academic leader and educator specializing in entrepreneurship and business development. Leads curriculum development for the US program.",
+      image: "/team/tommy-knapp.jpg",
+      military: "Academic Leader",
+      linkedinUrl: "https://www.linkedin.com/in/tommyknapp1/",
+      isFounder: false,
+      order: 3,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'gali-einav',
+      name: "Dr. Gali Einav",
+      title: "IL Academic Lead",
+      role: "IL Academic Lead",
+      bio: "Former IDF Intelligence veteran with a PhD in business strategy. Leads academic initiatives and curriculum design for the Israeli program components.",
+      image: "/team/gali-einav.jpg",
+      military: "8200 IDF",
+      linkedinUrl: "https://www.linkedin.com/in/gali-einav-ph-d-6771aa1/",
+      isFounder: false,
+      order: 4,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'yotam-dagan',
+      name: "Yotam Dagan",
+      title: "Director of Growth",
+      role: "Director of Growth",
+      bio: "Elite naval special forces commander turned growth strategist. Focuses on scaling program impact and building strategic partnerships with veteran communities.",
+      image: "/team/yotam-dagan.jpg",
+      military: "CDR (Res.) Shayetet-13",
+      linkedinUrl: "https://www.linkedin.com/in/yotam-dagan-abaa14b/",
+      isFounder: false,
+      order: 5,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'jeff-ross',
+      name: "Jeff Ross",
+      title: "US Veteran Network Lead",
+      role: "US Veteran Network Lead",
+      bio: "Decorated Navy SEAL with extensive combat experience. Builds and maintains networks within US veteran entrepreneur communities to support program participants.",
+      image: "/team/jeff-ross.jpg",
+      military: "Special Operations Chief Petty Officer (Res.), US Navy SEALs",
+      linkedinUrl: "https://www.linkedin.com/in/jeff-ross-64183143/",
+      isFounder: false,
+      order: 6,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'eden-golan',
+      name: "Eden Golan",
+      title: "Program Manager",
+      role: "Program Manager",
+      bio: "Experienced program coordinator specializing in veteran entrepreneurship initiatives. Manages day-to-day program operations and participant engagement.",
+      image: "/team/eden-golan.jpg",
+      military: "Program Operations",
+      linkedinUrl: "https://www.linkedin.com/in/edenzgolan/",
+      isFounder: false,
+      order: 7,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'tamir-sida',
+      name: "Tamir Sida",
+      title: "Tech Stack Architect & AI/Web Dev Mentor",
+      role: "Tech Stack Architect & AI/Web Dev Mentor",
+      bio: "Technology leader and former IDF operations chief. Mentors veteran entrepreneurs in AI, web development, and modern tech stack implementation.",
+      image: "/team/tamir-sida.jpg",
+      military: "Chief of Operations (Res.), 55th Brigade, IDF",
+      linkedinUrl: "https://www.linkedin.com/in/tamir-sida/",
+      isFounder: false,
+      order: 8,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  ];
+
+  // Merge CMS members with default members and always show all
+  const allMembers = members.length > 0 ? members : defaultTeamMembers;
+  const visibleMembers = allMembers.filter(member => member.isVisible !== false);
+
+  const handleEditClick = (member: TeamMember, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(member);
+    }
+  };
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-600 flex items-center justify-center mr-4 shadow-lg">
-              <i className="fas fa-shield-alt text-2xl text-white"></i>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">
-              Meet the Team
-            </h2>
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+            <div className="w-2 h-2 bg-white rounded-full"></div>
+            <span className="text-white/80 text-sm font-medium tracking-wide">LEADERSHIP TEAM</span>
           </div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Mentors and Educators who are in-the-trenches with you
+          
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            Meet the Team
+          </h2>
+          
+          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Battle-tested leaders and mentors who understand your journey and are committed to your success
           </p>
         </div>
 
         {/* Team Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {displayMembers.map((member, index) => (
+          {visibleMembers.map((member, index) => (
             <div 
               key={member.id} 
-              className="bg-white rounded-2xl shadow-2xl border-2 border-gray-200 p-8 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-3xl group"
+              className="relative bg-gradient-to-br from-gray-800/80 via-gray-700/60 to-gray-900/80 backdrop-blur-sm border border-gray-600/30 rounded-2xl p-8 text-center transform transition-all duration-300 hover:scale-105 hover:border-gray-500/50 hover:shadow-2xl group overflow-hidden cursor-pointer"
+              onMouseEnter={() => setHoveredMember(member.id)}
+              onMouseLeave={() => setHoveredMember(null)}
+              onClick={() => member.linkedinUrl && window.open(member.linkedinUrl, '_blank', 'noopener,noreferrer')}
             >
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent"></div>
+                <div className="absolute bottom-0 right-0 w-16 h-16 border-r-2 border-b-2 border-white/10"></div>
+              </div>
+
               {/* Profile Image */}
-              <div className="relative mb-6">
+              <div className="relative mb-6 z-10">
                 {member.image ? (
-                  <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-200 shadow-xl border-4 border-white group-hover:border-gray-300 transition-colors">
-                    <img
+                  <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-700 shadow-2xl border-4 border-gray-600 group-hover:border-gray-500 transition-all duration-300">
+                    <Image
                       src={member.image}
                       alt={member.name}
+                      width={128}
+                      height={128}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />
                   </div>
                 ) : (
-                  <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center shadow-xl border-4 border-white group-hover:border-gray-300 transition-colors">
+                  <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center shadow-2xl border-4 border-gray-600 group-hover:border-gray-500 transition-all duration-300">
                     <span className="text-3xl font-bold text-white">
                       {member.name.split(' ').map(n => n[0]).join('')}
                     </span>
                   </div>
                 )}
                 
-                {/* Military Badge */}
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full border-2 border-white flex items-center justify-center shadow-lg">
-                  <i className="fas fa-star text-white text-sm"></i>
-                </div>
               </div>
 
               {/* Member Info */}
-              <div className="space-y-4">
+              <div className="space-y-4 relative z-10">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors">
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-gray-200 transition-colors">
                     {member.name}
                   </h3>
-                  <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-full text-sm font-semibold shadow-lg">
-                    <i className="fas fa-medal mr-2"></i>
-                    {member.role}
-                  </div>
+                  {member.title && (
+                    <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-700 to-gray-800 border border-gray-600 text-gray-100 rounded-full text-sm font-semibold shadow-lg mb-3">
+                      <i className="fas fa-chevrons-up mr-2 text-xs"></i>
+                      {member.title}
+                    </div>
+                  )}
                 </div>
                 
-                <p className="text-gray-700 leading-relaxed text-base px-2">
-                  {member.bio}
-                </p>
+                {/* Military Background */}
+                {member.military && member.military !== 'N/A' && member.military !== 'Program Operations' && member.military !== 'Academic Leader' && (
+                  <div className="bg-gray-900/50 border border-gray-600/30 rounded-lg p-3">
+                    <div className="flex items-center justify-center mb-2">
+                      <i className="fas fa-medal text-yellow-400 mr-2"></i>
+                      <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">Military Service</span>
+                    </div>
+                    <p className="text-sm text-gray-300 font-medium leading-relaxed">
+                      {member.military}
+                    </p>
+                  </div>
+                )}
 
-                {/* LinkedIn Button */}
-                {member.linkedinUrl && (
-                  <div className="pt-4 border-t border-gray-200">
-                    <Link
-                      href={member.linkedinUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+                {/* Admin Edit Button */}
+                {isAdminMode && onEdit && (
+                  <div className="pt-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditClick(member, e);
+                      }}
+                      className="inline-flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition-all duration-200 border border-gray-600"
                     >
-                      <i className="fab fa-linkedin mr-2"></i>
-                      Connect
-                    </Link>
+                      <i className="fas fa-edit mr-2"></i>
+                      Edit
+                    </button>
                   </div>
                 )}
               </div>
 
-              {/* Decorative Elements */}
-              <div className="absolute top-4 left-4 w-2 h-2 bg-gray-300 rounded-full"></div>
-              <div className="absolute top-4 right-4 w-2 h-2 bg-gray-300 rounded-full"></div>
-              <div className="absolute bottom-4 left-4 w-2 h-2 bg-gray-300 rounded-full"></div>
-              <div className="absolute bottom-4 right-4 w-2 h-2 bg-gray-300 rounded-full"></div>
+              {/* Tactical Corner Elements */}
+              <div className="absolute top-4 left-4 w-3 h-3 border-l-2 border-t-2 border-gray-500/30"></div>
+              <div className="absolute top-4 right-4 w-3 h-3 border-r-2 border-t-2 border-gray-500/30"></div>
+              <div className="absolute bottom-4 left-4 w-3 h-3 border-l-2 border-b-2 border-gray-500/30"></div>
+              <div className="absolute bottom-4 right-4 w-3 h-3 border-r-2 border-b-2 border-gray-500/30"></div>
             </div>
           ))}
         </div>
 
-        {/* Show All Button */}
-        {!showAll && members.length > 3 && (
-          <div className="text-center">
-            <Link href="/team">
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="px-8 py-4 text-lg font-semibold bg-white border-2 border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg rounded-full"
-              >
-                <i className="fas fa-users mr-2"></i>
-                Meet All Mentors
-              </Button>
-            </Link>
-          </div>
-        )}
       </div>
     </section>
   );
