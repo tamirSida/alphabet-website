@@ -148,6 +148,12 @@ function AlphaBetHomepageContent() {
           };
           await CMSServiceFactory.getQualificationService().create(qualificationData);
         }
+      } else if (editingType === 'cta') {
+        if (editingItem && editingItem.id) {
+          await CMSServiceFactory.getCallToActionService().update(editingItem.id, data);
+        } else {
+          await CMSServiceFactory.getCallToActionService().create(data);
+        }
       }
       
       await loadContent();
@@ -202,6 +208,13 @@ function AlphaBetHomepageContent() {
           { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter qualification description...' },
           { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-shield-alt' },
           { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-5' }
+        ];
+      case 'cta':
+        return [
+          { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'Enter call-to-action title' },
+          { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter call-to-action description...' },
+          { key: 'buttonText', label: 'Button Text', type: 'text' as const, required: true, placeholder: 'e.g., Apply Now' },
+          { key: 'buttonLink', label: 'Button Link', type: 'text' as const, required: false, placeholder: 'e.g., #apply or https://...' }
         ];
       default:
         return [];
@@ -372,21 +385,31 @@ The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empo
       </EditableSection>
 
       {/* Call to Action */}
-      {cta ? (
-        <CTASection
-          title={cta.title}
-          description={cta.description}
-          buttonText={cta.buttonText}
-          buttonLink={cta.buttonLink}
-        />
-      ) : (
-        <CTASection
-          title="Ready to Begin Your Next Mission?"
-          description="The Alpha-Bet program is a free, selective program open to combat veterans of the US and Israel. The application process is competitive, and we're looking for individuals with a passion for innovation and the discipline to execute. Start your journey today."
-          buttonText="Apply Now"
-          buttonLink="#apply"
-        />
-      )}
+      <EditableSection
+        sectionName="Call to Action"
+        onEdit={() => handleEdit('cta', cta || {
+          title: "Ready to Begin Your Next Mission?",
+          description: "The Alpha-Bet program is a free, selective program open to combat veterans of the US and Israel. The application process is competitive, and we're looking for individuals with a passion for innovation and the discipline to execute. Start your journey today.",
+          buttonText: "Apply Now",
+          buttonLink: "#apply"
+        })}
+      >
+        {cta ? (
+          <CTASection
+            title={cta.title}
+            description={cta.description}
+            buttonText={cta.buttonText}
+            buttonLink={cta.buttonLink}
+          />
+        ) : (
+          <CTASection
+            title="Ready to Begin Your Next Mission?"
+            description="The Alpha-Bet program is a free, selective program open to combat veterans of the US and Israel. The application process is competitive, and we're looking for individuals with a passion for innovation and the discipline to execute. Start your journey today."
+            buttonText="Apply Now"
+            buttonLink="#apply"
+          />
+        )}
+      </EditableSection>
 
       {/* Edit Modal */}
       <EditModal
