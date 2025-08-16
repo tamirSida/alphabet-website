@@ -50,14 +50,6 @@ export default function PrivacyPolicyPage() {
 
             <h2>1. Information We Collect</h2>
             
-            <h3>Application Information</h3>
-            <ul>
-              <li><strong>Personal Details:</strong> Name, email address, contact information</li>
-              <li><strong>Military Background:</strong> Branch of service, years of service, country</li>
-              <li><strong>Program Information:</strong> Business ideas, motivation for applying</li>
-              <li><strong>Communication Preferences:</strong> Newsletter subscription choices</li>
-            </ul>
-
             <h3>Website Usage Data</h3>
             <ul>
               <li><strong>Technical Information:</strong> IP address, browser type, device information</li>
@@ -67,19 +59,19 @@ export default function PrivacyPolicyPage() {
 
             <h2>2. How We Use Your Information</h2>
             
-            <h3>Program Operations</h3>
+            <h3>Website Operations</h3>
             <ul>
-              <li>Review and process program applications</li>
-              <li>Communicate about application status and program updates</li>
-              <li>Provide program materials, resources, and support</li>
-              <li>Facilitate connections with mentors and fellow participants</li>
+              <li>Ensure website functionality and security</li>
+              <li>Analyze website traffic and improve user experience</li>
+              <li>Respond to contact form inquiries (when provided)</li>
+              <li>Send newsletters to subscribers (when opted in)</li>
             </ul>
 
-            <h3>Program Improvement</h3>
+            <h3>Website Improvement</h3>
             <ul>
-              <li>Analyze program effectiveness and participant outcomes</li>
-              <li>Improve curriculum and participant experience</li>
-              <li>Develop new resources and support materials</li>
+              <li>Understand how visitors use our website</li>
+              <li>Improve website design and functionality</li>
+              <li>Optimize content and resources</li>
             </ul>
 
             <h3>Communications</h3>
@@ -184,9 +176,6 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <BottomNavigation currentPage="home" />
-        
-        {/* Footer */}
-        <Footer />
       </div>
     </>
   );

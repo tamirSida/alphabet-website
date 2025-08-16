@@ -15,8 +15,8 @@ This document tracks all placeholder content in the Alpha-Bet website that needs
 
 | Platform | Current Value | Location | Status | Priority |
 |----------|---------------|----------|--------|----------|
-| LinkedIn | `https://linkedin.com` | `components/public/footer.tsx` (line ~38) | ❌ Needs Real URL | HIGH |
-| Twitter | `https://twitter.com` | `components/public/footer.tsx` (line ~46) | ❌ Needs Real URL | HIGH |
+| LinkedIn | `https://www.linkedin.com/school/versionbravo/posts/?feedView=all` | `/lib/config/urls.ts` | ✅ Real VBV LinkedIn | COMPLETE |
+| Twitter | ❌ REMOVED | N/A | ✅ No Twitter Links | COMPLETE |
 
 ### 👥 Team Members (CMS Manageable)
 
@@ -45,14 +45,16 @@ This document tracks all placeholder content in the Alpha-Bet website that needs
 
 **Note**: FAQ content is comprehensive but can be customized via CMS with delete/edit functionality
 
-## ⚠️ **FORM PLACEHOLDERS** (Medium Priority - UX)
+## ⚠️ **EXTERNAL FORM INTEGRATION** (Medium Priority - UX)
 
 ### Application Form
 
 | Field | Current Value | Location | Status | Priority |
 |-------|---------------|----------|--------|----------|
-| Email Placeholder | `your.email@example.com` | `/apply` page form | ❌ Consider Better Example | MEDIUM |
-| Phone Placeholder | `+1 (555) 123-4567` | `/apply` page form | ❌ Consider Better Example | MEDIUM |
+| External Form URL | `#` (placeholder) | `/lib/config/urls.ts` | ❌ Needs Real Form URL | MEDIUM |
+| Apply Button Links | Points to placeholder | Multiple pages | ❌ Will work when URL added | MEDIUM |
+
+**Note**: Local `/apply` page removed. All apply buttons now point to `EXTERNAL_URLS.APPLY_FORM` for easy centralized management.
 
 ## 🔧 **ADMIN PLACEHOLDERS** (Low Priority - Internal Use)
 
@@ -78,18 +80,19 @@ This document tracks all placeholder content in the Alpha-Bet website that needs
 ### Phase 1: Critical Contact Information
 - [ ] Replace `info@alphabetprogram.com` with real email address (footer)
 - [ ] Replace `+1 (555) 123-4567` with real phone number (footer)
-- [ ] Replace LinkedIn URL with real company LinkedIn (footer)
-- [ ] Replace Twitter URL with real company Twitter/X (footer)
+- [x] ✅ LinkedIn URL updated to real VBV school page
+- [x] ✅ Twitter references removed from website
 
-### Phase 2: Content (Via CMS Admin)
+### Phase 2: Content (Via CMS Admin) - **NEW GRANULAR CMS**
 - [ ] Add real team member profiles via `/team?admin=true`
 - [ ] Add real veteran testimonials via homepage `?admin=true`
+- [ ] **NEW**: Edit individual Mission Brief and Key Highlights via granular CMS on homepage
 - [ ] Customize FAQ content if needed via homepage `?admin=true`
 - [ ] Update qualification requirements if needed via `/qualifications?admin=true`
 
-### Phase 3: UX Improvements
-- [ ] Update application form placeholder emails to realistic examples
-- [ ] Review all form placeholders for clarity
+### Phase 3: External Form Integration
+- [ ] Update `EXTERNAL_URLS.APPLY_FORM` in `/lib/config/urls.ts` with real application form URL
+- [ ] Test all "Apply Now" buttons point to correct external form
 
 ### Phase 4: Verification
 - [ ] Confirm "Version Bravo" branding is intentional
@@ -107,10 +110,11 @@ This document tracks all placeholder content in the Alpha-Bet website that needs
 
 ### To Update Content via CMS:
 1. **Homepage**: Go to `yourdomain.com/?admin=true` for hero, testimonials, FAQ
-2. **Team**: Go to `yourdomain.com/team?admin=true` for team member profiles
-3. **Curriculum**: Go to `yourdomain.com/curriculum?admin=true` for curriculum content
-4. **Qualifications**: Go to `yourdomain.com/qualifications?admin=true` for requirements
-5. **Application**: Content managed through individual page routes
+2. **NEW Granular Content**: Individual "Mission Brief" and "Key Highlights" editing with add/remove functionality
+3. **Team**: Go to `yourdomain.com/team?admin=true` for team member profiles
+4. **Curriculum**: Go to `yourdomain.com/curriculum?admin=true` for curriculum content
+5. **Qualifications**: Go to `yourdomain.com/qualifications?admin=true` for requirements
+6. **External Form**: Update URL in `/lib/config/urls.ts` for all apply buttons
 
 ### To Test Changes:
 ```bash
@@ -120,13 +124,20 @@ npm run dev    # Test in development
 
 ### Mobile Testing:
 - Test curriculum popup modals on mobile devices
-- Verify logo displays on mobile navigation
+- Verify logo displays on mobile navigation  
 - Check responsive design across all pages
+- **NEW**: Test granular CMS editing on mobile devices
+- **NEW**: Verify grid layout displays properly on all screen sizes
 
 ---
 
 **Last Updated**: August 16, 2025  
-**Status**: 🟢 Ready for production - minimal placeholders  
-**Recent Change**: Removed /apply page, created global URL config system  
+**Status**: 🟢 Production-ready with advanced CMS system  
+**Recent Major Changes**: 
+- ✅ Implemented granular CMS with database persistence
+- ✅ Enhanced visual design with seamless backgrounds and grid layouts
+- ✅ Updated privacy policy to reflect minimal data collection
+- ✅ Fixed double footer issues on legal pages
+- ✅ Removed Twitter references and updated LinkedIn to real VBV URL
 **Next Action**: Update EXTERNAL_URLS.APPLY_FORM in `/lib/config/urls.ts` when form URL available  
-**Website Status**: ✅ Production-ready with external URL configuration
+**Website Status**: ✅ Advanced production-ready website with modern CMS capabilities

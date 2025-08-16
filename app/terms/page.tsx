@@ -247,9 +247,6 @@ export default function TermsOfServicePage() {
         </section>
 
         <BottomNavigation currentPage="home" />
-        
-        {/* Footer */}
-        <Footer />
       </div>
     </>
   );
