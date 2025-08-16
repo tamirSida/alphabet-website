@@ -30,8 +30,8 @@ export default function Navigation() {
           {/* Logo/Brand */}
           <Link href="/" className="flex items-center">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-gray-900 font-bold text-lg">α</span>
+              <div className="w-10 h-10 flex items-center justify-center">
+                <img src="/logo.png" alt="Alpha-Bet Logo" className="w-10 h-10" />
               </div>
               <span className="text-white font-bold text-xl">Alpha-Bet</span>
             </div>

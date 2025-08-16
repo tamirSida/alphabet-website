@@ -151,8 +151,8 @@ export default function CurriculumTimeline({ items, onEdit }: CurriculumTimeline
               {/* Military Header */}
               <div className="border-b border-gray-600 pb-4">
                 <div className="flex items-center justify-center gap-3 mb-2">
-                  <div className="w-8 h-8 bg-gray-400 rounded flex items-center justify-center">
-                    <i className="fas fa-shield-alt text-gray-900 text-lg"></i>
+                  <div className="w-10 h-10 flex items-center justify-center">
+                    <img src="/logo.png" alt="Alpha-Bet Logo" className="w-10 h-10" />
                   </div>
                   <div className="text-left">
                     <div className="text-white font-bold text-lg tracking-wider font-mono">ALPHA-BET</div>
