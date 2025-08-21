@@ -20,7 +20,7 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 - `hero-section.tsx` - Landing hero with seamless background integration
 - `content-section.tsx` - Modern grid-based content with granular CMS, glass morphism effects, and color-coded sections
 - `curriculum-timeline.tsx` - Side-to-side curriculum layout with mobile popup modals (dark-themed)
-- `team-sections.tsx` - Refactored team component with 3 distinct sections: Founders, Alpha-Bet Staff, Version Bravo Staff
+- `team-sections.tsx` - Refactored team component with 3 distinct sections: Founders, Alpha-Bet Staff, Version Bravo Team
 - `team-section.tsx` - Legacy team component (replaced by team-sections.tsx)
 - `testimonials-section.tsx` - Dark themed testimonial cards with quote patterns
 - `cta-section.tsx` - Final mission briefing style call-to-action
@@ -43,7 +43,7 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 
 ### Individual Page Routes:
 - `/` - Homepage with hero, mission/why/what sections, FAQ, and bottom navigation
-- `/team` - Team page with 3 sections: Founders (2-column), Alpha-Bet Staff (3-column), Version Bravo Staff (3-column)
+- `/team` - Team page with 3 sections: Founders (2-column), Alpha-Bet Staff (3-column), Version Bravo Team (3-column)
 - `/curriculum` - 10-week program curriculum with military loading animation
 - `/qualifications` - Eligibility requirements in clean checklist format
 - `/privacy` - Privacy policy page with comprehensive data protection information
@@ -60,7 +60,7 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 1. **Hero Section** - Headline, sub-headline, CTA text/link, background image
 2. **Content Sections** - **GRANULAR CMS**: Individual editing of Mission Brief + Key Highlights with add/remove functionality
 3. **Curriculum Timeline** - 10-week program with week number, title, description, icons
-4. **Team Members** - Name, title, military background, image, LinkedIn profile (across 3 separate collections: founders, alphabet-staff, team-members)
+4. **Team Members** - Name, title, military background, image, LinkedIn profile (across 3 separate collections: founders, alphabet-staff, team-members for Version Bravo Team)
 5. **Testimonials** - Quote, author, title, company, profile image
 6. **Call to Action** - Title, description, button text/link
 7. **FAQ Items** - Question, answer, order, visibility controls with delete functionality
@@ -77,7 +77,7 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 - **Delete Functionality**: Remove FAQ items and highlights with confirmation
 - **Responsive Editing**: Edit buttons properly positioned and mobile-friendly
 - **Grid Layout**: Modern 2-column responsive grid for highlight display
-- **Multi-Section Team Management**: Separate CMS for Founders, Alpha-Bet Staff, and Version Bravo Staff
+- **Multi-Section Team Management**: Separate CMS for Founders, Alpha-Bet Staff, and Version Bravo Team
 
 ## Design System
 
@@ -126,7 +126,7 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 - ✅ Touch-friendly mobile interfaces
 
 ## Recent Major Updates:
-- **Team Section Refactor**: Implemented 3-section team layout with separate CMS collections for Founders, Alpha-Bet Staff, and Version Bravo Staff
+- **Team Section Refactor**: Implemented 3-section team layout with separate CMS collections for Founders, Alpha-Bet Staff, and Version Bravo Team
 - **Enhanced Form System**: Added radio button support, removed deprecated fields (role, bio), streamlined team member forms
 - **Curriculum UX Improvements**: Fixed mobile popup dark theme, removed deprecated dropdown content, mobile-only modal system
 - **External Image Support**: Added LinkedIn media domain support in Next.js configuration

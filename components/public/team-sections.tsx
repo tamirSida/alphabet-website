@@ -68,7 +68,7 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
     }
   ];
 
-  // Default Version Bravo Staff (all non-founder team members)
+  // Default Version Bravo Team (all non-founder team members)
   const defaultVersionBravoStaff: TeamMember[] = [
     {
       id: 'tommy-knapp',
@@ -162,39 +162,29 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
     }
   ];
 
-  // Merge CMS data with defaults
-  const mergedFounders = React.useMemo(() => {
-    if (!founders || founders.length === 0) {
-      return defaultFounders;
-    }
-    
-    const cmsMap = new Map(founders.map(member => [member.id, member]));
-    const merged = defaultFounders.map(defaultMember => 
-      cmsMap.get(defaultMember.id) || defaultMember
-    );
-    
-    const existingIds = new Set(defaultFounders.map(m => m.id));
-    const newCmsMembers = founders.filter(member => !existingIds.has(member.id));
-    
-    return [...merged, ...newCmsMembers];
-  }, [founders?.length]);
 
-  // Merge CMS data with Version Bravo Staff defaults
-  const mergedVersionBravoStaff = React.useMemo(() => {
-    if (!team || team.length === 0) {
-      return defaultVersionBravoStaff;
+  // Merge CMS data with Version Bravo Team defaults (including founders)
+  const mergedVersionBravoTeam = React.useMemo(() => {
+    // Combine founders and team defaults
+    const allDefaults = [...defaultFounders, ...defaultVersionBravoStaff];
+    
+    // Get both founders and team from CMS
+    const allCmsMembers = [...(founders || []), ...(team || [])];
+    
+    if (!allCmsMembers || allCmsMembers.length === 0) {
+      return allDefaults.sort((a, b) => a.order - b.order);
     }
     
-    const cmsMap = new Map(team.map(member => [member.id, member]));
-    const merged = defaultVersionBravoStaff.map(defaultMember => 
+    const cmsMap = new Map(allCmsMembers.map(member => [member.id, member]));
+    const merged = allDefaults.map(defaultMember => 
       cmsMap.get(defaultMember.id) || defaultMember
     );
     
-    const existingIds = new Set(defaultVersionBravoStaff.map(m => m.id));
-    const newCmsMembers = team.filter(member => !existingIds.has(member.id));
+    const existingIds = new Set(allDefaults.map(m => m.id));
+    const newCmsMembers = allCmsMembers.filter(member => !existingIds.has(member.id));
     
-    return [...merged, ...newCmsMembers];
-  }, [team?.length]);
+    return [...merged, ...newCmsMembers].sort((a, b) => a.order - b.order);
+  }, [founders?.length, team?.length]);
 
   const handleEditClick = (member: TeamMember, section: 'founders' | 'staff' | 'team', e: React.MouseEvent) => {
     e.stopPropagation();
@@ -204,7 +194,8 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
   };
 
   const TeamCard = ({ member, section }: { member: TeamMember; section: 'founders' | 'staff' | 'team' }) => {
-    const isSmallCard = section !== 'founders';
+    // Founders get large cards, others get small cards
+    const isSmallCard = !member.isFounder;
     
     return (
       <div 
@@ -343,33 +334,8 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
           </p>
         </div>
 
-        {/* Section 1: Founders */}
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">Founders</h3>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {mergedFounders.filter(member => member.isVisible !== false).map((member) => (
-              <TeamCard key={member.id} member={member} section="founders" />
-            ))}
-          </div>
 
-          {isAdminMode && onEdit && (
-            <div className="text-center mt-6">
-              <button
-                onClick={() => onEdit(undefined, 'founders')}
-                className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg border border-green-500"
-              >
-                <i className="fas fa-plus mr-2"></i>
-                Add Founder
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Section 2: Alpha-Bet Staff */}
+        {/* Section 1: Alpha-Bet Staff */}
         <div className="mb-16">
           <div className="text-center mb-8">
             <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">Alpha-Bet Staff</h3>
@@ -395,21 +361,36 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
           )}
         </div>
 
-        {/* Section 3: Version Bravo Staff */}
+        {/* Section 2: Version Bravo Team (including founders) */}
         <div className="mb-16">
           <div className="text-center mb-8">
-            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">Version Bravo Staff</h3>
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">Version Bravo Team</h3>
             <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-red-500 mx-auto rounded-full"></div>
           </div>
           
+          {/* Founders Row (Large Cards) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+            {mergedVersionBravoTeam.filter(member => member.isVisible !== false && member.isFounder).map((member) => (
+              <TeamCard key={member.id} member={member} section="founders" />
+            ))}
+          </div>
+          
+          {/* Other Team Members (Small Cards) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mergedVersionBravoStaff.filter(member => member.isVisible !== false).map((member) => (
+            {mergedVersionBravoTeam.filter(member => member.isVisible !== false && !member.isFounder).map((member) => (
               <TeamCard key={member.id} member={member} section="team" />
             ))}
           </div>
 
           {isAdminMode && onEdit && (
-            <div className="text-center mt-6">
+            <div className="text-center mt-6 flex flex-wrap gap-4 justify-center">
+              <button
+                onClick={() => onEdit(undefined, 'founders')}
+                className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg border border-green-500"
+              >
+                <i className="fas fa-plus mr-2"></i>
+                Add Founder
+              </button>
               <button
                 onClick={() => onEdit(undefined, 'team')}
                 className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg border border-green-500"
