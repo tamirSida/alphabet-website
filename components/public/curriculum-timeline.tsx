@@ -14,7 +14,6 @@ interface CurriculumTimelineProps {
 
 export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEditCTA }: CurriculumTimelineProps) {
   const { isAdminMode } = useAdmin();
-  const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
   const [isDecrypting, setIsDecrypting] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
@@ -98,24 +97,16 @@ export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEdit
   }, []);
 
 
-  // Handle week click to expand/collapse (no decrypting after initial load)
+  // Handle week click to open mobile modal
   const handleWeekClick = (weekNumber: number) => {
     if (!isLoaded) return; // Don't allow clicks during decrypting
     
-    // Open modal for mobile (will be hidden on desktop via CSS)
+    // Open modal for mobile
     const displayItems = mergeItemsWithDefaults();
     const item = displayItems.find(item => item.weekNumber === weekNumber);
     if (item) {
       setMobileModalItem(item);
       setMobileModalOpen(true);
-    }
-    
-    // Handle desktop inline expansion
-    if (expandedWeek === weekNumber) {
-      setExpandedWeek(null);
-      setMobileModalOpen(false); // Also close modal if open
-    } else {
-      setExpandedWeek(weekNumber);
     }
   };
 
@@ -307,7 +298,7 @@ export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEdit
                 <div className={`relative overflow-hidden rounded-2xl border shadow-xl transition-all duration-500 ${
                   isLoaded ? 'cursor-pointer' : 'cursor-not-allowed'
                 } ${
-                  (hoveredWeek === item.weekNumber || expandedWeek === item.weekNumber) && isLoaded
+                  hoveredWeek === item.weekNumber && isLoaded
                     ? 'bg-gradient-to-br from-white/15 via-white/10 to-white/5 border-white/30 shadow-2xl scale-105'
                     : 'bg-white/10 border-white/20 hover:bg-white/15'
                 } backdrop-blur-md`}
@@ -335,16 +326,9 @@ export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEdit
                         </h3>
                       </div>
                       <div className="text-white/60">
-                        {/* Show different icons for mobile vs desktop */}
-                        <div className="block md:hidden">
+                        {/* Show expand icon for mobile */}
+                        <div className="block">
                           <i className="fas fa-expand-alt text-lg"></i>
-                        </div>
-                        <div className="hidden md:block">
-                          {expandedWeek === item.weekNumber ? (
-                            <i className="fas fa-chevron-up text-lg transform transition-transform duration-300"></i>
-                          ) : (
-                            <i className="fas fa-chevron-down text-lg transform transition-transform duration-300"></i>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -379,55 +363,6 @@ export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEdit
                     </div>
                   </div>
 
-                  {/* Expanded Details */}
-                  {expandedWeek === item.weekNumber && (
-                    <div className="border-t border-white/20 bg-white/5 backdrop-blur-sm">
-                      <div className="p-6 sm:p-8">
-                        <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                          <i className="fas fa-info-circle text-blue-300"></i>
-                          What You'll Learn
-                        </h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                              <i className="fas fa-book text-blue-300 text-sm"></i>
-                            </div>
-                            <div>
-                              <div className="text-white font-medium text-sm">Core Concepts</div>
-                              <div className="text-gray-300 text-sm">Essential frameworks and methodologies</div>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                              <i className="fas fa-hammer text-green-300 text-sm"></i>
-                            </div>
-                            <div>
-                              <div className="text-white font-medium text-sm">Hands-On Practice</div>
-                              <div className="text-gray-300 text-sm">Real-world application exercises</div>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                              <i className="fas fa-comments text-purple-300 text-sm"></i>
-                            </div>
-                            <div>
-                              <div className="text-white font-medium text-sm">Peer Review</div>
-                              <div className="text-gray-300 text-sm">Collaborative feedback sessions</div>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                              <i className="fas fa-trophy text-orange-300 text-sm"></i>
-                            </div>
-                            <div>
-                              <div className="text-white font-medium text-sm">Milestone Achievement</div>
-                              <div className="text-gray-300 text-sm">Track your progress and wins</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
                 
                 {/* Connecting Line (except for last item) */}
@@ -512,7 +447,7 @@ export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEdit
           onClick={() => setMobileModalOpen(false)}
         >
           <div 
-            className="bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-md rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto border border-white/20 shadow-2xl transform transition-all duration-300 ease-out animate-scale-in relative"
+            className="bg-gradient-to-br from-gray-800/90 via-gray-700/90 to-gray-900/90 backdrop-blur-md rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto border border-gray-600/30 shadow-2xl transform transition-all duration-300 ease-out animate-scale-in relative"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Popup indicator dots */}

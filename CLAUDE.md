@@ -19,8 +19,9 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 - `bottom-navigation.tsx` - Contextual user journey flow between pages
 - `hero-section.tsx` - Landing hero with seamless background integration
 - `content-section.tsx` - Modern grid-based content with granular CMS, glass morphism effects, and color-coded sections
-- `curriculum-timeline.tsx` - Side-to-side curriculum layout with mobile popup modals
-- `team-section.tsx` - Military-themed team member cards with veteran badges
+- `curriculum-timeline.tsx` - Side-to-side curriculum layout with mobile popup modals (dark-themed)
+- `team-sections.tsx` - Refactored team component with 3 distinct sections: Founders, Alpha-Bet Staff, Version Bravo Staff
+- `team-section.tsx` - Legacy team component (replaced by team-sections.tsx)
 - `testimonials-section.tsx` - Dark themed testimonial cards with quote patterns
 - `cta-section.tsx` - Final mission briefing style call-to-action
 - `faq-section.tsx` - Expandable Q&A component with dark theme and CMS integration
@@ -35,14 +36,14 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 
 ### Backend Services (`/lib/cms/`)
 - `base-service.ts` - Abstract Firestore service with CRUD operations
-- `content-services.ts` - Service factory for all content types
+- `content-services.ts` - Service factory for all content types (includes FounderService, AlphaBetStaffService, TeamMemberService)
 - `admin-context.tsx` - Admin state management
 
 ## Page Architecture
 
 ### Individual Page Routes:
 - `/` - Homepage with hero, mission/why/what sections, FAQ, and bottom navigation
-- `/team` - Team members page with member cards and bios
+- `/team` - Team page with 3 sections: Founders (2-column), Alpha-Bet Staff (3-column), Version Bravo Staff (3-column)
 - `/curriculum` - 10-week program curriculum with military loading animation
 - `/qualifications` - Eligibility requirements in clean checklist format
 - `/privacy` - Privacy policy page with comprehensive data protection information
@@ -59,7 +60,7 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 1. **Hero Section** - Headline, sub-headline, CTA text/link, background image
 2. **Content Sections** - **GRANULAR CMS**: Individual editing of Mission Brief + Key Highlights with add/remove functionality
 3. **Curriculum Timeline** - 10-week program with week number, title, description, icons
-4. **Team Members** - Name, role, bio, image, LinkedIn profile
+4. **Team Members** - Name, title, military background, image, LinkedIn profile (across 3 separate collections: founders, alphabet-staff, team-members)
 5. **Testimonials** - Quote, author, title, company, profile image
 6. **Call to Action** - Title, description, button text/link
 7. **FAQ Items** - Question, answer, order, visibility controls with delete functionality
@@ -70,12 +71,13 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 - **Admin Access**: Discrete URL parameter (?admin=true) or toggle
 - **Granular Content Editing**: Individual editing of Mission Brief and Key Highlights with full database persistence
 - **Add/Remove Highlights**: Dynamic bullet point management with real-time updates
-- **Form Validation**: Required fields, proper input types
+- **Form Validation**: Required fields, proper input types, radio button support
 - **Database Persistence**: Full Firebase/Firestore integration with automatic save
 - **Fallback Content**: Default content when no CMS data exists
 - **Delete Functionality**: Remove FAQ items and highlights with confirmation
 - **Responsive Editing**: Edit buttons properly positioned and mobile-friendly
 - **Grid Layout**: Modern 2-column responsive grid for highlight display
+- **Multi-Section Team Management**: Separate CMS for Founders, Alpha-Bet Staff, and Version Bravo Staff
 
 ## Design System
 
@@ -105,9 +107,10 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 - `npm run typecheck` - TypeScript checking
 
 ## Firebase Configuration
-- **Collections**: hero-sections, content-sections, team-members, testimonials, curriculum-items, call-to-actions, faqs, qualification-items
+- **Collections**: hero-sections, content-sections, founders, alphabet-staff, team-members, testimonials, curriculum-items, call-to-actions, faqs, qualification-items
 - **Authentication**: Admin users for CMS access
 - **Security Rules**: Wildcard pattern allowing authenticated users full access to all collections, public read access
+- **External Images**: LinkedIn media domains configured in next.config.ts
 
 ## Key Features Implemented:
 - ✅ Complete multi-page website architecture with navigation
@@ -123,6 +126,11 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 - ✅ Touch-friendly mobile interfaces
 
 ## Recent Major Updates:
+- **Team Section Refactor**: Implemented 3-section team layout with separate CMS collections for Founders, Alpha-Bet Staff, and Version Bravo Staff
+- **Enhanced Form System**: Added radio button support, removed deprecated fields (role, bio), streamlined team member forms
+- **Curriculum UX Improvements**: Fixed mobile popup dark theme, removed deprecated dropdown content, mobile-only modal system
+- **External Image Support**: Added LinkedIn media domain support in Next.js configuration
+- **CMS Performance**: Fixed infinite loops in form initialization and component re-rendering
 - **Granular CMS System**: Implemented individual editing of Mission Brief and Key Highlights with full database persistence
 - **Enhanced Visual Design**: Seamless dark background, grid layouts, color-coded sections with modern UI/UX
 - **Database Integration**: Full Firebase persistence for all content edits with real-time updates
@@ -132,7 +140,6 @@ Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans,
 - **SEO Optimization**: Comprehensive meta tags, structured data, and keyword targeting
 - **Global URL System**: Centralized external link management for easy future updates
 - **Mobile Optimization**: Touch-friendly admin controls and responsive grid layouts
-- **Performance Improvements**: Eliminated Fast Refresh loops and optimized component re-rendering
 
 ## Environment Variables Needed:
 ```
