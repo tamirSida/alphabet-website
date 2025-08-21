@@ -107,7 +107,7 @@ export default function SEOHead({
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD",
-          "description": "Free entrepreneurship program for qualifying veterans"
+          "description": "Entrepreneurship program for qualifying veterans"
         }
       },
       {

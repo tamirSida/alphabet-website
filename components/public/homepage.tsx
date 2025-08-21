@@ -202,7 +202,7 @@ function AlphaBetHomepageContent() {
   const handleSave = useCallback(async (data: any) => {
     try {
       if (editingType === 'hero') {
-        if (editingItem) {
+        if (editingItem && editingItem.id) {
           await CMSServiceFactory.getHeroService().update(editingItem.id, data);
         } else {
           await CMSServiceFactory.getHeroService().create(data);
@@ -288,7 +288,7 @@ function AlphaBetHomepageContent() {
           { key: 'headline', label: 'Headline', type: 'text' as const, required: true, placeholder: 'Enter the main headline' },
           { key: 'subHeadline', label: 'Sub-headline', type: 'textarea' as const, required: true, placeholder: 'Enter the sub-headline description' },
           { key: 'ctaText', label: 'Call-to-Action Text', type: 'text' as const, required: true, placeholder: 'e.g., Apply Now' },
-          { key: 'ctaLink', label: 'Call-to-Action Link', type: 'url' as const, required: true, placeholder: 'https://...' },
+          { key: 'ctaLink', label: 'Call-to-Action Link', type: 'text' as const, required: true, placeholder: '/curriculum or https://...' },
           { key: 'backgroundImage', label: 'Background Image URL', type: 'url' as const, required: false, placeholder: 'https://...' }
         ];
       case 'content':
@@ -332,7 +332,7 @@ function AlphaBetHomepageContent() {
   // Fallback hero if no content is found
   const defaultHero = {
     headline: "From Battlefield to Business: Your Next Mission Starts Here.",
-    subHeadline: "Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans, designed to equip you with the skills, network, and battle-tested mindset to build a successful startup. It's time to channel your experience into innovation.",
+    subHeadline: "Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, designed to equip you with the skills, network, and battle-tested mindset to build a successful startup. It's time to channel your experience into innovation.",
     ctaText: "Explore Program",
     ctaLink: "/curriculum"
   };
@@ -351,7 +351,7 @@ function AlphaBetHomepageContent() {
         {/* Hero Section */}
         <EditableSection
           sectionName="Hero"
-          onEdit={() => handleEdit('hero', hero)}
+          onEdit={() => handleEdit('hero', activeHero)}
         >
           <HeroSection
             headline={activeHero.headline}

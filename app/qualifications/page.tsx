@@ -108,7 +108,7 @@ export default function QualificationsPage() {
     <>
       <SEOHead
         title="Eligibility Requirements - Who Should Apply to Alpha-Bet"
-        description="Check if you qualify for Alpha-Bet: Free entrepreneurship program for US & Israeli combat veterans. Requirements include military service, business interest, and program commitment."
+        description="Check if you qualify for Alpha-Bet: An entrepreneurship program for US & Israeli combat veterans. Requirements include military service, business interest, and program commitment."
         keywords={[
           'Alpha-Bet eligibility',
           'veteran program requirements',

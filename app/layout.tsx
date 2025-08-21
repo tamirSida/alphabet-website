@@ -12,11 +12,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Alpha-Bet | Entrepreneurship Program for Combat Veterans",
-  description: "Free entrepreneurship program for US and Israeli combat veterans. From battlefield to business - your next mission starts here.",
+  description: "Entrepreneurship program for US and Israeli combat veterans. From battlefield to business - your next mission starts here.",
   keywords: "veterans, entrepreneurship, startup, combat veterans, business program, Version Bravo",
   openGraph: {
     title: "Alpha-Bet | Entrepreneurship Program for Combat Veterans",
-    description: "Free entrepreneurship program for US and Israeli combat veterans. From battlefield to business - your next mission starts here.",
+    description: "Entrepreneurship program for US and Israeli combat veterans. From battlefield to business - your next mission starts here.",
     type: "website",
   },
 };

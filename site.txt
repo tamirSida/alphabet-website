@@ -1,6 +1,6 @@
 Hero Section
 Headline: From Battlefield to Business: Your Next Mission Starts Here.
-Sub-headline: Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans, designed to equip you with the skills, network, and battle-tested mindset to build a successful startup. It’s time to channel your experience into innovation.
+Sub-headline: Alpha-Bet is a entrepreneurship program for US and Israeli combat veterans, designed to equip you with the skills, network, and battle-tested mindset to build a successful startup. It’s time to channel your experience into innovation.
 
 Our Mission
 You've demonstrated courage, discipline, and leadership in the most challenging environments. Now, we're here to help you apply those same traits to the world of entrepreneurship.

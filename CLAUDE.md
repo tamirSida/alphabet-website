@@ -1,7 +1,7 @@
 # Alpha-Bet Project - Claude Context
 
 ## Project Overview
-Alpha-Bet is a free entrepreneurship program for US and Israeli combat veterans, designed to equip them with the skills, network, and battle-tested mindset to build successful startups. This is a Next.js website with a complete CMS system and multi-page architecture.
+Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, designed to equip them with the skills, network, and battle-tested mindset to build successful startups. This is a Next.js website with a complete CMS system and multi-page architecture.
 
 ## Project Structure
 - **Framework**: Next.js 15.4.6 with TypeScript and Tailwind CSS

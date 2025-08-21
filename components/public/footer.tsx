@@ -37,7 +37,7 @@ export default function Footer() {
               <span className="text-white font-bold text-xl">Alpha-Bet</span>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed max-w-md">
-              A free entrepreneurship program for US and Israeli combat veterans, 
+              An entrepreneurship program for US and Israeli combat veterans,
               designed to equip them with the skills, network, and battle-tested mindset 
               to build successful startups.
             </p>
