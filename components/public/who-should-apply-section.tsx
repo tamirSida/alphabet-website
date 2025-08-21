@@ -249,21 +249,6 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
           </div>
         </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-16 text-center">
-          <div className="max-w-3xl mx-auto bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-xl">
-            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-              Ready for Your Next Mission?
-            </h3>
-            <p className="text-lg text-gray-200 leading-relaxed mb-6">
-              If you meet these qualifications, you're prepared to transform your military leadership into entrepreneurial excellence.
-            </p>
-            <div className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 text-gray-900 font-semibold hover:scale-105 transition-transform duration-300 cursor-pointer">
-              <span>Begin Application</span>
-              <i className="fas fa-arrow-right text-sm"></i>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

@@ -33,7 +33,7 @@ export default function Navigation() {
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center relative">
                 <Image 
-                  src="/logo.png" 
+                  src="/logo.jpeg"
                   alt="Alpha-Bet Logo" 
                   width={40}
                   height={40}

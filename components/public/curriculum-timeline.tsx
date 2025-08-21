@@ -175,7 +175,7 @@ export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEdit
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <div className="w-10 h-10 flex items-center justify-center relative">
                     <Image 
-                      src="/logo.png" 
+                      src="/logo.jpeg"
                       alt="Alpha-Bet Logo" 
                       width={40}
                       height={40}
