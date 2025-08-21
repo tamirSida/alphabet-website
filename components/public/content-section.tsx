@@ -13,22 +13,26 @@ interface ContentSectionProps {
   title: string;
   content: string;
   type?: string;
+  description?: string; // Override the default description
   className?: string;
   onEditBrief?: () => void;
   onEditHighlight?: (highlight?: Highlight, index?: number) => void;
   onDeleteHighlight?: (highlight: Highlight, index: number) => void;
   onAddHighlight?: () => void;
+  onEditDescription?: () => void;
 }
 
 export default function ContentSection({ 
   title, 
   content, 
   type,
+  description,
   className = '',
   onEditBrief,
   onEditHighlight,
   onDeleteHighlight,
-  onAddHighlight
+  onAddHighlight,
+  onEditDescription
 }: ContentSectionProps) {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const { isAdminMode } = useAdmin();
@@ -67,6 +71,8 @@ export default function ContentSection({
   };
 
   const config = getTypeConfig(type);
+  // Use custom description if provided, otherwise use default from config
+  const displayDescription = description || config.description;
 
   // Parse content into structured format
   const parseContent = (text: string) => {
@@ -120,10 +126,14 @@ export default function ContentSection({
             {title}
           </h2>
           
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+          <div 
+            className={`relative inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 ${isAdminMode && onEditDescription ? 'cursor-pointer hover:bg-white/20 transition-colors' : ''}`}
+            onClick={isAdminMode && onEditDescription ? onEditDescription : undefined}
+            title={isAdminMode && onEditDescription ? 'Click to edit description' : undefined}
+          >
             <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${config.accentColor}`}></div>
             <span className="text-white/80 text-sm font-medium tracking-wide uppercase">
-              {config.description}
+              {displayDescription}
             </span>
           </div>
         </div>
@@ -134,16 +144,6 @@ export default function ContentSection({
           {intro && (
             <div className="space-y-6">
               <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-8 sm:p-10 hover:bg-white/10 transition-all duration-500 group">
-                {/* Admin Edit Button for Brief */}
-                {isAdminMode && onEditBrief && (
-                  <button
-                    onClick={onEditBrief}
-                    className="absolute top-4 right-4 w-8 h-8 bg-blue-500 hover:bg-blue-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-10"
-                    title="Edit Mission Brief"
-                  >
-                    <i className="fas fa-edit"></i>
-                  </button>
-                )}
                 
                 <div className="flex items-start gap-4 mb-6">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${config.accentColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
@@ -164,19 +164,6 @@ export default function ContentSection({
           {/* Enhanced Bullet Points */}
           {bullets.length > 0 && (
             <div className="space-y-6">
-              {/* Admin Add Highlight Button */}
-              {isAdminMode && onAddHighlight && (
-                <div className="flex justify-end mb-6">
-                  <button
-                    onClick={onAddHighlight}
-                    className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-colors shadow-lg"
-                    title="Add New Highlight"
-                  >
-                    <i className="fas fa-plus"></i>
-                    <span>Add</span>
-                  </button>
-                </div>
-              )}
               
               {/* Grid Layout for Highlights */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
@@ -194,29 +181,6 @@ export default function ContentSection({
                     onMouseEnter={() => setHoveredItem(index)}
                     onMouseLeave={() => setHoveredItem(null)}
                   >
-                    {/* Admin Edit/Delete Buttons for Individual Highlights */}
-                    {isAdminMode && (
-                      <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
-                        {onEditHighlight && (
-                          <button
-                            onClick={() => onEditHighlight(highlight, index)}
-                            className="w-7 h-7 bg-blue-500 hover:bg-blue-400 text-white rounded-full flex items-center justify-center text-xs transition-colors shadow-lg"
-                            title="Edit this highlight"
-                          >
-                            <i className="fas fa-edit"></i>
-                          </button>
-                        )}
-                        {onDeleteHighlight && bullets.length > 1 && (
-                          <button
-                            onClick={() => onDeleteHighlight(highlight, index)}
-                            className="w-7 h-7 bg-red-500 hover:bg-red-400 text-white rounded-full flex items-center justify-center text-xs transition-colors shadow-lg"
-                            title="Delete this highlight"
-                          >
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        )}
-                      </div>
-                    )}
                     
                     <div className="flex items-start gap-4">
                       <div className={`relative w-10 h-10 rounded-lg bg-gradient-to-br ${config.accentColor} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-all duration-300 ${hoveredItem === index ? config.glowColor + ' shadow-lg' : ''}`}>

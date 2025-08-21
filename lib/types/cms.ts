@@ -15,6 +15,7 @@ export interface ContentSection {
   id: string;
   title: string;
   content: string;
+  description?: string; // Optional custom description for the section
   type: 'mission' | 'why-alpha-bet' | 'who-should-apply' | 'curriculum' | 'what-you-gain';
   isVisible: boolean;
   order: number;

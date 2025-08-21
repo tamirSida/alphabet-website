@@ -116,6 +116,7 @@ export class FAQService extends BaseFirestoreService<FAQ> {
   }
 }
 
+
 // Service factory for easy instantiation
 export class CMSServiceFactory {
   private static instances: Map<string, any> = new Map();
@@ -196,4 +197,5 @@ export class CMSServiceFactory {
     }
     return this.instances.get('faq');
   }
+
 }
