@@ -27,7 +27,7 @@ export default function Footer() {
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 flex items-center justify-center relative">
                 <Image 
-                  src="/logo.jpeg"
+                  src="/logo.png"
                   alt="Alpha-Bet Logo" 
                   width={40}
                   height={40}
@@ -50,6 +50,50 @@ export default function Footer() {
               >
                 <i className="fab fa-linkedin text-xl"></i>
               </a>
+            </div>
+            
+            {/* Our Partners Section */}
+            <div className="mt-8">
+              <h4 className="text-white font-semibold mb-4">
+                Our Partners
+              </h4>
+              <div className="flex flex-wrap items-center gap-4">
+                <Image 
+                  src="/partnerships/afins.png"
+                  alt="AFINS Partner" 
+                  width={80}
+                  height={40}
+                  className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                />
+                <Image 
+                  src="/partnerships/honor-foundation.png"
+                  alt="Honor Foundation Partner" 
+                  width={80}
+                  height={40}
+                  className="object-contain filter brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
+                />
+                <Image 
+                  src="/partnerships/momentum.png"
+                  alt="Momentum Partner" 
+                  width={80}
+                  height={40}
+                  className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                />
+                <Image 
+                  src="/partnerships/seal-future.png"
+                  alt="SEAL Future Partner" 
+                  width={80}
+                  height={40}
+                  className="object-contain filter brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
+                />
+                <Image 
+                  src="/partnerships/shabak.png"
+                  alt="Shabak Partner" 
+                  width={80}
+                  height={40}
+                  className="object-contain filter brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
+                />
+              </div>
             </div>
           </div>
 

@@ -44,7 +44,7 @@ export default function SEOHead({
   description,
   keywords = [],
   canonical,
-  ogImage = '/logo.jpeg',
+  ogImage = '/logo.png',
   ogType = 'website',
   structuredData,
   noindex = false
@@ -71,7 +71,7 @@ export default function SEOHead({
         "url": siteUrl,
         "logo": {
           "@type": "ImageObject",
-          "url": `${siteUrl}/logo.jpeg`,
+          "url": `${siteUrl}/logo.png`,
           "width": 200,
           "height": 200
         },
