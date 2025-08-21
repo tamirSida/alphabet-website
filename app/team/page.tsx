@@ -84,10 +84,11 @@ export default function TeamPage() {
                            editingSection === 'staff' ? staff : team;
         
         if (editingItem) {
-          await service.update(editingItem.id, data);
+          await service.update(editingItem.id, { ...data, role: data.title || 'Team Member' });
         } else {
           const memberData = {
             ...data,
+            role: data.title || 'Team Member',
             isVisible: true,
             order: currentData.length + 1
           };
@@ -119,12 +120,19 @@ export default function TeamPage() {
   const memberFields = useMemo(() => [
     { key: 'name', label: 'Name', type: 'text' as const, required: true, placeholder: 'Enter full name' },
     { key: 'title', label: 'Title/Position', type: 'text' as const, required: false, placeholder: 'e.g., Co-Founder, Director, Lead' },
-    { key: 'role', label: 'Role (for compatibility)', type: 'text' as const, required: true, placeholder: 'e.g., Founder, Mentor, Advisor' },
     { key: 'military', label: 'Military Background', type: 'text' as const, required: false, placeholder: 'e.g., Navy SEALs, IDF Paratrooper, or N/A' },
-    { key: 'bio', label: 'Biography', type: 'textarea' as const, required: false, placeholder: 'Enter biography...' },
     { key: 'image', label: 'Profile Image (URL or path)', type: 'text' as const, required: false, placeholder: '/team/image.jpg or https://...' },
     { key: 'linkedinUrl', label: 'LinkedIn Profile URL', type: 'url' as const, required: false, placeholder: 'https://linkedin.com/in/...' },
-    { key: 'isFounder', label: 'Is Founder? (true/false)', type: 'text' as const, required: false, placeholder: 'true or false' }
+    { 
+      key: 'isFounder', 
+      label: 'Is this person a founder?', 
+      type: 'radio' as const, 
+      required: false, 
+      options: [
+        { label: 'Yes', value: true },
+        { label: 'No', value: false }
+      ]
+    }
   ], []);
 
   const headerFields = useMemo(() => [

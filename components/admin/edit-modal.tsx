@@ -9,10 +9,11 @@ import { Textarea } from '@/components/ui/textarea';
 interface FormField {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'email' | 'url' | 'number';
+  type: 'text' | 'textarea' | 'email' | 'url' | 'number' | 'radio';
   required?: boolean;
   placeholder?: string;
   value?: string;
+  options?: { label: string; value: string | boolean }[];
 }
 
 interface EditModalProps {
@@ -178,6 +179,25 @@ export default function EditModal({
                     rows={4}
                     className="w-full"
                   />
+                ) : field.type === 'radio' ? (
+                  <div className="flex gap-4">
+                    {field.options?.map((option) => (
+                      <label key={String(option.value)} className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name={field.key}
+                          value={String(option.value)}
+                          checked={String(formData[field.key]) === String(option.value)}
+                          onChange={(e) => updateFormData({
+                            ...formData,
+                            [field.key]: option.value
+                          })}
+                          className="rounded"
+                        />
+                        <span className="text-sm text-gray-700">{option.label}</span>
+                      </label>
+                    ))}
+                  </div>
                 ) : (
                   <Input
                     type={field.type}

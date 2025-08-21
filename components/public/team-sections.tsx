@@ -257,7 +257,7 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
             {member.title && (
               <div className={`inline-flex items-center px-3 py-1 bg-gradient-to-r from-gray-700 to-gray-800 border border-gray-600 text-gray-100 rounded-full ${
                 isSmallCard ? 'text-xs' : 'text-sm'
-              } font-semibold shadow-lg mb-2`}>
+              } font-semibold shadow-lg mb-2 mx-auto`}>
                 <i className="fas fa-chevrons-up mr-2 text-xs"></i>
                 {member.title}
               </div>
