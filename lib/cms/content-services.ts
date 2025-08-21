@@ -46,6 +46,26 @@ export class TeamMemberService extends BaseFirestoreService<TeamMember> {
   }
 }
 
+export class FounderService extends BaseFirestoreService<TeamMember> {
+  constructor() {
+    super('founders');
+  }
+
+  async getFeaturedFounders(limit: number = 2): Promise<TeamMember[]> {
+    return this.getVisible(limit);
+  }
+}
+
+export class AlphaBetStaffService extends BaseFirestoreService<TeamMember> {
+  constructor() {
+    super('alphabet-staff');
+  }
+
+  async getFeaturedStaff(limit: number = 10): Promise<TeamMember[]> {
+    return this.getVisible(limit);
+  }
+}
+
 export class TeamHeaderService extends BaseFirestoreService<TeamHeader> {
   constructor() {
     super('team-headers');
@@ -119,6 +139,20 @@ export class CMSServiceFactory {
       this.instances.set('team', new TeamMemberService());
     }
     return this.instances.get('team');
+  }
+
+  static getFounderService(): FounderService {
+    if (!this.instances.has('founder')) {
+      this.instances.set('founder', new FounderService());
+    }
+    return this.instances.get('founder');
+  }
+
+  static getAlphaBetStaffService(): AlphaBetStaffService {
+    if (!this.instances.has('alphabetStaff')) {
+      this.instances.set('alphabetStaff', new AlphaBetStaffService());
+    }
+    return this.instances.get('alphabetStaff');
   }
 
   static getTeamHeaderService(): TeamHeaderService {

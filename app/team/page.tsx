@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import TeamSection from '@/components/public/team-section';
+import TeamSections from '@/components/public/team-sections';
 import SEOHead from '@/components/seo/SEOHead';
 import BottomNavigation from '@/components/public/bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
@@ -12,13 +12,16 @@ import { CMSServiceFactory } from '@/lib/cms/content-services';
 import { TeamMember, TeamHeader } from '@/lib/types/cms';
 
 export default function TeamPage() {
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [founders, setFounders] = useState<TeamMember[]>([]);
+  const [staff, setStaff] = useState<TeamMember[]>([]);
+  const [team, setTeam] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
   const [editingType, setEditingType] = useState<'member' | 'header'>('member');
+  const [editingSection, setEditingSection] = useState<'founders' | 'staff' | 'team'>('team');
 
   // Enable URL-based admin access
   useUrlAdminAccess();
@@ -26,8 +29,14 @@ export default function TeamPage() {
   const loadContent = useCallback(async () => {
     try {
       setLoading(true);
-      const teamData = await CMSServiceFactory.getTeamMemberService().getFeaturedMembers();
-      setTeamMembers(teamData);
+      const [foundersData, staffData, teamData] = await Promise.all([
+        CMSServiceFactory.getFounderService().getFeaturedFounders(),
+        CMSServiceFactory.getAlphaBetStaffService().getFeaturedStaff(),
+        CMSServiceFactory.getTeamMemberService().getFeaturedMembers()
+      ]);
+      setFounders(foundersData);
+      setStaff(staffData);
+      setTeam(teamData);
     } catch (error) {
       console.error('Error loading team content:', error);
     } finally {
@@ -35,9 +44,10 @@ export default function TeamPage() {
     }
   }, []);
 
-  const handleEdit = useCallback((item?: TeamMember) => {
+  const handleEdit = useCallback((item?: TeamMember, section?: 'founders' | 'staff' | 'team') => {
     setEditingItem(item);
     setEditingType('member');
+    setEditingSection(section || 'team');
     setEditModalOpen(true);
   }, []);
 
@@ -65,16 +75,23 @@ export default function TeamPage() {
         console.log('Saving header data:', data);
         // await CMSServiceFactory.getTeamHeaderService().update('team-header-1', data);
       } else {
-        // Save team member data
+        // Save team member data based on section
+        const service = editingSection === 'founders' ? CMSServiceFactory.getFounderService() :
+                       editingSection === 'staff' ? CMSServiceFactory.getAlphaBetStaffService() :
+                       CMSServiceFactory.getTeamMemberService();
+        
+        const currentData = editingSection === 'founders' ? founders :
+                           editingSection === 'staff' ? staff : team;
+        
         if (editingItem) {
-          await CMSServiceFactory.getTeamMemberService().update(editingItem.id, data);
+          await service.update(editingItem.id, data);
         } else {
-          const teamData = {
+          const memberData = {
             ...data,
             isVisible: true,
-            order: teamMembers.length + 1
+            order: currentData.length + 1
           };
-          await CMSServiceFactory.getTeamMemberService().create(teamData);
+          await service.create(memberData);
         }
         await loadContent();
       }
@@ -82,12 +99,15 @@ export default function TeamPage() {
       console.error('Error saving:', error);
       throw error;
     }
-  }, [editingItem, editingType, teamMembers.length, loadContent]);
+  }, [editingItem, editingType, editingSection, founders.length, staff.length, team.length, loadContent]);
 
-  const handleDelete = useCallback(async (memberId: string) => {
+  const handleDelete = useCallback(async (memberId: string, section?: 'founders' | 'staff' | 'team') => {
     if (window.confirm('Are you sure you want to delete this team member?')) {
       try {
-        await CMSServiceFactory.getTeamMemberService().delete(memberId);
+        const service = section === 'founders' ? CMSServiceFactory.getFounderService() :
+                       section === 'staff' ? CMSServiceFactory.getAlphaBetStaffService() :
+                       CMSServiceFactory.getTeamMemberService();
+        await service.delete(memberId);
         await loadContent();
       } catch (error) {
         console.error('Error deleting:', error);
@@ -151,7 +171,14 @@ export default function TeamPage() {
         <SimpleAdminToggle />
         
         {/* Team Section */}
-        <TeamSection members={teamMembers} onEdit={handleEdit} onDelete={handleDelete} onEditHeader={handleEditHeader} />
+        <TeamSections 
+          founders={founders} 
+          staff={staff} 
+          team={team} 
+          onEdit={handleEdit} 
+          onDelete={handleDelete} 
+          onEditHeader={handleEditHeader} 
+        />
 
         {/* Bottom Navigation */}
         <BottomNavigation currentPage="team" />
@@ -165,7 +192,7 @@ export default function TeamPage() {
             setEditingItem(null);
           }}
           onSave={handleSave}
-          title={editingType === 'header' ? "Edit Team Section Header" : (editingItem?.name ? `Edit ${editingItem.name}` : "Add New Team Member")}
+          title={editingType === 'header' ? "Edit Team Section Header" : (editingItem?.name ? `Edit ${editingItem.name}` : `Add New ${editingSection === 'founders' ? 'Founder' : editingSection === 'staff' ? 'Staff Member' : 'Team Member'}`)}
           fields={editingType === 'header' ? headerFields : memberFields}
           initialData={editingItem}
           loading={loading}

@@ -62,7 +62,7 @@ export default function EditModal({
       setFormHistory([initData]);
       setHistoryIndex(0);
     }
-  }, [isOpen, fields, initialData]);
+  }, [isOpen, fields.length, initialData?.id]);
 
   // Reset form data when modal closes
   useEffect(() => {
