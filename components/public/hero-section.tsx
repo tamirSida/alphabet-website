@@ -1,11 +1,13 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 interface HeroSectionProps {
   headline: string;
   subHeadline: string;
+  subHeadline2?: string;
   ctaText: string;
   ctaLink: string;
   backgroundImage?: string;
@@ -14,10 +16,30 @@ interface HeroSectionProps {
 export default function HeroSection({
   headline,
   subHeadline,
+  subHeadline2,
   ctaText,
   ctaLink,
   backgroundImage
 }: HeroSectionProps) {
+  const [dividerWidth, setDividerWidth] = useState(200);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const updateDividerWidth = () => {
+      if (subtitleRef.current) {
+        const textWidth = subtitleRef.current.scrollWidth;
+        const maxWidth = window.innerWidth * 0.9;
+        setDividerWidth(Math.min(textWidth, maxWidth));
+      }
+    };
+
+    // Update width on mount and resize
+    updateDividerWidth();
+    window.addEventListener('resize', updateDividerWidth);
+    
+    return () => window.removeEventListener('resize', updateDividerWidth);
+  }, [subHeadline]);
+
   return (
     <section 
       className="relative min-h-screen flex items-center justify-center px-4 py-16"
@@ -31,9 +53,28 @@ export default function HeroSection({
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
           {headline}
         </h1>
-        <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+        {/* First subtitle line */}
+        <p 
+          ref={subtitleRef}
+          className="text-lg sm:text-xl md:text-2xl text-gray-200 font-bold mb-4 max-w-3xl mx-auto leading-relaxed"
+        >
           {subHeadline}
         </p>
+        
+        {/* Gradient divider that matches first subtitle width */}
+        <div className="flex justify-center mb-4">
+          <div 
+            className="h-1 bg-gradient-to-r from-purple-500 to-red-500 rounded-full transition-all duration-300"
+            style={{ width: `${dividerWidth}px` }}
+          ></div>
+        </div>
+        
+        {/* Second subtitle line */}
+        {subHeadline2 && (
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+            {subHeadline2}
+          </p>
+        )}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Link href={ctaLink}>
             <Button 

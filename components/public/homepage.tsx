@@ -341,7 +341,8 @@ function AlphaBetHomepageContent() {
       case 'hero':
         return [
           { key: 'headline', label: 'Headline', type: 'text' as const, required: true, placeholder: 'Enter the main headline' },
-          { key: 'subHeadline', label: 'Sub-headline', type: 'textarea' as const, required: true, placeholder: 'Enter the sub-headline description' },
+          { key: 'subHeadline', label: 'First Sub-headline', type: 'textarea' as const, required: true, placeholder: 'The only entrepreneurship program for US and Israeli combat veterans.' },
+          { key: 'subHeadline2', label: 'Second Sub-headline', type: 'textarea' as const, required: false, placeholder: 'Alpha-Bet equips you with the skills, network, and battle-tested mindset to build a successful startup...' },
           { key: 'ctaText', label: 'Call-to-Action Text', type: 'text' as const, required: true, placeholder: 'e.g., Apply Now' },
           { key: 'ctaLink', label: 'Call-to-Action Link', type: 'text' as const, required: true, placeholder: '/curriculum or https://...' },
           { key: 'backgroundImage', label: 'Background Image URL', type: 'url' as const, required: false, placeholder: 'https://...' }
@@ -392,7 +393,8 @@ function AlphaBetHomepageContent() {
   // Fallback hero if no content is found
   const defaultHero = {
     headline: "From Battlefield to Business: Your Next Mission Starts Here.",
-    subHeadline: "Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, designed to equip you with the skills, network, and battle-tested mindset to build a successful startup. It's time to channel your experience into innovation.",
+    subHeadline: "The only entrepreneurship program for US and Israeli combat veterans.",
+    subHeadline2: "Alpha-Bet equips you with the skills, network, and battle-tested mindset to build a successful startup. It's time to channel your experience into innovation.",
     ctaText: "Explore Program",
     ctaLink: "/curriculum"
   };
@@ -416,6 +418,7 @@ function AlphaBetHomepageContent() {
           <HeroSection
             headline={activeHero.headline}
             subHeadline={activeHero.subHeadline}
+            subHeadline2={activeHero.subHeadline2}
             ctaText={activeHero.ctaText}
             ctaLink={activeHero.ctaLink}
             backgroundImage={hero?.backgroundImage}

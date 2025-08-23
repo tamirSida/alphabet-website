@@ -2,6 +2,7 @@ export interface HeroSection {
   id: string;
   headline: string;
   subHeadline: string;
+  subHeadline2?: string;
   ctaText: string;
   ctaLink: string;
   backgroundImage?: string;
