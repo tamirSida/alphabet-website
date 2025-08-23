@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import WhoShouldApplySection from '@/components/public/who-should-apply-section';
 import ProgramOverviewSection from '@/components/public/program-overview-section';
 import SEOHead from '@/components/seo/SEOHead';
 import BottomNavigation from '@/components/public/bottom-navigation';
@@ -9,10 +8,9 @@ import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/comp
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
 import EditModal from '@/components/admin/edit-modal';
 import { CMSServiceFactory } from '@/lib/cms/content-services';
-import { Qualification, ProgramIntro, ParticipantType, CandidateProfile, ProgramExclusions } from '@/lib/types/cms';
+import { ProgramIntro, ParticipantType, CandidateProfile, ProgramExclusions } from '@/lib/types/cms';
 
 export default function QualificationsPage() {
-  const [qualifications, setQualifications] = useState<Qualification[]>([]);
   const [programIntro, setProgramIntro] = useState<ProgramIntro | null>(null);
   const [participantTypes, setParticipantTypes] = useState<ParticipantType[]>([]);
   const [candidateProfile, setCandidateProfile] = useState<CandidateProfile | null>(null);
@@ -22,7 +20,7 @@ export default function QualificationsPage() {
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
-  const [editingType, setEditingType] = useState<'qualification' | 'header' | 'programIntro' | 'participantType' | 'candidateProfile' | 'programExclusions'>('qualification');
+  const [editingType, setEditingType] = useState<'programIntro' | 'participantType' | 'candidateProfile' | 'programExclusions'>('programIntro');
 
   // Enable URL-based admin access
   useUrlAdminAccess();
@@ -31,20 +29,17 @@ export default function QualificationsPage() {
     try {
       setLoading(true);
       const [
-        qualificationData,
         programIntroData,
         participantTypesData,
         candidateProfileData,
         programExclusionsData
       ] = await Promise.all([
-        CMSServiceFactory.getQualificationService().getAll(),
         CMSServiceFactory.getProgramIntroService().getActiveProgramIntro(),
         CMSServiceFactory.getParticipantTypeService().getVisible(),
         CMSServiceFactory.getCandidateProfileService().getActiveCandidateProfile(),
         CMSServiceFactory.getProgramExclusionsService().getActiveProgramExclusions()
       ]);
       
-      setQualifications(qualificationData);
       setProgramIntro(programIntroData);
       setParticipantTypes(participantTypesData);
       setCandidateProfile(candidateProfileData);
@@ -56,23 +51,6 @@ export default function QualificationsPage() {
     }
   }, []);
 
-  const handleEdit = useCallback((item?: Qualification) => {
-    setEditingItem(item);
-    setEditingType('qualification');
-    setEditModalOpen(true);
-  }, []);
-
-  const handleEditHeader = useCallback(() => {
-    const defaultHeader = {
-      type: 'header',
-      subtitle: 'QUALIFICATION CRITERIA',
-      title: 'Who Should Apply?',
-      description: "We're looking for exceptional veterans ready to transform their military experience into entrepreneurial success."
-    };
-    setEditingItem(defaultHeader);
-    setEditingType('header');
-    setEditModalOpen(true);
-  }, []);
 
   const handleEditIntro = useCallback(() => {
     const defaultIntro = {
@@ -129,10 +107,7 @@ export default function QualificationsPage() {
 
   const handleSave = useCallback(async (data: any) => {
     try {
-      if (editingType === 'header') {
-        // Save header data (for now, just log - in full implementation would save to CMS)
-        console.log('Saving header data:', data);
-      } else if (editingType === 'programIntro') {
+      if (editingType === 'programIntro') {
         // Save program intro data
         const introData = {
           title: data.title,
@@ -192,40 +167,12 @@ export default function QualificationsPage() {
           await CMSServiceFactory.getProgramExclusionsService().create(exclusionsData);
         }
         await loadContent();
-      } else {
-        // Save qualification data
-        if (editingItem && editingItem.id && !editingItem.id.startsWith('qual-')) {
-          // Update existing CMS qualification
-          await CMSServiceFactory.getQualificationService().update(editingItem.id, data);
-        } else {
-          // Create new qualification
-          const qualificationData = {
-            ...data,
-            isVisible: true,
-            order: data.order || qualifications.length + 1
-          };
-          await CMSServiceFactory.getQualificationService().create(qualificationData);
-        }
-        await loadContent();
       }
     } catch (error) {
       console.error('Error saving:', error);
       throw error;
     }
-  }, [editingItem, editingType, qualifications.length, participantTypes.length, loadContent, programIntro, candidateProfile, programExclusions]);
-
-  const qualificationFields = useMemo(() => [
-    { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Combat Veteran Status' },
-    { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter qualification description...' },
-    { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-shield-alt' },
-    { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-5' }
-  ], []);
-
-  const headerFields = useMemo(() => [
-    { key: 'subtitle', label: 'Badge Text', type: 'text' as const, required: true, placeholder: 'e.g., QUALIFICATION CRITERIA' },
-    { key: 'title', label: 'Main Heading', type: 'text' as const, required: true, placeholder: 'e.g., Who Should Apply?' },
-    { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter section description...' }
-  ], []);
+  }, [editingItem, editingType, participantTypes.length, loadContent, programIntro, candidateProfile, programExclusions]);
 
   const programIntroFields = useMemo(() => [
     { key: 'title', label: 'Title', type: 'text' as const, required: false, placeholder: 'Optional section title' },
@@ -254,8 +201,6 @@ export default function QualificationsPage() {
 
   const getEditFields = useCallback(() => {
     switch (editingType) {
-      case 'header':
-        return headerFields;
       case 'programIntro':
         return programIntroFields;
       case 'participantType':
@@ -263,17 +208,13 @@ export default function QualificationsPage() {
       case 'candidateProfile':
         return candidateProfileFields;
       case 'programExclusions':
-        return programExclusionsFields;
-      case 'qualification':
       default:
-        return qualificationFields;
+        return programExclusionsFields;
     }
-  }, [editingType, headerFields, programIntroFields, participantTypeFields, candidateProfileFields, programExclusionsFields, qualificationFields]);
+  }, [editingType, programIntroFields, participantTypeFields, candidateProfileFields, programExclusionsFields]);
 
   const getModalTitle = useCallback(() => {
     switch (editingType) {
-      case 'header':
-        return "Edit Qualifications Section Header";
       case 'programIntro':
         return "Edit Program Introduction";
       case 'participantType':
@@ -281,10 +222,8 @@ export default function QualificationsPage() {
       case 'candidateProfile':
         return "Edit Candidate Profile";
       case 'programExclusions':
-        return "Edit Program Exclusions";
-      case 'qualification':
       default:
-        return editingItem?.title ? `Edit ${editingItem.title}` : "Add New Qualification";
+        return "Edit Program Exclusions";
     }
   }, [editingType, editingItem]);
 
@@ -335,13 +274,6 @@ export default function QualificationsPage() {
           onEditParticipantType={handleEditParticipantType}
           onEditCandidateProfile={handleEditCandidateProfile}
           onEditExclusions={handleEditExclusions}
-        />
-        
-        {/* Qualifications Section */}
-        <WhoShouldApplySection 
-          qualifications={qualifications} 
-          onEdit={handleEdit}
-          onEditHeader={handleEditHeader}
         />
 
         {/* Bottom Navigation */}
