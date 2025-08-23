@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { X, Undo, Redo } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,6 +42,17 @@ export default function EditModal({
   const [formHistory, setFormHistory] = useState<any[]>([]);
   const [historyIndex, setHistoryIndex] = useState(0);
 
+  // Create a stable key for dependencies
+  const dependencyKey = useMemo(() => {
+    return JSON.stringify({
+      isOpen,
+      fieldsLength: fields.length,
+      initialId: initialData?.id || 'new',
+      initialName: initialData?.name || '',
+      fieldsKeys: fields.map(f => f.key).join(',')
+    });
+  }, [isOpen, fields.length, initialData?.id, initialData?.name, fields]);
+
   // Initialize form data when modal opens
   useEffect(() => {
     if (isOpen && fields.length > 0) {
@@ -63,7 +74,7 @@ export default function EditModal({
       setFormHistory([initData]);
       setHistoryIndex(0);
     }
-  }, [isOpen, fields.length, initialData]);
+  }, [dependencyKey]);
 
   // Reset form data when modal closes
   useEffect(() => {
