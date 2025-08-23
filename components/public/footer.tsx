@@ -64,6 +64,7 @@ export default function Footer() {
                   width={80}
                   height={40}
                   className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ width: 'auto', height: 'auto' }}
                 />
                 <Image 
                   src="/partnerships/honor-foundation.png"
@@ -71,6 +72,7 @@ export default function Footer() {
                   width={80}
                   height={40}
                   className="object-contain filter brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ width: 'auto', height: 'auto' }}
                 />
                 <Image 
                   src="/partnerships/momentum.png"
@@ -78,6 +80,7 @@ export default function Footer() {
                   width={80}
                   height={40}
                   className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ width: 'auto', height: 'auto', maxWidth: '80px', maxHeight: '40px' }}
                 />
                 <Image 
                   src="/partnerships/seal-future.png"
@@ -85,6 +88,7 @@ export default function Footer() {
                   width={80}
                   height={40}
                   className="object-contain filter brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ width: 'auto', height: 'auto' }}
                 />
                 <Image 
                   src="/partnerships/shabak.png"
@@ -92,6 +96,7 @@ export default function Footer() {
                   width={80}
                   height={40}
                   className="object-contain filter brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </div>
             </div>

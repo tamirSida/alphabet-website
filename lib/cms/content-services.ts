@@ -7,6 +7,7 @@ import {
   TeamHeader,
   Testimonial, 
   CurriculumItem, 
+  CurriculumHeader,
   CallToAction,
   Qualification,
   FAQ
@@ -90,6 +91,17 @@ export class TestimonialService extends BaseFirestoreService<Testimonial> {
 export class CurriculumService extends BaseFirestoreService<CurriculumItem> {
   constructor() {
     super('curriculum-items');
+  }
+}
+
+export class CurriculumHeaderService extends BaseFirestoreService<CurriculumHeader> {
+  constructor() {
+    super('curriculum-headers');
+  }
+
+  async getActiveHeader(): Promise<CurriculumHeader | null> {
+    const headers = await this.getVisible(1);
+    return headers.length > 0 ? headers[0] : null;
   }
 }
 
@@ -198,4 +210,10 @@ export class CMSServiceFactory {
     return this.instances.get('faq');
   }
 
+  static getCurriculumHeaderService(): CurriculumHeaderService {
+    if (!this.instances.has('curriculumHeader')) {
+      this.instances.set('curriculumHeader', new CurriculumHeaderService());
+    }
+    return this.instances.get('curriculumHeader');
+  }
 }

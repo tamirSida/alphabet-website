@@ -3,20 +3,28 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useAdmin } from '@/lib/cms/admin-context';
-import { CurriculumItem } from '@/lib/types/cms';
+import { CurriculumItem, CurriculumHeader } from '@/lib/types/cms';
 
 interface CurriculumTimelineProps {
   items: CurriculumItem[];
+  header?: CurriculumHeader | null;
   onEdit?: (item?: CurriculumItem) => void;
   onEditHeader?: () => void;
   onEditCTA?: () => void;
 }
 
-export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEditCTA }: CurriculumTimelineProps) {
+export default function CurriculumTimeline({ items, header, onEdit, onEditHeader, onEditCTA }: CurriculumTimelineProps) {
   const { isAdminMode } = useAdmin();
   const [isDecrypting, setIsDecrypting] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
+  
+  // Default header values with fallback to CMS data
+  const activeHeader = {
+    badge: header?.badge || '10-WEEK CURRICULUM',
+    title: header?.title || 'The Alpha-Bet Program',
+    description: header?.description || 'A practical MBA for founders, designed to turn your idea into a viable business.'
+  };
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingText, setLoadingText] = useState('INITIALIZING...');
   const [mobileModalOpen, setMobileModalOpen] = useState(false);
@@ -144,15 +152,15 @@ export default function CurriculumTimeline({ items, onEdit, onEditHeader, onEdit
           
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 mb-4">
             <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-            <span className="text-white/80 text-xs font-medium tracking-wide">10-WEEK CURRICULUM</span>
+            <span className="text-white/80 text-xs font-medium tracking-wide">{activeHeader.badge}</span>
           </div>
           
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
-            The Alpha-Bet Program
+            {activeHeader.title}
           </h2>
           
           <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            A practical MBA for founders, designed to turn your idea into a viable business.
+            {activeHeader.description}
           </p>
         </div>
 

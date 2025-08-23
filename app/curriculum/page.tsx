@@ -9,10 +9,11 @@ import EditableSection from '@/components/admin/editable-section';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
 import EditModal from '@/components/admin/edit-modal';
 import { CMSServiceFactory } from '@/lib/cms/content-services';
-import { CurriculumItem } from '@/lib/types/cms';
+import { CurriculumItem, CurriculumHeader } from '@/lib/types/cms';
 
 export default function CurriculumPage() {
   const [curriculum, setCurriculum] = useState<CurriculumItem[]>([]);
+  const [curriculumHeader, setCurriculumHeader] = useState<CurriculumHeader | null>(null);
   const [loading, setLoading] = useState(true);
   
   // Modal state
@@ -26,8 +27,12 @@ export default function CurriculumPage() {
   const loadContent = useCallback(async () => {
     try {
       setLoading(true);
-      const curriculumData = await CMSServiceFactory.getCurriculumService().getVisible();
+      const [curriculumData, headerData] = await Promise.all([
+        CMSServiceFactory.getCurriculumService().getVisible(),
+        CMSServiceFactory.getCurriculumHeaderService().getActiveHeader()
+      ]);
       setCurriculum(curriculumData);
+      setCurriculumHeader(headerData);
     } catch (error) {
       console.error('Error loading curriculum content:', error);
     } finally {
@@ -42,16 +47,15 @@ export default function CurriculumPage() {
   }, []);
 
   const handleEditHeader = useCallback(() => {
-    const defaultHeader = {
-      type: 'header',
+    const headerToEdit = curriculumHeader || {
       badge: '10-WEEK CURRICULUM',
       title: 'The Alpha-Bet Program',
       description: 'A practical MBA for founders, designed to turn your idea into a viable business.'
     };
-    setEditingItem(defaultHeader);
+    setEditingItem(headerToEdit);
     setEditingType('header');
     setEditModalOpen(true);
-  }, []);
+  }, [curriculumHeader]);
 
   const handleEditCTA = useCallback(() => {
     const defaultCTA = {
@@ -69,8 +73,23 @@ export default function CurriculumPage() {
   const handleSave = useCallback(async (data: any) => {
     try {
       if (editingType === 'header') {
-        // Save header data (for now, just log - in full implementation would save to CMS)
-        console.log('Saving curriculum header data:', data);
+        // Save header data to database
+        const headerData = {
+          badge: data.badge,
+          title: data.title,
+          description: data.description,
+          isVisible: true,
+          order: 1
+        };
+
+        if (curriculumHeader && curriculumHeader.id) {
+          // Update existing header
+          await CMSServiceFactory.getCurriculumHeaderService().update(curriculumHeader.id, headerData);
+        } else {
+          // Create new header
+          await CMSServiceFactory.getCurriculumHeaderService().create(headerData);
+        }
+        await loadContent();
       } else if (editingType === 'cta') {
         // Save CTA data (for now, just log - in full implementation would save to CMS)
         console.log('Saving curriculum CTA data:', data);
@@ -94,7 +113,7 @@ export default function CurriculumPage() {
       console.error('Error saving:', error);
       throw error;
     }
-  }, [editingItem, editingType, loadContent]);
+  }, [editingItem, editingType, loadContent, curriculumHeader]);
 
   const getEditFields = () => {
     if (editingType === 'header') {
@@ -160,6 +179,7 @@ export default function CurriculumPage() {
         {/* Curriculum Timeline */}
         <CurriculumTimeline 
           items={curriculum} 
+          header={curriculumHeader}
           onEdit={(item) => handleEdit(item)}
           onEditHeader={handleEditHeader}
           onEditCTA={handleEditCTA}

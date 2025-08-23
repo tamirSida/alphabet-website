@@ -108,6 +108,17 @@ export interface FAQ {
   updatedAt: Date;
 }
 
+export interface CurriculumHeader {
+  id: string;
+  badge: string; // "10-WEEK CURRICULUM"
+  title: string; // "The Alpha-Bet Program"
+  description: string; // Description text
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type ContentType = 
   | 'hero'
   | 'content-section'
