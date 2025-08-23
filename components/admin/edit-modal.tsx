@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { X, Undo, Redo } from 'lucide-react';
+import { X, Undo, Redo, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 interface FormField {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'email' | 'url' | 'number' | 'radio' | 'date';
+  type: 'text' | 'textarea' | 'email' | 'url' | 'number' | 'radio' | 'date' | 'titles-list';
   required?: boolean;
   placeholder?: string;
   value?: string;
@@ -208,6 +208,91 @@ export default function EditModal({
                         <span className="text-sm text-gray-700">{option.label}</span>
                       </label>
                     ))}
+                  </div>
+                ) : field.type === 'titles-list' ? (
+                  <div className="space-y-3">
+                    {/* Titles List */}
+                    {(formData[field.key] || []).map((titleItem: any, index: number) => (
+                      <div key={index} className="flex gap-2 items-start">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
+                          <Input
+                            type="text"
+                            placeholder="Title (e.g., Academic Director)"
+                            value={titleItem?.title || ''}
+                            onChange={(e) => {
+                              const newTitles = [...(formData[field.key] || [])];
+                              newTitles[index] = {
+                                ...newTitles[index],
+                                id: newTitles[index]?.id || `title-${Date.now()}-${index}`,
+                                title: e.target.value
+                              };
+                              updateFormData({
+                                ...formData,
+                                [field.key]: newTitles
+                              });
+                            }}
+                            className="w-full"
+                          />
+                          <Input
+                            type="text"
+                            placeholder="Organization (e.g., Alpha-Bet)"
+                            value={titleItem?.organization || ''}
+                            onChange={(e) => {
+                              const newTitles = [...(formData[field.key] || [])];
+                              newTitles[index] = {
+                                ...newTitles[index],
+                                id: newTitles[index]?.id || `title-${Date.now()}-${index}`,
+                                organization: e.target.value
+                              };
+                              updateFormData({
+                                ...formData,
+                                [field.key]: newTitles
+                              });
+                            }}
+                            className="w-full"
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const newTitles = [...(formData[field.key] || [])];
+                            newTitles.splice(index, 1);
+                            updateFormData({
+                              ...formData,
+                              [field.key]: newTitles
+                            });
+                          }}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                    
+                    {/* Add New Title Button */}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newTitles = [...(formData[field.key] || [])];
+                        newTitles.push({
+                          id: `title-${Date.now()}-${newTitles.length}`,
+                          title: '',
+                          organization: ''
+                        });
+                        updateFormData({
+                          ...formData,
+                          [field.key]: newTitles
+                        });
+                      }}
+                      className="w-full border-dashed border-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Title
+                    </Button>
                   </div>
                 ) : (
                   <Input

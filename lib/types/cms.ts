@@ -28,16 +28,21 @@ export interface ContentSection {
   updatedAt: Date;
 }
 
+export interface TeamMemberTitle {
+  id: string;
+  title: string; // e.g., "Academic Director, Alpha-Bet"
+  organization?: string; // e.g., "Alpha-Bet", "Version Bravo"
+}
+
 export interface TeamMember {
   id: string;
   name: string;
-  title?: string; // Job title/role
-  role: string; // For backwards compatibility
+  titles: TeamMemberTitle[]; // Array of multiple titles/positions
+  role: string; // For backwards compatibility - will use first title as fallback
   bio?: string;
   image?: string;
   military?: string; // Military background
   linkedinUrl?: string;
-  isFounder?: boolean; // Whether they're a founder
   order: number;
   isVisible: boolean;
   createdAt: Date;

@@ -51,6 +51,16 @@ export class TeamMemberService extends BaseFirestoreService<TeamMember> {
   }
 }
 
+export class AlphaBetTeamService extends BaseFirestoreService<TeamMember> {
+  constructor() {
+    super('alpha-bet-team'); // New unified collection
+  }
+
+  async getAllTeamMembers(): Promise<TeamMember[]> {
+    return this.getVisible();
+  }
+}
+
 export class FounderService extends BaseFirestoreService<TeamMember> {
   constructor() {
     super('founders');
@@ -286,5 +296,12 @@ export class CMSServiceFactory {
       this.instances.set('programExclusions', new ProgramExclusionsService());
     }
     return this.instances.get('programExclusions');
+  }
+
+  static getAlphaBetTeamService(): AlphaBetTeamService {
+    if (!this.instances.has('alphaBetTeam')) {
+      this.instances.set('alphaBetTeam', new AlphaBetTeamService());
+    }
+    return this.instances.get('alphaBetTeam');
   }
 }
