@@ -225,38 +225,20 @@ export default function EditModal({
               </div>
             ))}
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Order
-                </label>
-                <Input
-                  type="number"
-                  value={formData.order || 1}
-                  onChange={(e) => setFormData((prev: any) => ({
-                    ...prev,
-                    order: parseInt(e.target.value) || 1
-                  }))}
-                  min="1"
-                  className="w-full"
-                />
-              </div>
-
-              <div className="flex items-center space-x-2 pt-6">
-                <input
-                  type="checkbox"
-                  id="isVisible"
-                  checked={formData.isVisible !== false}
-                  onChange={(e) => setFormData((prev: any) => ({
-                    ...prev,
-                    isVisible: e.target.checked
-                  }))}
-                  className="rounded"
-                />
-                <label htmlFor="isVisible" className="text-sm font-medium text-gray-700">
-                  Visible on website
-                </label>
-              </div>
+            <div className="flex items-center space-x-2 pt-6">
+              <input
+                type="checkbox"
+                id="isVisible"
+                checked={formData.isVisible !== false}
+                onChange={(e) => updateFormData({
+                  ...formData,
+                  isVisible: e.target.checked
+                })}
+                className="rounded"
+              />
+              <label htmlFor="isVisible" className="text-sm font-medium text-gray-700">
+                Visible on website
+              </label>
             </div>
           </div>
 

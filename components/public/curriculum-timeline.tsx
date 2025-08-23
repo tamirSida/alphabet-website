@@ -298,6 +298,7 @@ export default function CurriculumTimeline({ items, header, onEdit, onEditHeader
     }
   };
 
+
   return (
     <section className="py-12 sm:py-16 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
       {/* Background Elements */}
@@ -433,7 +434,7 @@ export default function CurriculumTimeline({ items, header, onEdit, onEditHeader
               key={item.id}
               className={`flex flex-col lg:flex-row items-center gap-6 lg:gap-12 ${
                 index % 2 === 1 ? 'lg:flex-row-reverse' : ''
-              }`}
+              } transition-all duration-300`}
               onMouseEnter={() => isLoaded && setHoveredWeek(item.weekNumber)}
               onMouseLeave={() => isLoaded && setHoveredWeek(null)}
             >
@@ -558,6 +559,7 @@ export default function CurriculumTimeline({ items, header, onEdit, onEditHeader
                   </div>
                 )}
               </div>
+              
             </div>
           ))}
         </div>

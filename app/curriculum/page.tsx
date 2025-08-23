@@ -8,10 +8,13 @@ import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/comp
 import EditableSection from '@/components/admin/editable-section';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
 import EditModal from '@/components/admin/edit-modal';
+import CurriculumOrdering from '@/components/admin/curriculum-ordering';
 import { CMSServiceFactory } from '@/lib/cms/content-services';
 import { CurriculumItem, CurriculumHeader } from '@/lib/types/cms';
+import { useAdmin } from '@/lib/cms/admin-context';
 
 export default function CurriculumPage() {
+  const { isAdminMode } = useAdmin();
   const [curriculum, setCurriculum] = useState<CurriculumItem[]>([]);
   const [curriculumHeader, setCurriculumHeader] = useState<CurriculumHeader | null>(null);
   const [loading, setLoading] = useState(true);
@@ -103,7 +106,7 @@ export default function CurriculumPage() {
           const curriculumData = {
             ...data,
             isVisible: true,
-            order: data.weekNumber || 1
+            order: data.order || data.weekNumber || 1
           };
           await CMSServiceFactory.getCurriculumService().create(curriculumData);
         }
@@ -114,6 +117,30 @@ export default function CurriculumPage() {
       throw error;
     }
   }, [editingItem, editingType, loadContent, curriculumHeader]);
+
+  const handleReorder = useCallback(async (reorderedItems: CurriculumItem[]) => {
+    try {
+      // Update the local state immediately for better UX
+      setCurriculum(reorderedItems);
+      
+      // Update the order field for all items in the database
+      const updatePromises = reorderedItems.map((item) => {
+        if (item.id && !item.id.startsWith('week-')) {
+          // Only update Firestore documents, not default data
+          return CMSServiceFactory.getCurriculumService().update(item.id, { order: item.order });
+        }
+        return Promise.resolve();
+      });
+      
+      await Promise.all(updatePromises.filter(Boolean));
+      // Reload content to ensure consistency
+      await loadContent();
+    } catch (error) {
+      console.error('Error reordering curriculum items:', error);
+      // Reload content on error to restore previous state
+      await loadContent();
+    }
+  }, [loadContent]);
 
   const getEditFields = () => {
     if (editingType === 'header') {
@@ -181,6 +208,15 @@ export default function CurriculumPage() {
         <DiscreteAdminDot />
         <SimpleAdminToggle />
         
+        {/* Admin Curriculum Ordering Module */}
+        {isAdminMode && curriculum.length > 0 && (
+          <div className="max-w-4xl mx-auto px-4 py-6">
+            <CurriculumOrdering
+              items={curriculum}
+              onReorder={handleReorder}
+            />
+          </div>
+        )}
 
         {/* Curriculum Timeline */}
         <CurriculumTimeline 
