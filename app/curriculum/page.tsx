@@ -134,7 +134,13 @@ export default function CurriculumPage() {
       { key: 'weekNumber', label: 'Week Number', type: 'number' as const, required: true, placeholder: '1-10' },
       { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'Enter week title' },
       { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter week description...' },
-      { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-rocket' }
+      { key: 'icon', label: 'Font Awesome Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-rocket' },
+      { key: 'badge1Text', label: 'Badge 1 Text', type: 'text' as const, required: false, placeholder: 'e.g., Interactive Sessions' },
+      { key: 'badge1Icon', label: 'Badge 1 Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-clock' },
+      { key: 'badge2Text', label: 'Badge 2 Text', type: 'text' as const, required: false, placeholder: 'e.g., Peer Collaboration' },
+      { key: 'badge2Icon', label: 'Badge 2 Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-users' },
+      { key: 'badge3Text', label: 'Badge 3 Text', type: 'text' as const, required: false, placeholder: 'e.g., Practical Application' },
+      { key: 'badge3Icon', label: 'Badge 3 Icon', type: 'text' as const, required: false, placeholder: 'e.g., fas fa-lightbulb' }
     ];
   };
 

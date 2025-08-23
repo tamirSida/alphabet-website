@@ -32,16 +32,176 @@ export default function CurriculumTimeline({ items, header, onEdit, onEditHeader
   
   // Default curriculum data from your specification
   const defaultCurriculum = [
-    { id: 'week-1', weekNumber: 1, title: 'Orientation', description: 'Set the foundation for your entrepreneurial journey.', icon: 'fas fa-compass', order: 1, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
-    { id: 'week-2', weekNumber: 2, title: 'Choosing Partners', description: 'Learn to build a strong, reliable team.', icon: 'fas fa-handshake', order: 2, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
-    { id: 'week-3', weekNumber: 3, title: 'Ideation Process', description: 'Develop and refine your business idea.', icon: 'fas fa-lightbulb', order: 3, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
-    { id: 'week-4', weekNumber: 4, title: 'Lean Model Canvas', description: 'Master the fundamental framework for a startup.', icon: 'fas fa-drafting-compass', order: 4, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
-    { id: 'week-5', weekNumber: 5, title: 'Customer Discovery', description: 'Understand your market and find product-market fit.', icon: 'fas fa-search', order: 5, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
-    { id: 'week-6', weekNumber: 6, title: 'Networking', description: 'Build powerful connections with investors, mentors, and peers.', icon: 'fas fa-network-wired', order: 6, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
-    { id: 'week-7', weekNumber: 7, title: 'Market Analysis', description: 'Validate your concept with data-driven insights.', icon: 'fas fa-chart-line', order: 7, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
-    { id: 'week-8', weekNumber: 8, title: 'Business Plan', description: 'Create a clear, actionable roadmap for growth.', icon: 'fas fa-map', order: 8, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
-    { id: 'week-9', weekNumber: 9, title: 'Storytelling & Branding', description: 'Learn to communicate your mission and vision effectively.', icon: 'fas fa-bullhorn', order: 9, isVisible: true, createdAt: new Date(), updatedAt: new Date() },
-    { id: 'week-10', weekNumber: 10, title: 'Presentations', description: 'Prepare to pitch your business with confidence.', icon: 'fas fa-flag-checkered', order: 10, isVisible: true, createdAt: new Date(), updatedAt: new Date() }
+    { 
+      id: 'week-1', 
+      weekNumber: 1, 
+      title: 'Orientation', 
+      description: 'Set the foundation for your entrepreneurial journey.', 
+      icon: 'fas fa-compass', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 1, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
+      id: 'week-2', 
+      weekNumber: 2, 
+      title: 'Choosing Partners', 
+      description: 'Learn to build a strong, reliable team.', 
+      icon: 'fas fa-handshake', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 2, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
+      id: 'week-3', 
+      weekNumber: 3, 
+      title: 'Ideation Process', 
+      description: 'Develop and refine your business idea.', 
+      icon: 'fas fa-lightbulb', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 3, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
+      id: 'week-4', 
+      weekNumber: 4, 
+      title: 'Lean Model Canvas', 
+      description: 'Master the fundamental framework for a startup.', 
+      icon: 'fas fa-drafting-compass', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 4, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
+      id: 'week-5', 
+      weekNumber: 5, 
+      title: 'Customer Discovery', 
+      description: 'Understand your market and find product-market fit.', 
+      icon: 'fas fa-search', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 5, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
+      id: 'week-6', 
+      weekNumber: 6, 
+      title: 'Networking', 
+      description: 'Build powerful connections with investors, mentors, and peers.', 
+      icon: 'fas fa-network-wired', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 6, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
+      id: 'week-7', 
+      weekNumber: 7, 
+      title: 'Market Analysis', 
+      description: 'Validate your concept with data-driven insights.', 
+      icon: 'fas fa-chart-line', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 7, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
+      id: 'week-8', 
+      weekNumber: 8, 
+      title: 'Business Plan', 
+      description: 'Create a clear, actionable roadmap for growth.', 
+      icon: 'fas fa-map', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 8, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
+      id: 'week-9', 
+      weekNumber: 9, 
+      title: 'Storytelling & Branding', 
+      description: 'Learn to communicate your mission and vision effectively.', 
+      icon: 'fas fa-bullhorn', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 9, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
+      id: 'week-10', 
+      weekNumber: 10, 
+      title: 'Presentations', 
+      description: 'Prepare to pitch your business with confidence.', 
+      icon: 'fas fa-flag-checkered', 
+      badge1Text: 'Interactive Sessions',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Peer Collaboration', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: 'Practical Application',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 10, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    }
   ];
 
   // Merge CMS items with default data - show database items where they exist, default items elsewhere
@@ -56,13 +216,25 @@ export default function CurriculumTimeline({ items, header, onEdit, onEditHeader
       if (defaultIndex !== -1) {
         merged[defaultIndex] = {
           ...cmsItem,
-          icon: cmsItem.icon || defaultCurriculum[defaultIndex].icon
+          icon: cmsItem.icon || defaultCurriculum[defaultIndex].icon,
+          badge1Text: cmsItem.badge1Text || defaultCurriculum[defaultIndex].badge1Text,
+          badge1Icon: cmsItem.badge1Icon || defaultCurriculum[defaultIndex].badge1Icon,
+          badge2Text: cmsItem.badge2Text || defaultCurriculum[defaultIndex].badge2Text,
+          badge2Icon: cmsItem.badge2Icon || defaultCurriculum[defaultIndex].badge2Icon,
+          badge3Text: cmsItem.badge3Text || defaultCurriculum[defaultIndex].badge3Text,
+          badge3Icon: cmsItem.badge3Icon || defaultCurriculum[defaultIndex].badge3Icon
         };
       } else {
         // If CMS item has a week number not in defaults, add it
         merged.push({
           ...cmsItem,
-          icon: cmsItem.icon || 'fas fa-star'
+          icon: cmsItem.icon || 'fas fa-star',
+          badge1Text: cmsItem.badge1Text || 'Interactive Sessions',
+          badge1Icon: cmsItem.badge1Icon || 'fas fa-clock',
+          badge2Text: cmsItem.badge2Text || 'Peer Collaboration',
+          badge2Icon: cmsItem.badge2Icon || 'fas fa-users',
+          badge3Text: cmsItem.badge3Text || 'Practical Application',
+          badge3Icon: cmsItem.badge3Icon || 'fas fa-lightbulb'
         });
       }
     });
@@ -348,18 +520,24 @@ export default function CurriculumTimeline({ items, header, onEdit, onEditHeader
 
                     {/* Quick preview badges */}
                     <div className="flex flex-wrap gap-2">
-                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
-                        <i className="fas fa-clock mr-1"></i>
-                        Interactive Sessions
-                      </span>
-                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
-                        <i className="fas fa-users mr-1"></i>
-                        Peer Collaboration
-                      </span>
-                      <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
-                        <i className="fas fa-lightbulb mr-1"></i>
-                        Practical Application
-                      </span>
+                      {item.badge1Text && (
+                        <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                          {item.badge1Icon && <i className={`${item.badge1Icon} mr-1`}></i>}
+                          {item.badge1Text}
+                        </span>
+                      )}
+                      {item.badge2Text && (
+                        <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                          {item.badge2Icon && <i className={`${item.badge2Icon} mr-1`}></i>}
+                          {item.badge2Text}
+                        </span>
+                      )}
+                      {item.badge3Text && (
+                        <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                          {item.badge3Icon && <i className={`${item.badge3Icon} mr-1`}></i>}
+                          {item.badge3Text}
+                        </span>
+                      )}
                     </div>
 
                     {/* Mobile tap indicator */}
@@ -541,18 +719,24 @@ export default function CurriculumTimeline({ items, header, onEdit, onEditHeader
               {/* Quick preview badges */}
               <div className="mt-6 pt-4 border-t border-white/10">
                 <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
-                    <i className="fas fa-clock mr-1"></i>
-                    Interactive Sessions
-                  </span>
-                  <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
-                    <i className="fas fa-users mr-1"></i>
-                    Peer Collaboration
-                  </span>
-                  <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
-                    <i className="fas fa-lightbulb mr-1"></i>
-                    Practical Application
-                  </span>
+                  {mobileModalItem?.badge1Text && (
+                    <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                      {mobileModalItem.badge1Icon && <i className={`${mobileModalItem.badge1Icon} mr-1`}></i>}
+                      {mobileModalItem.badge1Text}
+                    </span>
+                  )}
+                  {mobileModalItem?.badge2Text && (
+                    <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                      {mobileModalItem.badge2Icon && <i className={`${mobileModalItem.badge2Icon} mr-1`}></i>}
+                      {mobileModalItem.badge2Text}
+                    </span>
+                  )}
+                  {mobileModalItem?.badge3Text && (
+                    <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                      {mobileModalItem.badge3Icon && <i className={`${mobileModalItem.badge3Icon} mr-1`}></i>}
+                      {mobileModalItem.badge3Text}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

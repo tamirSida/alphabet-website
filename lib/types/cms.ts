@@ -58,6 +58,12 @@ export interface CurriculumItem {
   title: string;
   description: string;
   icon?: string; // Font Awesome icon class (e.g., "fas fa-rocket")
+  badge1Text?: string; // First badge text (e.g., "Interactive Sessions")
+  badge1Icon?: string; // First badge icon (e.g., "fas fa-clock")
+  badge2Text?: string; // Second badge text (e.g., "Peer Collaboration") 
+  badge2Icon?: string; // Second badge icon (e.g., "fas fa-users")
+  badge3Text?: string; // Third badge text (e.g., "Practical Application")
+  badge3Icon?: string; // Third badge icon (e.g., "fas fa-lightbulb")
   order: number;
   isVisible: boolean;
   createdAt: Date;
