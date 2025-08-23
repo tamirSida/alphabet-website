@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAdmin } from '@/lib/cms/admin-context';
 import { ProgramIntro, ParticipantType, CandidateProfile, ProgramExclusions } from '@/lib/types/cms';
 
@@ -27,6 +27,8 @@ export default function ProgramOverviewSection({
 }: ProgramOverviewSectionProps) {
   const { isAdminMode } = useAdmin();
   const [showSection, setShowSection] = useState(false);
+  const [dividerWidth, setDividerWidth] = useState(300);
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   // Animation trigger
   useEffect(() => {
@@ -147,6 +149,23 @@ export default function ProgramOverviewSection({
   const displayCandidateProfile = candidateProfile || defaultCandidateProfile;
   const displayExclusions = programExclusions || defaultExclusions;
 
+  // Update divider width to match title width
+  useEffect(() => {
+    const updateDividerWidth = () => {
+      if (titleRef.current) {
+        const textWidth = titleRef.current.scrollWidth;
+        const maxWidth = window.innerWidth * 0.9;
+        setDividerWidth(Math.min(textWidth, maxWidth));
+      }
+    };
+
+    // Update width on mount and resize
+    updateDividerWidth();
+    window.addEventListener('resize', updateDividerWidth);
+    
+    return () => window.removeEventListener('resize', updateDividerWidth);
+  }, [displayIntro.description, showSection]);
+
   return (
     <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
       {/* Background Elements */}
@@ -155,11 +174,11 @@ export default function ProgramOverviewSection({
       
       <div className="max-w-6xl mx-auto relative z-10 space-y-16 sm:space-y-24">
         
-        {/* Program Introduction */}
-        <div className={`text-center transition-all duration-1000 ${
+        {/* Program Introduction Header */}
+        <div className={`text-center mb-16 transition-all duration-1000 ${
           showSection ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
         }`}>
-          <div className="relative group max-w-4xl mx-auto">
+          <div className="relative group max-w-5xl mx-auto">
             {/* Intro Edit Button */}
             {isAdminMode && onEditIntro && (
               <button
@@ -175,9 +194,20 @@ export default function ProgramOverviewSection({
               </button>
             )}
 
-            <p className="text-lg sm:text-xl text-gray-200 leading-relaxed">
+            <h1 
+              ref={titleRef}
+              className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-8 leading-tight tracking-tight"
+            >
               {displayIntro.description}
-            </p>
+            </h1>
+            
+            {/* Gradient divider line that spans title width */}
+            <div className="flex justify-center">
+              <div 
+                className="h-1 bg-gradient-to-r from-purple-500 to-red-500 rounded-full transition-all duration-300"
+                style={{ width: `${dividerWidth}px` }}
+              ></div>
+            </div>
           </div>
         </div>
 
@@ -186,7 +216,7 @@ export default function ProgramOverviewSection({
           showSection ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
         }`}>
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
               Two Types of Participants
             </h2>
           </div>
