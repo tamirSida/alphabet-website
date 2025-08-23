@@ -108,9 +108,9 @@ export default function TeamPage() {
         const service = CMSServiceFactory.getAlphaBetTeamService();
         await service.delete(memberId);
         await loadContent();
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Error deleting team member:', error);
-        alert(`Failed to delete team member. Error: ${error.message || 'Unknown error'}`);
+        alert(`Failed to delete team member. Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
   }, [loadContent]);
