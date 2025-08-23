@@ -10,7 +10,11 @@ import {
   CurriculumHeader,
   CallToAction,
   Qualification,
-  FAQ
+  FAQ,
+  ProgramIntro,
+  ParticipantType,
+  CandidateProfile,
+  ProgramExclusions
 } from '@/lib/types/cms';
 
 export class HeroService extends BaseFirestoreService<HeroSection> {
@@ -128,6 +132,45 @@ export class FAQService extends BaseFirestoreService<FAQ> {
   }
 }
 
+export class ProgramIntroService extends BaseFirestoreService<ProgramIntro> {
+  constructor() {
+    super('program-intros');
+  }
+
+  async getActiveProgramIntro(): Promise<ProgramIntro | null> {
+    const intros = await this.getVisible(1);
+    return intros.length > 0 ? intros[0] : null;
+  }
+}
+
+export class ParticipantTypeService extends BaseFirestoreService<ParticipantType> {
+  constructor() {
+    super('participant-types');
+  }
+}
+
+export class CandidateProfileService extends BaseFirestoreService<CandidateProfile> {
+  constructor() {
+    super('candidate-profiles');
+  }
+
+  async getActiveCandidateProfile(): Promise<CandidateProfile | null> {
+    const profiles = await this.getVisible(1);
+    return profiles.length > 0 ? profiles[0] : null;
+  }
+}
+
+export class ProgramExclusionsService extends BaseFirestoreService<ProgramExclusions> {
+  constructor() {
+    super('program-exclusions');
+  }
+
+  async getActiveProgramExclusions(): Promise<ProgramExclusions | null> {
+    const exclusions = await this.getVisible(1);
+    return exclusions.length > 0 ? exclusions[0] : null;
+  }
+}
+
 
 // Service factory for easy instantiation
 export class CMSServiceFactory {
@@ -215,5 +258,33 @@ export class CMSServiceFactory {
       this.instances.set('curriculumHeader', new CurriculumHeaderService());
     }
     return this.instances.get('curriculumHeader');
+  }
+
+  static getProgramIntroService(): ProgramIntroService {
+    if (!this.instances.has('programIntro')) {
+      this.instances.set('programIntro', new ProgramIntroService());
+    }
+    return this.instances.get('programIntro');
+  }
+
+  static getParticipantTypeService(): ParticipantTypeService {
+    if (!this.instances.has('participantType')) {
+      this.instances.set('participantType', new ParticipantTypeService());
+    }
+    return this.instances.get('participantType');
+  }
+
+  static getCandidateProfileService(): CandidateProfileService {
+    if (!this.instances.has('candidateProfile')) {
+      this.instances.set('candidateProfile', new CandidateProfileService());
+    }
+    return this.instances.get('candidateProfile');
+  }
+
+  static getProgramExclusionsService(): ProgramExclusionsService {
+    if (!this.instances.has('programExclusions')) {
+      this.instances.set('programExclusions', new ProgramExclusionsService());
+    }
+    return this.instances.get('programExclusions');
   }
 }

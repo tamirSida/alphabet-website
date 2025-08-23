@@ -2,22 +2,27 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import WhoShouldApplySection from '@/components/public/who-should-apply-section';
+import ProgramOverviewSection from '@/components/public/program-overview-section';
 import SEOHead from '@/components/seo/SEOHead';
 import BottomNavigation from '@/components/public/bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
 import EditModal from '@/components/admin/edit-modal';
 import { CMSServiceFactory } from '@/lib/cms/content-services';
-import { Qualification } from '@/lib/types/cms';
+import { Qualification, ProgramIntro, ParticipantType, CandidateProfile, ProgramExclusions } from '@/lib/types/cms';
 
 export default function QualificationsPage() {
   const [qualifications, setQualifications] = useState<Qualification[]>([]);
+  const [programIntro, setProgramIntro] = useState<ProgramIntro | null>(null);
+  const [participantTypes, setParticipantTypes] = useState<ParticipantType[]>([]);
+  const [candidateProfile, setCandidateProfile] = useState<CandidateProfile | null>(null);
+  const [programExclusions, setProgramExclusions] = useState<ProgramExclusions | null>(null);
   const [loading, setLoading] = useState(true);
   
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
-  const [editingType, setEditingType] = useState<'qualification' | 'header'>('qualification');
+  const [editingType, setEditingType] = useState<'qualification' | 'header' | 'programIntro' | 'participantType' | 'candidateProfile' | 'programExclusions'>('qualification');
 
   // Enable URL-based admin access
   useUrlAdminAccess();
@@ -25,8 +30,25 @@ export default function QualificationsPage() {
   const loadContent = useCallback(async () => {
     try {
       setLoading(true);
-      const qualificationData = await CMSServiceFactory.getQualificationService().getAll();
+      const [
+        qualificationData,
+        programIntroData,
+        participantTypesData,
+        candidateProfileData,
+        programExclusionsData
+      ] = await Promise.all([
+        CMSServiceFactory.getQualificationService().getAll(),
+        CMSServiceFactory.getProgramIntroService().getActiveProgramIntro(),
+        CMSServiceFactory.getParticipantTypeService().getVisible(),
+        CMSServiceFactory.getCandidateProfileService().getActiveCandidateProfile(),
+        CMSServiceFactory.getProgramExclusionsService().getActiveProgramExclusions()
+      ]);
+      
       setQualifications(qualificationData);
+      setProgramIntro(programIntroData);
+      setParticipantTypes(participantTypesData);
+      setCandidateProfile(candidateProfileData);
+      setProgramExclusions(programExclusionsData);
     } catch (error) {
       console.error('Error loading qualifications content:', error);
     } finally {
@@ -52,11 +74,124 @@ export default function QualificationsPage() {
     setEditModalOpen(true);
   }, []);
 
+  const handleEditIntro = useCallback(() => {
+    const defaultIntro = {
+      title: '',
+      description: 'Alpha-Bet is the launchpad for Veterans and Reservists ready to take their first steps into entrepreneurship. Whether you already have an idea or are simply curious about the path, this program gives you the tools, experience, and network to start building.'
+    };
+    const introToEdit = programIntro || defaultIntro;
+    setEditingItem(introToEdit);
+    setEditingType('programIntro');
+    setEditModalOpen(true);
+  }, [programIntro]);
+
+  const handleEditParticipantType = useCallback((type?: ParticipantType) => {
+    setEditingItem(type);
+    setEditingType('participantType');
+    setEditModalOpen(true);
+  }, []);
+
+  const handleEditCandidateProfile = useCallback(() => {
+    const defaultProfile = {
+      title: 'The Alpha-Bet Candidate',
+      description: '',
+      highlights: [
+        "Combat Veteran: Served in a combat role in the US or Israel.",
+        "Serious about exploring entrepreneurship, not just \"filling time\"",
+        "Collaborative, supportive, and eager to grow with others",
+        "Curious, adaptable, and driven to turn military leadership into entrepreneurial impact",
+        "Open to feedback and willing to put in the work to succeed"
+      ]
+    };
+    const profileToEdit = candidateProfile || defaultProfile;
+    setEditingItem(profileToEdit);
+    setEditingType('candidateProfile');
+    setEditModalOpen(true);
+  }, [candidateProfile]);
+
+  const handleEditExclusions = useCallback(() => {
+    const defaultExclusions = {
+      title: 'Who This Program Is Not For',
+      description: '',
+      highlights: [
+        "Those who aren't ready to commit to a process of learning and practicing a new craft",
+        "Experienced startup founders (the Version Bravo Accelerator is a better fit)",
+        "Founders who are not Veterans or who did not serve in a combat unit",
+        "Those who are using this as a way to figure out what to do next after the military - This program is open to transitioning or recently retired service members, however, you should be honest with yourself about whether you are genuinely interested in entrepreneurship or just looking for something to do after your service."
+      ],
+      note: "If you have entrepreneurial experience in other areas but want to understand the unique path of startups, Alpha-Bet is still a great fit."
+    };
+    const exclusionsToEdit = programExclusions || defaultExclusions;
+    setEditingItem(exclusionsToEdit);
+    setEditingType('programExclusions');
+    setEditModalOpen(true);
+  }, [programExclusions]);
+
   const handleSave = useCallback(async (data: any) => {
     try {
       if (editingType === 'header') {
         // Save header data (for now, just log - in full implementation would save to CMS)
         console.log('Saving header data:', data);
+      } else if (editingType === 'programIntro') {
+        // Save program intro data
+        const introData = {
+          title: data.title,
+          description: data.description,
+          isVisible: true,
+          order: 1
+        };
+        
+        if (programIntro && programIntro.id) {
+          await CMSServiceFactory.getProgramIntroService().update(programIntro.id, introData);
+        } else {
+          await CMSServiceFactory.getProgramIntroService().create(introData);
+        }
+        await loadContent();
+      } else if (editingType === 'participantType') {
+        // Save participant type data
+        const typeData = {
+          ...data,
+          highlights: Array.isArray(data.highlights) ? data.highlights : data.highlights.split('\n').filter((h: string) => h.trim()),
+          isVisible: true,
+          order: data.order || participantTypes.length + 1
+        };
+        
+        if (editingItem && editingItem.id && !editingItem.id.startsWith('explorer-') && !editingItem.id.startsWith('builder-')) {
+          await CMSServiceFactory.getParticipantTypeService().update(editingItem.id, typeData);
+        } else {
+          await CMSServiceFactory.getParticipantTypeService().create(typeData);
+        }
+        await loadContent();
+      } else if (editingType === 'candidateProfile') {
+        // Save candidate profile data
+        const profileData = {
+          ...data,
+          highlights: Array.isArray(data.highlights) ? data.highlights : data.highlights.split('\n').filter((h: string) => h.trim()),
+          isVisible: true,
+          order: 1
+        };
+        
+        if (candidateProfile && candidateProfile.id) {
+          await CMSServiceFactory.getCandidateProfileService().update(candidateProfile.id, profileData);
+        } else {
+          await CMSServiceFactory.getCandidateProfileService().create(profileData);
+        }
+        await loadContent();
+      } else if (editingType === 'programExclusions') {
+        // Save program exclusions data
+        const exclusionsData = {
+          ...data,
+          highlights: Array.isArray(data.highlights) ? data.highlights : data.highlights.split('\n').filter((h: string) => h.trim()),
+          isVisible: true,
+          order: 1
+        };
+        
+        if (programExclusions && programExclusions.id) {
+          await CMSServiceFactory.getProgramExclusionsService().update(programExclusions.id, exclusionsData);
+        } else {
+          await CMSServiceFactory.getProgramExclusionsService().create(exclusionsData);
+        }
+        await loadContent();
       } else {
         // Save qualification data
         if (editingItem && editingItem.id && !editingItem.id.startsWith('qual-')) {
@@ -77,7 +212,7 @@ export default function QualificationsPage() {
       console.error('Error saving:', error);
       throw error;
     }
-  }, [editingItem, editingType, qualifications.length, loadContent]);
+  }, [editingItem, editingType, qualifications.length, participantTypes.length, loadContent, programIntro, candidateProfile, programExclusions]);
 
   const qualificationFields = useMemo(() => [
     { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Combat Veteran Status' },
@@ -91,6 +226,67 @@ export default function QualificationsPage() {
     { key: 'title', label: 'Main Heading', type: 'text' as const, required: true, placeholder: 'e.g., Who Should Apply?' },
     { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Enter section description...' }
   ], []);
+
+  const programIntroFields = useMemo(() => [
+    { key: 'title', label: 'Title', type: 'text' as const, required: false, placeholder: 'Optional section title' },
+    { key: 'description', label: 'Description', type: 'textarea' as const, required: true, placeholder: 'Alpha-Bet is the launchpad for Veterans...' }
+  ], []);
+
+  const participantTypeFields = useMemo(() => [
+    { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Explorers' },
+    { key: 'description', label: 'Description', type: 'textarea' as const, required: false, placeholder: 'Brief description of this participant type' },
+    { key: 'highlights', label: 'Highlights (one per line)', type: 'textarea' as const, required: true, placeholder: 'Enter each highlight on a new line...' },
+    { key: 'order', label: 'Order', type: 'number' as const, required: true, placeholder: '1-10' }
+  ], []);
+
+  const candidateProfileFields = useMemo(() => [
+    { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., The Alpha-Bet Candidate' },
+    { key: 'description', label: 'Description', type: 'textarea' as const, required: false, placeholder: 'Optional description' },
+    { key: 'highlights', label: 'Highlights (one per line)', type: 'textarea' as const, required: true, placeholder: 'Enter each characteristic on a new line...' }
+  ], []);
+
+  const programExclusionsFields = useMemo(() => [
+    { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'e.g., Who This Program Is Not For' },
+    { key: 'description', label: 'Description', type: 'textarea' as const, required: false, placeholder: 'Optional description' },
+    { key: 'highlights', label: 'Exclusions (one per line)', type: 'textarea' as const, required: true, placeholder: 'Enter each exclusion on a new line...' },
+    { key: 'note', label: 'Note (Optional)', type: 'textarea' as const, required: false, placeholder: 'Optional note to display at the bottom...' }
+  ], []);
+
+  const getEditFields = useCallback(() => {
+    switch (editingType) {
+      case 'header':
+        return headerFields;
+      case 'programIntro':
+        return programIntroFields;
+      case 'participantType':
+        return participantTypeFields;
+      case 'candidateProfile':
+        return candidateProfileFields;
+      case 'programExclusions':
+        return programExclusionsFields;
+      case 'qualification':
+      default:
+        return qualificationFields;
+    }
+  }, [editingType, headerFields, programIntroFields, participantTypeFields, candidateProfileFields, programExclusionsFields, qualificationFields]);
+
+  const getModalTitle = useCallback(() => {
+    switch (editingType) {
+      case 'header':
+        return "Edit Qualifications Section Header";
+      case 'programIntro':
+        return "Edit Program Introduction";
+      case 'participantType':
+        return editingItem?.title ? `Edit ${editingItem.title}` : "Add New Participant Type";
+      case 'candidateProfile':
+        return "Edit Candidate Profile";
+      case 'programExclusions':
+        return "Edit Program Exclusions";
+      case 'qualification':
+      default:
+        return editingItem?.title ? `Edit ${editingItem.title}` : "Add New Qualification";
+    }
+  }, [editingType, editingItem]);
 
   useEffect(() => {
     loadContent();
@@ -129,6 +325,18 @@ export default function QualificationsPage() {
         <DiscreteAdminDot />
         <SimpleAdminToggle />
         
+        {/* Program Overview Section */}
+        <ProgramOverviewSection 
+          programIntro={programIntro}
+          participantTypes={participantTypes}
+          candidateProfile={candidateProfile}
+          programExclusions={programExclusions}
+          onEditIntro={handleEditIntro}
+          onEditParticipantType={handleEditParticipantType}
+          onEditCandidateProfile={handleEditCandidateProfile}
+          onEditExclusions={handleEditExclusions}
+        />
+        
         {/* Qualifications Section */}
         <WhoShouldApplySection 
           qualifications={qualifications} 
@@ -148,9 +356,13 @@ export default function QualificationsPage() {
             setEditingItem(null);
           }}
           onSave={handleSave}
-          title={editingType === 'header' ? "Edit Qualifications Section Header" : (editingItem?.title ? `Edit ${editingItem.title}` : "Add New Qualification")}
-          fields={editingType === 'header' ? headerFields : qualificationFields}
-          initialData={editingItem}
+          title={getModalTitle()}
+          fields={getEditFields()}
+          initialData={{
+            ...editingItem,
+            // Convert highlights array to string for editing
+            highlights: Array.isArray(editingItem?.highlights) ? editingItem.highlights.join('\n') : editingItem?.highlights
+          }}
           loading={loading}
         />
       </div>

@@ -121,6 +121,50 @@ export interface FAQ {
   updatedAt: Date;
 }
 
+export interface ProgramIntro {
+  id: string;
+  title: string;
+  description: string;
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ParticipantType {
+  id: string;
+  title: string; // "Explorers" or "Builders"
+  description: string;
+  highlights: string[]; // Array of bullet points
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CandidateProfile {
+  id: string;
+  title: string; // "The Alpha-Bet Candidate"
+  description: string;
+  highlights: string[]; // Array of bullet points
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ProgramExclusions {
+  id: string;
+  title: string; // "Who This Program Is Not For"
+  description: string;
+  highlights: string[]; // Array of bullet points
+  note?: string; // Optional note at the bottom
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface CurriculumHeader {
   id: string;
   badge: string; // "10-WEEK CURRICULUM"
