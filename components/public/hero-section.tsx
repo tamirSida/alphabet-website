@@ -97,44 +97,47 @@ export default function HeroSection({
         
         {/* Application Window Section */}
         {(applicationWindowOpens || applicationWindowCloses || programStartDate || programEndDate) && (
-          <div className="bg-gradient-to-r from-purple-500/10 to-red-500/10 backdrop-blur-md rounded-xl border border-white/30 px-4 sm:px-6 py-3 sm:py-4 mb-6 max-w-md mx-auto shadow-lg">
-            <div className="text-center space-y-1 sm:space-y-3">
+          <div className="bg-gradient-to-r from-purple-500/10 to-red-500/10 backdrop-blur-md rounded-xl border border-white/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 max-w-3xl mx-auto shadow-lg">
+            <div className="text-center space-y-2 sm:space-y-4">
               {(applicationWindowOpens || applicationWindowCloses) && (
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center text-xs sm:text-lg text-gray-100">
-                  <span className="font-bold text-white mb-1 sm:mb-0 sm:mr-3 flex items-center justify-center">
-                    <i className="fas fa-calendar-alt mr-1 text-purple-400"></i>
-                    Application Window
-                  </span>
-                  <div className="text-center sm:text-left">
+                <div className="text-xs sm:text-lg text-gray-100">
+                  <div className="flex items-center justify-center mb-2 sm:mb-3">
+                    <i className="fas fa-calendar-alt mr-2 text-purple-400"></i>
+                    <span className="font-bold text-white">Application Window</span>
+                  </div>
+                  <div className="leading-relaxed">
                     {applicationWindowOpens && applicationWindowCloses ? (
-                      <span className="block sm:inline">
-                        <span className="text-purple-300">Opens:</span> <span className="font-medium">{formatDate(applicationWindowOpens)}</span>
-                        <span className="hidden sm:inline mx-2">•</span>
-                        <span className="block sm:inline mt-1 sm:mt-0">
-                          <span className="text-red-300">Closes:</span> <span className="font-medium">{formatDate(applicationWindowCloses)}</span>
-                        </span>
-                      </span>
+                      <div className="space-y-1 sm:space-y-0">
+                        <div className="block sm:inline-block">
+                          <span className="text-purple-300 font-medium">Opens:</span>{' '}
+                          <span className="font-medium text-white">{formatDate(applicationWindowOpens)}</span>
+                        </div>
+                        <div className="block sm:inline-block sm:ml-6">
+                          <span className="text-red-300 font-medium">Closes:</span>{' '}
+                          <span className="font-medium text-white">{formatDate(applicationWindowCloses)}</span>
+                        </div>
+                      </div>
                     ) : applicationWindowOpens ? (
-                      <span><span className="text-purple-300">Opens:</span> <span className="font-medium">{formatDate(applicationWindowOpens)}</span></span>
+                      <div><span className="text-purple-300 font-medium">Opens:</span>{' '}<span className="font-medium text-white">{formatDate(applicationWindowOpens)}</span></div>
                     ) : applicationWindowCloses ? (
-                      <span><span className="text-red-300">Closes:</span> <span className="font-medium">{formatDate(applicationWindowCloses)}</span></span>
+                      <div><span className="text-red-300 font-medium">Closes:</span>{' '}<span className="font-medium text-white">{formatDate(applicationWindowCloses)}</span></div>
                     ) : null}
                   </div>
                 </div>
               )}
               {(programStartDate || programEndDate) && (
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center text-xs sm:text-lg text-gray-100 pt-1 sm:pt-3 border-t border-white/20">
-                  <span className="font-bold text-white mb-1 sm:mb-0 sm:mr-3 flex items-center justify-center">
-                    <i className="fas fa-graduation-cap mr-1 text-yellow-400"></i>
-                    Program Dates
-                  </span>
-                  <div className="text-center sm:text-left">
+                <div className="text-xs sm:text-lg text-gray-100 pt-2 sm:pt-4 border-t border-white/20">
+                  <div className="flex items-center justify-center mb-2 sm:mb-3">
+                    <i className="fas fa-graduation-cap mr-2 text-yellow-400"></i>
+                    <span className="font-bold text-white">Program Dates</span>
+                  </div>
+                  <div className="leading-relaxed">
                     {programStartDate && programEndDate ? (
-                      <span className="font-medium">{formatDate(programStartDate)} - {formatDate(programEndDate)}</span>
+                      <div className="font-medium text-white">{formatDate(programStartDate)} - {formatDate(programEndDate)}</div>
                     ) : programStartDate ? (
-                      <span className="font-medium">{formatDate(programStartDate)}</span>
+                      <div className="font-medium text-white">{formatDate(programStartDate)}</div>
                     ) : programEndDate ? (
-                      <span className="font-medium">{formatDate(programEndDate)}</span>
+                      <div className="font-medium text-white">{formatDate(programEndDate)}</div>
                     ) : null}
                   </div>
                 </div>
@@ -155,12 +158,6 @@ export default function HeroSection({
         </div>
       </div>
       
-      {/* Scroll indicator - hidden on mobile */}
-      <div className="hidden sm:block absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white rounded-full mt-2"></div>
-        </div>
-      </div>
     </section>
   );
 }
