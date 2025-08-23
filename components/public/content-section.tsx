@@ -165,8 +165,8 @@ export default function ContentSection({
           {bullets.length > 0 && (
             <div className="space-y-6">
               
-              {/* Grid Layout for Highlights */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+              {/* Stacked Layout for Highlights */}
+              <div className="space-y-4">
                 {bullets.map((bullet, index) => {
                 const highlight: Highlight = {
                   id: `highlight-${index}`,
