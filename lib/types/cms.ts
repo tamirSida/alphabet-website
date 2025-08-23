@@ -81,6 +81,8 @@ export interface CallToAction {
   description: string;
   buttonText: string;
   buttonLink: string;
+  secondaryButtonText?: string;
+  secondaryButtonLink?: string;
   isVisible: boolean;
   order: number;
   createdAt: Date;

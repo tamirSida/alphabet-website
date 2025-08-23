@@ -17,6 +17,7 @@ export default function CurriculumPage() {
   const { isAdminMode } = useAdmin();
   const [curriculum, setCurriculum] = useState<CurriculumItem[]>([]);
   const [curriculumHeader, setCurriculumHeader] = useState<CurriculumHeader | null>(null);
+  const [curriculumCTA, setCurriculumCTA] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
   // Modal state
@@ -30,12 +31,14 @@ export default function CurriculumPage() {
   const loadContent = useCallback(async () => {
     try {
       setLoading(true);
-      const [curriculumData, headerData] = await Promise.all([
+      const [curriculumData, headerData, ctaData] = await Promise.all([
         CMSServiceFactory.getCurriculumService().getVisible(),
-        CMSServiceFactory.getCurriculumHeaderService().getActiveHeader()
+        CMSServiceFactory.getCurriculumHeaderService().getActiveHeader(),
+        CMSServiceFactory.getCallToActionService().getActiveCallToAction()
       ]);
       setCurriculum(curriculumData);
       setCurriculumHeader(headerData);
+      setCurriculumCTA(ctaData);
     } catch (error) {
       console.error('Error loading curriculum content:', error);
     } finally {
@@ -62,16 +65,27 @@ export default function CurriculumPage() {
 
   const handleEditCTA = useCallback(() => {
     const defaultCTA = {
-      type: 'cta',
       title: 'Your Entrepreneurial Journey Awaits',
       description: 'Transform 10 weeks of intensive learning into a lifetime of entrepreneurial success. Each week builds on the last, creating a comprehensive foundation for your startup journey.',
-      primaryButtonText: 'Start Your Journey',
-      secondaryButtonText: '10-Week Program'
+      buttonText: 'Start Your Journey',
+      buttonLink: '/qualifications',
+      secondaryButtonText: '10-Week Program',
+      secondaryButtonLink: '/curriculum'
     };
-    setEditingItem(defaultCTA);
+    
+    // Merge existing CTA data with defaults to ensure all fields are populated
+    const ctaToEdit = {
+      ...defaultCTA,
+      ...curriculumCTA,
+      // Ensure secondary button fields have fallback values if they're empty
+      secondaryButtonText: curriculumCTA?.secondaryButtonText || defaultCTA.secondaryButtonText,
+      secondaryButtonLink: curriculumCTA?.secondaryButtonLink || defaultCTA.secondaryButtonLink
+    };
+    
+    setEditingItem(ctaToEdit);
     setEditingType('cta');
     setEditModalOpen(true);
-  }, []);
+  }, [curriculumCTA]);
 
   const handleSave = useCallback(async (data: any) => {
     try {
@@ -94,8 +108,26 @@ export default function CurriculumPage() {
         }
         await loadContent();
       } else if (editingType === 'cta') {
-        // Save CTA data (for now, just log - in full implementation would save to CMS)
-        console.log('Saving curriculum CTA data:', data);
+        // Save CTA data to database
+        const ctaData = {
+          title: data.title,
+          description: data.description,
+          buttonText: data.buttonText,
+          buttonLink: data.buttonLink,
+          secondaryButtonText: data.secondaryButtonText,
+          secondaryButtonLink: data.secondaryButtonLink,
+          isVisible: true,
+          order: 1
+        };
+
+        if (curriculumCTA && curriculumCTA.id) {
+          // Update existing CTA
+          await CMSServiceFactory.getCallToActionService().update(curriculumCTA.id, ctaData);
+        } else {
+          // Create new CTA
+          await CMSServiceFactory.getCallToActionService().create(ctaData);
+        }
+        await loadContent();
       } else {
         // Save curriculum week data
         if (editingItem && editingItem.id && !editingItem.id.startsWith('week-')) {
@@ -116,7 +148,7 @@ export default function CurriculumPage() {
       console.error('Error saving:', error);
       throw error;
     }
-  }, [editingItem, editingType, loadContent, curriculumHeader]);
+  }, [editingItem, editingType, loadContent, curriculumHeader, curriculumCTA]);
 
   const handleReorder = useCallback(async (reorderedItems: CurriculumItem[]) => {
     try {
@@ -153,8 +185,10 @@ export default function CurriculumPage() {
       return [
         { key: 'title', label: 'CTA Title', type: 'text' as const, required: true, placeholder: 'e.g., Your Entrepreneurial Journey Awaits' },
         { key: 'description', label: 'CTA Description', type: 'textarea' as const, required: true, placeholder: 'Enter CTA description...' },
-        { key: 'primaryButtonText', label: 'Primary Button Text', type: 'text' as const, required: true, placeholder: 'e.g., Start Your Journey' },
-        { key: 'secondaryButtonText', label: 'Secondary Button Text', type: 'text' as const, required: true, placeholder: 'e.g., 10-Week Program' }
+        { key: 'buttonText', label: 'Primary Button Text', type: 'text' as const, required: true, placeholder: 'e.g., Start Your Journey' },
+        { key: 'buttonLink', label: 'Primary Button Link', type: 'text' as const, required: true, placeholder: 'e.g., /qualifications' },
+        { key: 'secondaryButtonText', label: 'Secondary Button Text', type: 'text' as const, required: false, placeholder: 'e.g., 10-Week Program' },
+        { key: 'secondaryButtonLink', label: 'Secondary Button Link', type: 'text' as const, required: false, placeholder: 'e.g., /curriculum' }
       ];
     }
     return [
@@ -222,6 +256,7 @@ export default function CurriculumPage() {
         <CurriculumTimeline 
           items={curriculum} 
           header={curriculumHeader}
+          cta={curriculumCTA}
           onEdit={(item) => handleEdit(item)}
           onEditHeader={handleEditHeader}
           onEditCTA={handleEditCTA}
