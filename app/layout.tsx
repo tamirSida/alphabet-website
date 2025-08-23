@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Black_Ops_One } from "next/font/google";
 import { AdminProvider } from "@/lib/cms/admin-context";
-import Navigation from "@/components/public/navigation";
-import Footer from "@/components/public/footer";
+import ConditionalNavigation from "@/components/layout/conditional-navigation";
+import ConditionalFooter from "@/components/layout/conditional-footer";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const blackOpsOne = Black_Ops_One({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-black-ops-one",
 });
 
 export const metadata: Metadata = {
@@ -35,16 +41,20 @@ export default function RootLayout({
           integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
           crossOrigin="anonymous"
         />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body
-        className={`${inter.variable} font-sans antialiased`}
+        className={`${inter.variable} ${blackOpsOne.variable} font-sans antialiased`}
       >
         <AdminProvider>
-          <Navigation />
+          <ConditionalNavigation />
           <main className="min-h-screen">
             {children}
           </main>
-          <Footer />
+          <ConditionalFooter />
         </AdminProvider>
       </body>
     </html>

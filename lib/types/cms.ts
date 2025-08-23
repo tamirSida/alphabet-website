@@ -181,6 +181,18 @@ export interface CurriculumHeader {
   updatedAt: Date;
 }
 
+export interface SplashSection {
+  id: string;
+  headline: string; // "Version Bravo Alphabet"
+  subHeadline: string; // "The only entrepreneurship program for US and Israeli combat veterans."
+  redirectUrl: string; // Where to redirect after timer
+  timerDuration: number; // Timer duration in seconds
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type ContentType = 
   | 'hero'
   | 'content-section'
