@@ -506,12 +506,6 @@ export default function CurriculumTimeline({ items, header, onEdit, onEditHeader
                           {item.title}
                         </h3>
                       </div>
-                      <div className="text-white/60">
-                        {/* Show expand icon for mobile */}
-                        <div className="block">
-                          <i className="fas fa-expand-alt text-lg"></i>
-                        </div>
-                      </div>
                     </div>
                     
                     {/* Description */}
