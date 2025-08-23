@@ -6,6 +6,10 @@ export interface HeroSection {
   ctaText: string;
   ctaLink: string;
   backgroundImage?: string;
+  applicationWindowOpens?: string;
+  applicationWindowCloses?: string;
+  programStartDate?: string;
+  programEndDate?: string;
   isVisible: boolean;
   order: number;
   createdAt: Date;

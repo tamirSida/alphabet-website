@@ -343,6 +343,10 @@ function AlphaBetHomepageContent() {
           { key: 'headline', label: 'Headline', type: 'text' as const, required: true, placeholder: 'Enter the main headline' },
           { key: 'subHeadline', label: 'First Sub-headline', type: 'textarea' as const, required: true, placeholder: 'The only entrepreneurship program for US and Israeli combat veterans.' },
           { key: 'subHeadline2', label: 'Second Sub-headline', type: 'textarea' as const, required: false, placeholder: 'Alpha-Bet equips you with the skills, network, and battle-tested mindset to build a successful startup...' },
+          { key: 'applicationWindowOpens', label: 'Application Window Opens', type: 'date' as const, required: false, placeholder: '2025-01-15' },
+          { key: 'applicationWindowCloses', label: 'Application Window Closes', type: 'date' as const, required: false, placeholder: '2025-02-28' },
+          { key: 'programStartDate', label: 'Program Start Date', type: 'date' as const, required: false, placeholder: '2025-03-15' },
+          { key: 'programEndDate', label: 'Program End Date', type: 'date' as const, required: false, placeholder: '2025-05-24' },
           { key: 'ctaText', label: 'Call-to-Action Text', type: 'text' as const, required: true, placeholder: 'e.g., Apply Now' },
           { key: 'ctaLink', label: 'Call-to-Action Link', type: 'text' as const, required: true, placeholder: '/curriculum or https://...' },
           { key: 'backgroundImage', label: 'Background Image URL', type: 'url' as const, required: false, placeholder: 'https://...' }
@@ -395,6 +399,10 @@ function AlphaBetHomepageContent() {
     headline: "From Battlefield to Business: Your Next Mission Starts Here.",
     subHeadline: "The only entrepreneurship program for US and Israeli combat veterans.",
     subHeadline2: "Alpha-Bet equips you with the skills, network, and battle-tested mindset to build a successful startup. It's time to channel your experience into innovation.",
+    applicationWindowOpens: "2025-01-15",
+    applicationWindowCloses: "2025-02-28",
+    programStartDate: "2025-03-15",
+    programEndDate: "2025-05-24",
     ctaText: "Explore Program",
     ctaLink: "/curriculum"
   };
@@ -422,6 +430,10 @@ function AlphaBetHomepageContent() {
             ctaText={activeHero.ctaText}
             ctaLink={activeHero.ctaLink}
             backgroundImage={hero?.backgroundImage}
+            applicationWindowOpens={activeHero.applicationWindowOpens}
+            applicationWindowCloses={activeHero.applicationWindowCloses}
+            programStartDate={activeHero.programStartDate}
+            programEndDate={activeHero.programEndDate}
           />
         </EditableSection>
         {/* Default homepage content sections */}

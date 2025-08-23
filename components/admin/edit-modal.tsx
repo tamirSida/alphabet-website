@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 interface FormField {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'email' | 'url' | 'number' | 'radio';
+  type: 'text' | 'textarea' | 'email' | 'url' | 'number' | 'radio' | 'date';
   required?: boolean;
   placeholder?: string;
   value?: string;
