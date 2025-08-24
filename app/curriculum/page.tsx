@@ -242,15 +242,6 @@ export default function CurriculumPage() {
         <DiscreteAdminDot />
         <SimpleAdminToggle />
         
-        {/* Admin Curriculum Ordering Module */}
-        {isAdminMode && curriculum.length > 0 && (
-          <div className="max-w-4xl mx-auto px-4 py-6">
-            <CurriculumOrdering
-              items={curriculum}
-              onReorder={handleReorder}
-            />
-          </div>
-        )}
 
         {/* Curriculum Timeline */}
         <CurriculumTimeline 

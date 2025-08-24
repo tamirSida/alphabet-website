@@ -190,7 +190,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
               {expandedFAQ === faq.id && (
                 <div className="px-6 pb-5 border-t border-white/10 bg-white/5">
                   <div className="pt-4">
-                    <p className="text-gray-200 leading-relaxed">
+                    <p className="text-black leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>

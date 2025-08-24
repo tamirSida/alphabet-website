@@ -43,6 +43,22 @@ export default function HeroSection({
     });
   };
 
+  // Get program start month name
+  const getProgramStartMonth = (dateString: string) => {
+    if (!dateString) return 'Winter';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { month: 'long' });
+  };
+
+  // Check if we're currently in the application window
+  const isInApplicationWindow = () => {
+    if (!applicationWindowOpens || !applicationWindowCloses) return false;
+    const now = new Date();
+    const opensDate = new Date(applicationWindowOpens);
+    const closesDate = new Date(applicationWindowCloses);
+    return now >= opensDate && now <= closesDate;
+  };
+
   useEffect(() => {
     const updateDividerWidth = () => {
       if (subtitleRef.current) {
@@ -96,53 +112,23 @@ export default function HeroSection({
           </p>
         )}
         
-        {/* Application Window Section */}
-        {(applicationWindowOpens || applicationWindowCloses || programStartDate || programEndDate) && (
+        {/* Application Status Message */}
+        {(applicationWindowOpens || applicationWindowCloses || programStartDate) && (
           <div className="bg-gradient-to-r from-blue-500/10 to-gray-500/10 backdrop-blur-md rounded-xl border border-gray-400/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 max-w-3xl mx-auto shadow-lg">
-            <div className="text-center space-y-2 sm:space-y-4">
-              {(applicationWindowOpens || applicationWindowCloses) && (
-                <div className="text-xs sm:text-lg text-gray-800">
-                  <div className="flex items-center justify-center mb-2 sm:mb-3">
-                    <i className="fas fa-calendar-alt mr-2 text-blue-600"></i>
-                    <span className="font-bold text-black">Application Window</span>
-                  </div>
-                  <div className="leading-relaxed">
-                    {applicationWindowOpens && applicationWindowCloses ? (
-                      <div className="space-y-1 sm:space-y-0">
-                        <div className="block sm:inline-block">
-                          <span className="text-blue-500 font-medium">Opens:</span>{' '}
-                          <span className="font-medium text-black">{formatDate(applicationWindowOpens)}</span>
-                        </div>
-                        <div className="block sm:inline-block sm:ml-6">
-                          <span className="text-gray-600 font-medium">Closes:</span>{' '}
-                          <span className="font-medium text-black">{formatDate(applicationWindowCloses)}</span>
-                        </div>
-                      </div>
-                    ) : applicationWindowOpens ? (
-                      <div><span className="text-blue-500 font-medium">Opens:</span>{' '}<span className="font-medium text-black">{formatDate(applicationWindowOpens)}</span></div>
-                    ) : applicationWindowCloses ? (
-                      <div><span className="text-gray-600 font-medium">Closes:</span>{' '}<span className="font-medium text-black">{formatDate(applicationWindowCloses)}</span></div>
-                    ) : null}
-                  </div>
-                </div>
-              )}
-              {(programStartDate || programEndDate) && (
-                <div className="text-xs sm:text-lg text-gray-800 pt-2 sm:pt-4 border-t border-gray-400/20">
-                  <div className="flex items-center justify-center mb-2 sm:mb-3">
-                    <i className="fas fa-graduation-cap mr-2 text-blue-600"></i>
-                    <span className="font-bold text-black">Program Dates</span>
-                  </div>
-                  <div className="leading-relaxed">
-                    {programStartDate && programEndDate ? (
-                      <div className="font-medium text-black">{formatDate(programStartDate)} - {formatDate(programEndDate)}</div>
-                    ) : programStartDate ? (
-                      <div className="font-medium text-black">{formatDate(programStartDate)}</div>
-                    ) : programEndDate ? (
-                      <div className="font-medium text-black">{formatDate(programEndDate)}</div>
-                    ) : null}
-                  </div>
-                </div>
-              )}
+            <div className="text-center">
+              <div className="text-sm sm:text-lg text-black font-medium leading-relaxed">
+                {isInApplicationWindow() ? (
+                  // Currently accepting applications
+                  <>
+                    Applications for {getProgramStartMonth(programStartDate || '')} Semester Currently Being Accepted Through {formatDate(applicationWindowCloses || '')}
+                  </>
+                ) : (
+                  // Applications not yet open
+                  <>
+                    Applications for {getProgramStartMonth(programStartDate || '')} Semester will begin on {formatDate(applicationWindowOpens || '')}
+                  </>
+                )}
+              </div>
             </div>
           </div>
         )}
