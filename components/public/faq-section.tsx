@@ -124,14 +124,14 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
             <div className="w-2 h-2 bg-white rounded-full"></div>
-            <span className="text-white/80 text-sm font-medium tracking-wide">FREQUENTLY ASKED QUESTIONS</span>
+            <span className="text-gray-800 text-sm font-medium tracking-wide">FREQUENTLY ASKED QUESTIONS</span>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 tracking-tight">
             Questions & Answers
           </h2>
           
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-gray-800 max-w-3xl mx-auto leading-relaxed">
             Get answers to common questions about the Alpha-Bet program and application process.
           </p>
         </div>
@@ -181,9 +181,9 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
               {/* Question Header */}
               <button
                 onClick={() => handleFAQClick(faq.id)}
-                className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
+                className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-100 transition-colors border border-gray-300 rounded-lg"
               >
-                <h3 className="text-lg font-semibold text-white pr-8 leading-tight">
+                <h3 className="text-lg font-semibold text-black pr-8 leading-tight">
                   {faq.question}
                 </h3>
                 <div className="flex-shrink-0 text-gray-400">
@@ -211,11 +211,11 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-br from-white via-white to-gray-200 rounded-2xl p-8 text-white">
+          <div className="bg-gradient-to-br from-white via-white to-gray-200 rounded-2xl p-8 text-black">
             <h3 className="text-2xl sm:text-3xl font-bold mb-4">
               Still Have Questions?
             </h3>
-            <p className="text-lg text-gray-300 leading-relaxed mb-6 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-800 leading-relaxed mb-6 max-w-2xl mx-auto">
               Our team is here to help you understand if Alpha-Bet is the right fit for your entrepreneurial journey.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
