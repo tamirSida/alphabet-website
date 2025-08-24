@@ -74,10 +74,10 @@ export default function ContentSection({
   // Use custom description if provided, otherwise use default from config
   const displayDescription = description || config.description;
 
-  // Parse content into structured format
+  // Parse content into structured format with titles and descriptions
   const parseContent = (text: string) => {
     const sections = text.split('\n\n');
-    const result: { intro?: string; bullets: string[] } = { bullets: [] };
+    const result: { intro?: string; bullets: { title: string; description?: string }[] } = { bullets: [] };
     
     sections.forEach(section => {
       if (section.includes('•') || section.includes('-')) {
@@ -85,7 +85,20 @@ export default function ContentSection({
         const bullets = section.split('\n').filter(line => 
           line.trim().startsWith('•') || line.trim().startsWith('-')
         ).map(line => line.replace(/^[•-]\s*/, '').trim());
-        result.bullets.push(...bullets);
+        
+        // Parse each bullet for title and description
+        bullets.forEach(bullet => {
+          if (bullet.includes(':')) {
+            // Split on first colon to separate title from description
+            const colonIndex = bullet.indexOf(':');
+            const title = bullet.substring(0, colonIndex).trim();
+            const description = bullet.substring(colonIndex + 1).trim();
+            result.bullets.push({ title, description });
+          } else {
+            // No colon, treat entire text as title
+            result.bullets.push({ title: bullet });
+          }
+        });
       } else if (section.trim() && !result.intro) {
         // First non-bullet section is intro
         result.intro = section.trim();
@@ -98,7 +111,7 @@ export default function ContentSection({
       if (sentences.length > 1) {
         // Take intro as first sentence, rest as bullets
         result.intro = sentences[0].trim() + '.';
-        result.bullets = sentences.slice(1, 4).map(s => s.trim()).filter(s => s.length > 0);
+        result.bullets = sentences.slice(1, 4).map(s => ({ title: s.trim() })).filter(b => b.title.length > 0);
       } else {
         result.intro = text.trim();
       }
@@ -170,7 +183,7 @@ export default function ContentSection({
                 {bullets.map((bullet, index) => {
                 const highlight: Highlight = {
                   id: `highlight-${index}`,
-                  text: bullet,
+                  text: bullet.title + (bullet.description ? ': ' + bullet.description : ''),
                   order: index
                 };
                 
@@ -190,9 +203,14 @@ export default function ContentSection({
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-base sm:text-lg text-black leading-relaxed group-hover:text-gray-800 transition-colors duration-300">
-                          {bullet}
-                        </p>
+                        <h4 className="text-xl sm:text-2xl font-bold text-black mb-2 group-hover:text-gray-800 transition-colors duration-300">
+                          {bullet.title}
+                        </h4>
+                        {bullet.description && (
+                          <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+                            {bullet.description}
+                          </p>
+                        )}
                       </div>
                     </div>
                     
