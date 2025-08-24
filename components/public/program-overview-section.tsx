@@ -196,7 +196,7 @@ export default function ProgramOverviewSection({
 
             <h1 
               ref={titleRef}
-              className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-8 leading-tight tracking-tight"
+              className="text-xl sm:text-2xl md:text-3xl font-bold text-black mb-8 leading-tight tracking-tight"
             >
               {displayIntro.description}
             </h1>
@@ -204,7 +204,7 @@ export default function ProgramOverviewSection({
             {/* Gradient divider line that spans title width */}
             <div className="flex justify-center">
               <div 
-                className="h-1 bg-gradient-to-r from-purple-500 to-red-500 rounded-full transition-all duration-300"
+                className="h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-300"
                 style={{ width: `${dividerWidth}px` }}
               ></div>
             </div>
@@ -216,7 +216,7 @@ export default function ProgramOverviewSection({
           showSection ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
         }`}>
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-4 tracking-tight" style={{ fontFamily: "'Black Ops One', cursive" }}>
               Two Types of Participants
             </h2>
           </div>
@@ -245,11 +245,11 @@ export default function ProgramOverviewSection({
                     <div className={`w-16 h-16 rounded-xl flex items-center justify-center ${
                       index === 0 
                         ? 'bg-gradient-to-br from-blue-500 to-blue-600' 
-                        : 'bg-gradient-to-br from-purple-500 to-purple-600'
+                        : 'bg-gradient-to-br from-blue-500 to-blue-600'
                     }`}>
                       <i className={`fas ${index === 0 ? 'fa-compass' : 'fa-hammer'} text-white text-2xl`}></i>
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-white">
+                    <h3 className="text-2xl sm:text-3xl font-bold text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
                       {type.title}
                     </h3>
                   </div>
@@ -259,9 +259,9 @@ export default function ProgramOverviewSection({
                     {type.highlights.map((highlight, hIndex) => (
                       <div key={hIndex} className="flex items-start gap-3">
                         <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                          index === 0 ? 'bg-blue-400' : 'bg-purple-400'
+                          'bg-blue-400'
                         }`}></div>
-                        <p className="text-gray-200 leading-relaxed">
+                        <p className="text-black leading-relaxed">
                           {highlight}
                         </p>
                       </div>
@@ -286,7 +286,7 @@ export default function ProgramOverviewSection({
                   e.stopPropagation();
                   onEditCandidateProfile();
                 }}
-                className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-500 hover:bg-yellow-400 text-white rounded-full flex items-center justify-center text-xs transition-all shadow-lg hover:shadow-xl hover:scale-110 z-[100] opacity-0 group-hover:opacity-100"
+                className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 hover:bg-blue-400 text-white rounded-full flex items-center justify-center text-xs transition-all shadow-lg hover:shadow-xl hover:scale-110 z-[100] opacity-0 group-hover:opacity-100"
                 title="Edit candidate profile"
               >
                 <i className="fas fa-edit"></i>
@@ -296,10 +296,10 @@ export default function ProgramOverviewSection({
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 sm:p-8 border border-white/20 shadow-2xl">
               {/* Header */}
               <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
                   <i className="fas fa-medal text-white text-2xl"></i>
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white">
+                <h3 className="text-2xl sm:text-3xl font-bold text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
                   {displayCandidateProfile.title}
                 </h3>
               </div>
@@ -308,8 +308,8 @@ export default function ProgramOverviewSection({
               <div className="space-y-4">
                 {displayCandidateProfile.highlights.map((highlight, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-gray-200 leading-relaxed">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-black leading-relaxed">
                       {highlight}
                     </p>
                   </div>
@@ -345,7 +345,7 @@ export default function ProgramOverviewSection({
                 <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
                   <i className="fas fa-times-circle text-white text-2xl"></i>
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white">
+                <h3 className="text-2xl sm:text-3xl font-bold text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
                   {displayExclusions.title}
                 </h3>
               </div>
@@ -355,7 +355,7 @@ export default function ProgramOverviewSection({
                 {displayExclusions.highlights.map((highlight, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-gray-200 leading-relaxed">
+                    <p className="text-black leading-relaxed">
                       {highlight}
                     </p>
                   </div>
@@ -366,10 +366,10 @@ export default function ProgramOverviewSection({
               {displayExclusions.note && (
                 <div className="bg-white/5 border border-white/20 rounded-xl p-4 sm:p-6">
                   <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <i className="fas fa-info text-white text-xs"></i>
                     </div>
-                    <p className="text-green-200 leading-relaxed font-medium">
+                    <p className="text-blue-600 leading-relaxed font-medium">
                       <strong>Note:</strong> {displayExclusions.note}
                     </p>
                   </div>
