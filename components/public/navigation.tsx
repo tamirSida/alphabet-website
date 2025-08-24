@@ -10,7 +10,7 @@ export default function Navigation() {
   const pathname = usePathname();
 
   const navigationItems = [
-    { name: 'Home', href: '/' },
+    { name: 'Home', href: '/home' },
     { name: 'Team', href: '/team' },
     { name: 'Curriculum', href: '/curriculum' },
     { name: 'Qualifications', href: '/qualifications' },
@@ -18,8 +18,8 @@ export default function Navigation() {
   ];
 
   const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/';
+    if (href === '/home') {
+      return pathname === '/home';
     }
     return pathname.startsWith(href);
   };
@@ -29,7 +29,7 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
-          <Link href="/" className="flex items-center">
+          <Link href="/home" className="flex items-center">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center relative">
                 <Image 
@@ -43,7 +43,10 @@ export default function Navigation() {
                   onLoad={() => console.log('Logo loaded successfully')}
                 />
               </div>
-              <span className="text-white font-bold text-lg sm:text-xl">Alpha-Bet</span>
+              <div className="text-white font-bold text-sm sm:text-base leading-tight text-center" style={{ fontFamily: "'Black Ops One', cursive" }}>
+                <div>Version Bravo</div>
+                <div>Alpha-Bet</div>
+              </div>
             </div>
           </Link>
 

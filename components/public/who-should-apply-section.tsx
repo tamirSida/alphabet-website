@@ -99,7 +99,7 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
 
 
   return (
-    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-white via-white to-gray-200 relative overflow-hidden">
+    <section className="py-16 sm:py-24 px-4 bg-gradient-to-r from-white via-white to-gray-400 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(120,119,198,0.15),transparent_50%)]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05),transparent_50%)]"></div>
@@ -123,22 +123,22 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
           )}
           
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-            <div className="w-2 h-2 bg-white rounded-full"></div>
-            <span className="text-white/80 text-sm font-medium tracking-wide">QUALIFICATION CRITERIA</span>
+            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+            <span className="text-gray-800 text-sm font-medium tracking-wide">QUALIFICATION CRITERIA</span>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 tracking-tight" style={{ fontFamily: "'Black Ops One', cursive" }}>
             Who Should Apply?
           </h2>
           
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-gray-800 max-w-3xl mx-auto leading-relaxed">
             We're looking for exceptional veterans ready to transform their military experience into entrepreneurial success.
           </p>
         </div>
 
         {/* Qualifications - Checklist Layout */}
         <div className="max-w-4xl mx-auto">
-          <div className={`bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 shadow-2xl transition-all duration-1000 ${
+          <div className={`bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-6 lg:p-8 border border-gray-300 shadow-2xl transition-all duration-1000 ${
             showItems ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'
           }`}>
             <div className="space-y-4 sm:space-y-6">
@@ -152,11 +152,11 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
                   }`}
                   style={{ 
                     transitionDelay: showItems ? '0ms' : `${index * 150 + 400}ms`,
-                    '--hover-bg': 'rgba(255, 255, 255, 0.05)'
+                    '--hover-bg': 'rgba(59, 130, 246, 0.05)'
                   } as React.CSSProperties}
                   onMouseEnter={(e) => {
                     if (showItems) {
-                      (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                      (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(59, 130, 246, 0.05)';
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -183,13 +183,13 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
                   
                   {/* Checkbox with animation */}
                   <div className="flex-shrink-0 mt-1">
-                    <div className={`w-5 h-5 sm:w-6 sm:h-6 border-2 border-white rounded-md flex items-center justify-center bg-white/10 group-hover:bg-white/20 transition-all duration-500 ${
+                    <div className={`w-5 h-5 sm:w-6 sm:h-6 border-2 border-blue-600 rounded-md flex items-center justify-center bg-blue-50 group-hover:bg-blue-100 transition-all duration-500 ${
                       showItems ? 'scale-100 rotate-0' : 'scale-0 rotate-45'
                     }`}
                     style={{ 
                       transitionDelay: `${index * 150 + 600}ms`
                     }}>
-                      <i className={`fas fa-check text-white text-xs sm:text-sm transition-all duration-300 ${
+                      <i className={`fas fa-check text-blue-600 text-xs sm:text-sm transition-all duration-300 ${
                         showItems ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
                       }`}
                       style={{ 
@@ -200,13 +200,13 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
                   
                   {/* Icon with bounce effect */}
                   <div className="flex-shrink-0 mt-0.5">
-                    <div className={`w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-105 transition-all duration-600 ${
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:scale-105 transition-all duration-600 ${
                       showItems ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
                     }`}
                     style={{ 
                       transitionDelay: `${index * 150 + 700}ms`
                     }}>
-                      <i className={`${qualification.icon} text-white text-base sm:text-lg transition-all duration-300 ${
+                      <i className={`${qualification.icon} text-blue-600 text-base sm:text-lg transition-all duration-300 ${
                         showItems ? 'scale-100' : 'scale-0'
                       }`}
                       style={{ 
@@ -217,7 +217,7 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
                   
                   {/* Content with typewriter effect */}
                   <div className="flex-1 min-w-0">
-                    <h3 className={`text-lg sm:text-xl font-bold text-white mb-2 group-hover:text-blue-100 transition-all duration-500 leading-tight ${
+                    <h3 className={`text-lg sm:text-xl font-bold text-black mb-2 group-hover:text-gray-800 transition-all duration-500 leading-tight ${
                       showItems ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
                     }`}
                     style={{ 
@@ -225,7 +225,7 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
                     }}>
                       {qualification.title}
                     </h3>
-                    <p className={`text-sm sm:text-base text-gray-200 leading-relaxed group-hover:text-gray-100 transition-all duration-500 ${
+                    <p className={`text-sm sm:text-base text-gray-700 leading-relaxed group-hover:text-gray-800 transition-all duration-500 ${
                       showItems ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'
                     }`}
                     style={{ 
@@ -236,7 +236,7 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
                   </div>
 
                   {/* Shimmer effect on load */}
-                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/10 to-transparent transform transition-all duration-1000 pointer-events-none z-10 ${
+                  <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-blue-100/30 to-transparent transform transition-all duration-1000 pointer-events-none z-10 ${
                     showItems ? 'translate-x-[200%] opacity-0' : '-translate-x-full opacity-100'
                   }`}
                   style={{ 

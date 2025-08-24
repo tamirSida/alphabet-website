@@ -301,7 +301,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
 
 
   return (
-    <section className="py-12 sm:py-16 px-4 bg-gradient-to-r from-white via-white to-gray-200 relative overflow-hidden">
+    <section className="py-12 sm:py-16 px-4 bg-gradient-to-r from-white via-white to-gray-400 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(120,119,198,0.15),transparent_50%)]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05),transparent_50%)]"></div>
@@ -340,7 +340,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
 
         {/* Military Loading Screen */}
         {isDecrypting && (
-          <div className="fixed inset-0 bg-gradient-to-r from-white via-white to-gray-200 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-gradient-to-r from-white via-white to-gray-400 flex items-center justify-center z-50">
             {/* Military grid overlay */}
             <div className="absolute inset-0 opacity-10" style={{
               backgroundImage: `

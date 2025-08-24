@@ -17,7 +17,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
   if (testimonials.length === 0) return null;
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-r from-white via-white to-gray-200">
+    <section className="py-20 px-4 bg-gradient-to-r from-white via-white to-gray-400">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -25,7 +25,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
             <div className="w-16 h-16 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center mr-4 shadow-lg">
               <i className="fas fa-quote-left text-2xl text-gray-700"></i>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
               Hear From Our Community
             </h2>
           </div>

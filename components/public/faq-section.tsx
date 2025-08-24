@@ -27,19 +27,10 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
       updatedAt: new Date()
     },
     {
-      id: 'faq-2',
-      question: 'Is there any cost to participate?',
-      answer: 'No, the Alpha-Bet program is completely free for qualifying veterans. This includes all workshops, mentorship sessions, resources, and networking opportunities throughout the 10-week program.',
-      order: 2,
-      isVisible: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
       id: 'faq-3',
       question: 'What time commitment is required?',
       answer: 'The program requires approximately 8-10 hours per week over 10 weeks. This includes live workshops, self-paced learning modules, peer collaboration sessions, and practical assignments to develop your business concept.',
-      order: 3,
+      order: 2,
       isVisible: true,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -48,7 +39,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
       id: 'faq-4',
       question: 'Is the program conducted online or in-person?',
       answer: 'The Alpha-Bet program is conducted entirely online, making it accessible to veterans regardless of location. All workshops, mentorship sessions, and networking events are held virtually using modern collaboration platforms.',
-      order: 4,
+      order: 3,
       isVisible: true,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -57,7 +48,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
       id: 'faq-5',
       question: 'Do I need to have a business idea already?',
       answer: 'Not necessarily. While some participants come with existing ideas, others join to find co-founders and develop concepts together. The program includes dedicated ideation workshops and partner-matching opportunities.',
-      order: 5,
+      order: 4,
       isVisible: true,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -66,7 +57,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
       id: 'faq-6',
       question: 'What kind of support continues after graduation?',
       answer: 'Graduates join our exclusive alumni network with ongoing access to mentors, investors, and fellow veteran entrepreneurs. We also provide continued resources, quarterly check-ins, and opportunities for advanced workshops.',
-      order: 6,
+      order: 5,
       isVisible: true,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -211,7 +202,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-br from-white via-white to-gray-200 rounded-2xl p-8 text-black">
+          <div className="bg-gradient-to-br from-white via-white to-gray-200 rounded-2xl p-8 text-black shadow-2xl">
             <h3 className="text-2xl sm:text-3xl font-bold mb-4">
               Still Have Questions?
             </h3>

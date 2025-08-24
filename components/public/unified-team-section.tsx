@@ -58,11 +58,11 @@ export default function UnifiedTeamSection({ teamMembers, onEdit, onDelete, onEd
             <span className="text-white/80 text-sm font-medium tracking-wide">LEADERSHIP TEAM</span>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-4 tracking-tight" style={{ fontFamily: "'Black Ops One', cursive" }}>
             Alpha-Bet Team
           </h1>
           
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-blue-600 max-w-3xl mx-auto leading-relaxed">
             Battle-tested leaders and mentors who understand your journey and are committed to your success
           </p>
         </div>
@@ -133,28 +133,48 @@ export default function UnifiedTeamSection({ teamMembers, onEdit, onDelete, onEd
 
                 {/* Member Info */}
                 <div className="text-center">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
+                  <h3 className="text-xl sm:text-2xl font-bold text-black mb-3">
                     {member.name}
                   </h3>
 
                   {/* Multiple Titles */}
-                  <div className="space-y-2 mb-4">
+                  <div className="flex flex-col items-center gap-2 mb-4">
                     {Array.isArray(member.titles) && member.titles.length > 0 ? (
-                      member.titles.map((titleObj, titleIndex) => (
-                        <div key={titleObj.id || titleIndex} className="inline-flex items-center justify-center">
-                          <span className="bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm font-medium text-gray-200 hover:bg-white/15 transition-colors">
-                            {titleObj.organization 
-                              ? `${titleObj.title}, ${titleObj.organization}`
-                              : titleObj.title}
-                          </span>
-                        </div>
-                      ))
+                      member.titles.flatMap((titleObj, titleIndex) => {
+                        const badges = [];
+                        
+                        // Add title as a badge
+                        if (titleObj.title) {
+                          badges.push(
+                            <span 
+                              key={`${titleObj.id || titleIndex}-title`} 
+                              className="bg-gray-50 border border-blue-200 rounded-full px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 transition-colors"
+                            >
+                              {titleObj.title}
+                            </span>
+                          );
+                        }
+                        
+                        // Add organization as a separate badge if it exists
+                        if (titleObj.organization) {
+                          badges.push(
+                            <span 
+                              key={`${titleObj.id || titleIndex}-org`} 
+                              className="bg-gray-50 border border-blue-200 rounded-full px-4 py-2 text-sm font-medium text-blue-700 hover:bg-gray-100 transition-colors"
+                            >
+                              {titleObj.organization}
+                            </span>
+                          );
+                        }
+                        
+                        return badges;
+                      })
                     ) : member.role ? (
-                      <div className="inline-flex items-center justify-center">
-                        <span className="bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm font-medium text-gray-200">
-                          {member.role}
-                        </span>
-                      </div>
+                      <span 
+                        className="bg-gray-50 border border-blue-200 rounded-full px-4 py-2 text-sm font-medium text-blue-700"
+                      >
+                        {member.role}
+                      </span>
                     ) : null}
                   </div>
 
@@ -162,7 +182,7 @@ export default function UnifiedTeamSection({ teamMembers, onEdit, onDelete, onEd
                   {member.military && (
                     <div className="flex items-center justify-center gap-2 mb-4">
                       <i className="fas fa-medal text-yellow-400 text-sm"></i>
-                      <span className="text-sm text-gray-300">{member.military}</span>
+                      <span className="text-sm text-gray-700">{member.military}</span>
                     </div>
                   )}
 
@@ -188,7 +208,7 @@ export default function UnifiedTeamSection({ teamMembers, onEdit, onDelete, onEd
             <div className="relative group">
               <button
                 onClick={() => onEdit && onEdit()}
-                className="w-full h-full min-h-[400px] bg-white/5 backdrop-blur-md rounded-2xl border-2 border-dashed border-white/20 hover:border-white/40 hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center gap-4 text-white/60 hover:text-white/80"
+                className="w-full h-full min-h-[400px] bg-gray-100/50 backdrop-blur-md rounded-2xl border-2 border-dashed border-gray-400 hover:border-gray-600 hover:bg-gray-200/50 transition-all duration-300 flex flex-col items-center justify-center gap-4 text-gray-600 hover:text-gray-800"
               >
                 <div className="w-16 h-16 rounded-full border-2 border-dashed border-current flex items-center justify-center">
                   <i className="fas fa-plus text-2xl"></i>

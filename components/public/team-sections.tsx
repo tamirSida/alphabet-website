@@ -306,7 +306,7 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
   };
 
   return (
-    <section className="py-16 sm:py-24 px-4 bg-gradient-to-r from-white via-white to-gray-200 text-white">
+    <section className="py-16 sm:py-24 px-4 bg-gradient-to-r from-white via-white to-gray-400">
       <div className="max-w-7xl mx-auto">
         {/* Main Section Header */}
         <div className="text-center mb-16 relative">
@@ -322,10 +322,10 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
           
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
             <div className="w-2 h-2 bg-white rounded-full"></div>
-            <span className="text-white/80 text-sm font-medium tracking-wide">LEADERSHIP TEAM</span>
+            <span className="text-gray-800 text-sm font-medium tracking-wide">LEADERSHIP TEAM</span>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6" style={{ fontFamily: "'Black Ops One', cursive" }}>
             Meet the Team
           </h2>
           
@@ -338,7 +338,7 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
         {/* Section 1: Alpha-Bet Staff */}
         <div className="mb-16">
           <div className="text-center mb-8">
-            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">Alpha-Bet Staff</h3>
+            <h3 className="text-2xl sm:text-3xl font-bold text-black mb-4" style={{ fontFamily: "'Black Ops One', cursive" }}>Alpha-Bet Staff</h3>
             <div className="w-24 h-1 bg-gradient-to-r from-green-500 to-blue-500 mx-auto rounded-full"></div>
           </div>
           
@@ -364,7 +364,7 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
         {/* Section 2: Version Bravo Team (including founders) */}
         <div className="mb-16">
           <div className="text-center mb-8">
-            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">Version Bravo Team</h3>
+            <h3 className="text-2xl sm:text-3xl font-bold text-black mb-4" style={{ fontFamily: "'Black Ops One', cursive" }}>Version Bravo Team</h3>
             <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-red-500 mx-auto rounded-full"></div>
           </div>
           
