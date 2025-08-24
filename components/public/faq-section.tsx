@@ -218,20 +218,13 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
             <p className="text-lg text-gray-800 leading-relaxed mb-6 max-w-2xl mx-auto">
               Our team is here to help you understand if Alpha-Bet is the right fit for your entrepreneurial journey.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <a
                 href="mailto:info@alphabetprogram.com"
                 className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:scale-105 transition-transform duration-300"
               >
                 <i className="fas fa-envelope"></i>
                 <span>Contact Us</span>
-              </a>
-              <a
-                href={EXTERNAL_URLS.APPLY_FORM}
-                className="inline-flex items-center gap-2 bg-white/10 text-white border border-white/20 px-6 py-3 rounded-full font-semibold hover:bg-white/15 transition-all duration-300"
-              >
-                <i className="fas fa-rocket"></i>
-                <span>Apply Now</span>
               </a>
             </div>
           </div>

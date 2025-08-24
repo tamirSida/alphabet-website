@@ -190,7 +190,7 @@ export default function ContentSection({
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-black leading-relaxed group-hover:text-gray-800 transition-colors duration-300">
+                        <p className="text-base sm:text-lg text-black leading-relaxed group-hover:text-gray-800 transition-colors duration-300">
                           {bullet}
                         </p>
                       </div>

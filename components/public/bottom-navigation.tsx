@@ -94,10 +94,10 @@ export default function BottomNavigation({ currentPage }: BottomNavigationProps)
     <section className="py-16 px-4 bg-gradient-to-br from-white via-white to-gray-200">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-black mb-4">
             Ready for the Next Step?
           </h2>
-          <p className="text-gray-300 max-w-2xl mx-auto">
+          <p className="text-gray-800 max-w-2xl mx-auto">
             Continue exploring the Alpha-Bet program to see how we can help transform your military experience into entrepreneurial success.
           </p>
         </div>
@@ -112,7 +112,7 @@ export default function BottomNavigation({ currentPage }: BottomNavigationProps)
                 className={`group block relative overflow-hidden rounded-xl border transition-all duration-300 hover:scale-105 ${
                   item.primary
                     ? 'bg-white text-gray-900 border-white shadow-2xl'
-                    : 'bg-white/10 text-white border-white/20 hover:bg-white/15'
+                    : 'bg-white/10 text-white border-blue-200 shadow-lg hover:bg-white/15 hover:shadow-xl hover:border-blue-300'
                 }`}
               >
               <div className="p-6 sm:p-8">
@@ -120,26 +120,26 @@ export default function BottomNavigation({ currentPage }: BottomNavigationProps)
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
                     item.primary
                       ? 'bg-gray-900 text-white'
-                      : 'bg-white/20 text-white group-hover:bg-white/30'
+                      : 'bg-blue-100 text-blue-600 border border-blue-200 shadow-md group-hover:bg-blue-200 group-hover:shadow-lg'
                   }`}>
                     <i className={`${item.icon} text-lg`}></i>
                   </div>
                   <div className="flex-1">
                     <h3 className={`text-xl font-bold leading-tight ${
-                      item.primary ? 'text-gray-900' : 'text-white'
+                      item.primary ? 'text-gray-900' : 'text-blue-600'
                     }`}>
                       {item.title}
                     </h3>
                   </div>
                   <div className={`${
-                    item.primary ? 'text-gray-900' : 'text-white/60'
+                    item.primary ? 'text-gray-900' : 'text-blue-500'
                   }`}>
                     <i className="fas fa-arrow-right text-lg group-hover:translate-x-1 transition-transform"></i>
                   </div>
                 </div>
                 
                 <p className={`leading-relaxed ${
-                  item.primary ? 'text-gray-700' : 'text-gray-200'
+                  item.primary ? 'text-gray-700' : 'text-blue-700'
                 }`}>
                   {item.description}
                 </p>

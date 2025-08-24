@@ -19,7 +19,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-gray-900 text-white border-t border-gray-800">
+    <footer className="bg-blue-900 text-white border-t border-blue-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
@@ -155,7 +155,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-8 border-t border-gray-800">
+        <div className="mt-8 pt-8 border-t border-blue-800">
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
               © {currentYear} Alpha-Bet Program. All rights reserved.

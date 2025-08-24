@@ -134,11 +134,11 @@ export default function HeroSection({
                   </div>
                   <div className="leading-relaxed">
                     {programStartDate && programEndDate ? (
-                      <div className="font-medium text-white">{formatDate(programStartDate)} - {formatDate(programEndDate)}</div>
+                      <div className="font-medium text-black">{formatDate(programStartDate)} - {formatDate(programEndDate)}</div>
                     ) : programStartDate ? (
-                      <div className="font-medium text-white">{formatDate(programStartDate)}</div>
+                      <div className="font-medium text-black">{formatDate(programStartDate)}</div>
                     ) : programEndDate ? (
-                      <div className="font-medium text-white">{formatDate(programEndDate)}</div>
+                      <div className="font-medium text-black">{formatDate(programEndDate)}</div>
                     ) : null}
                   </div>
                 </div>
