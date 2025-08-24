@@ -105,7 +105,7 @@ export class TestimonialService extends BaseFirestoreService<Testimonial> {
 
 export class CurriculumService extends BaseFirestoreService<CurriculumItem> {
   constructor() {
-    super('curriculum-items');
+    super('curriculum-weeks');
   }
 }
 

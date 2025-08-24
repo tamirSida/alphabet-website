@@ -38,13 +38,13 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
       id: 'week-1', 
       weekNumber: 1, 
       title: 'Orientation', 
-      description: 'Set the foundation for your entrepreneurial journey.', 
+      description: 'Set the foundation for your entrepreneurial journey. Dive into risk, resilience, and vision and tap into the entrepreneurial mindset.', 
       icon: 'fas fa-compass', 
-      badge1Text: 'Interactive Sessions',
+      badge1Text: 'Course Introduction',
       badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
+      badge2Text: 'Meet the Team', 
       badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
+      badge3Text: 'Intro to Entrepreneurship',
       badge3Icon: 'fas fa-lightbulb',
       order: 1, 
       isVisible: true, 
@@ -55,13 +55,13 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
       id: 'week-2', 
       weekNumber: 2, 
       title: 'Choosing Partners', 
-      description: 'Learn to build a strong, reliable team.', 
+      description: 'Learn to build a strong and reliable team. Understand the roles and responsibilities needed in an early stage venture and how to protect yourself from common pitfalls that many startups suffer from.', 
       icon: 'fas fa-handshake', 
-      badge1Text: 'Interactive Sessions',
+      badge1Text: 'Founding Team Roles',
       badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
+      badge2Text: 'Legal Protections', 
       badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
+      badge3Text: 'Team Dynamics',
       badge3Icon: 'fas fa-lightbulb',
       order: 2, 
       isVisible: true, 
@@ -72,13 +72,13 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
       id: 'week-3', 
       weekNumber: 3, 
       title: 'Ideation Process', 
-      description: 'Develop and refine your business idea.', 
+      description: 'Develop and/or refine a business idea. Learn the Ideation Toolkit, using AI as an ideation partner, and dive into the creative process.', 
       icon: 'fas fa-lightbulb', 
-      badge1Text: 'Interactive Sessions',
+      badge1Text: 'Ideation Toolkit',
       badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
+      badge2Text: 'AI Tools', 
       badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
+      badge3Text: 'Team Collaboration',
       badge3Icon: 'fas fa-lightbulb',
       order: 3, 
       isVisible: true, 
@@ -89,13 +89,13 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
       id: 'week-4', 
       weekNumber: 4, 
       title: 'Lean Model Canvas', 
-      description: 'Master the fundamental framework for a startup.', 
+      description: 'Master the fundamental framework for a startup. Learn about Lean Startup Methodology and how to create a Business Model Canvas. Learn how to turn this into a practical tool and not just a piece of paper.', 
       icon: 'fas fa-drafting-compass', 
-      badge1Text: 'Interactive Sessions',
+      badge1Text: 'Lean Startup Methodology',
       badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
+      badge2Text: 'Business Model Canvas', 
       badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
+      badge3Text: 'Startup Framework',
       badge3Icon: 'fas fa-lightbulb',
       order: 4, 
       isVisible: true, 
@@ -106,13 +106,13 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
       id: 'week-5', 
       weekNumber: 5, 
       title: 'Customer Discovery', 
-      description: 'Understand your market and find product-market fit.', 
+      description: 'Introduction to Customer Discovery - how to do it, why its so important, and getting to Product Market Fit. Learn why this is the number one startup killer and how most do not do it right!', 
       icon: 'fas fa-search', 
-      badge1Text: 'Interactive Sessions',
+      badge1Text: 'Identifying your Customer',
       badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
+      badge2Text: 'Customer Interviews', 
       badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
+      badge3Text: 'Product Market Fit',
       badge3Icon: 'fas fa-lightbulb',
       order: 5, 
       isVisible: true, 
@@ -120,16 +120,33 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
       updatedAt: new Date() 
     },
     { 
+      id: 'week-6', 
+      weekNumber: 6, 
+      title: 'Market Analysis / Landscape', 
+      description: 'Validate your concept with data-driven insights. Learn to analyze your market and map out your competition.', 
+      icon: 'fas fa-chart-line', 
+      badge1Text: 'Competitive Landscape',
+      badge1Icon: 'fas fa-clock',
+      badge2Text: 'Data Driven Decision Making', 
+      badge2Icon: 'fas fa-users',
+      badge3Text: '',
+      badge3Icon: 'fas fa-lightbulb',
+      order: 6, 
+      isVisible: true, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    },
+    { 
       id: 'week-7', 
       weekNumber: 7, 
-      title: 'Market Analysis', 
-      description: 'Validate your concept with data-driven insights.', 
-      icon: 'fas fa-chart-line', 
-      badge1Text: 'Interactive Sessions',
+      title: 'Business Plan', 
+      description: 'Create a clear, actionable roadmap for growth. Learn the components of a business plan, understand business models, and business strategy.', 
+      icon: 'fas fa-map', 
+      badge1Text: 'Business Models',
       badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
+      badge2Text: 'Business Plan', 
       badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
+      badge3Text: 'Business Strategy',
       badge3Icon: 'fas fa-lightbulb',
       order: 7, 
       isVisible: true, 
@@ -139,14 +156,14 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
     { 
       id: 'week-8', 
       weekNumber: 8, 
-      title: 'Business Plan', 
-      description: 'Create a clear, actionable roadmap for growth.', 
-      icon: 'fas fa-map', 
-      badge1Text: 'Interactive Sessions',
+      title: 'Storytelling & Branding for Veterans', 
+      description: 'Learn to communicate your mission and vision effectively. Practice storytelling and hone your presentation skills. We aren\'t pitching mission briefs, we are selling a dream!', 
+      icon: 'fas fa-bullhorn', 
+      badge1Text: 'Effective Communication',
       badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
+      badge2Text: 'Storytelling Techniques', 
       badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
+      badge3Text: 'Presentation Refining',
       badge3Icon: 'fas fa-lightbulb',
       order: 8, 
       isVisible: true, 
@@ -156,14 +173,14 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
     { 
       id: 'week-9', 
       weekNumber: 9, 
-      title: 'Storytelling & Branding', 
-      description: 'Learn to communicate your mission and vision effectively.', 
-      icon: 'fas fa-bullhorn', 
-      badge1Text: 'Interactive Sessions',
+      title: 'Networking', 
+      description: 'Learn to map out, build, and utilize your network. Strategize how to best take advantage of networking opportunities and events (they are happening all around us!).', 
+      icon: 'fas fa-network-wired', 
+      badge1Text: 'Network Building',
       badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
+      badge2Text: 'Elevator Pitch', 
       badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
+      badge3Text: 'Strategy & Planning',
       badge3Icon: 'fas fa-lightbulb',
       order: 9, 
       isVisible: true, 
@@ -174,13 +191,13 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
       id: 'week-10', 
       weekNumber: 10, 
       title: 'Presentations', 
-      description: 'Prepare to pitch your business with confidence.', 
+      description: 'Pitch your venture to a group of VC\'s and Angel investors, founders, and industry experts.', 
       icon: 'fas fa-flag-checkered', 
-      badge1Text: 'Interactive Sessions',
+      badge1Text: 'Venture Showcase',
       badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
+      badge2Text: 'Real Investors', 
       badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
+      badge3Text: 'Graduation',
       badge3Icon: 'fas fa-lightbulb',
       order: 10, 
       isVisible: true, 
@@ -189,46 +206,26 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
     }
   ];
 
-  // Merge CMS items with default data - show database items where they exist, default items elsewhere
-  const mergeItemsWithDefaults = () => {
+  // Merge CMS items with hardcoded data - show CMS where it exists, hardcoded elsewhere
+  const getDisplayedItems = () => {
     const merged = [...defaultCurriculum];
     
-    // Replace default items with CMS items where they exist
+    // Replace hardcoded weeks with CMS weeks where they exist
     items.forEach(cmsItem => {
       const defaultIndex = merged.findIndex(defaultItem => 
         defaultItem.weekNumber === cmsItem.weekNumber
       );
       if (defaultIndex !== -1) {
-        merged[defaultIndex] = {
-          ...cmsItem,
-          icon: cmsItem.icon || defaultCurriculum[defaultIndex].icon,
-          badge1Text: cmsItem.badge1Text || defaultCurriculum[defaultIndex].badge1Text,
-          badge1Icon: cmsItem.badge1Icon || defaultCurriculum[defaultIndex].badge1Icon,
-          badge2Text: cmsItem.badge2Text || defaultCurriculum[defaultIndex].badge2Text,
-          badge2Icon: cmsItem.badge2Icon || defaultCurriculum[defaultIndex].badge2Icon,
-          badge3Text: cmsItem.badge3Text || defaultCurriculum[defaultIndex].badge3Text,
-          badge3Icon: cmsItem.badge3Icon || defaultCurriculum[defaultIndex].badge3Icon
-        };
-      } else {
-        // If CMS item has a week number not in defaults, add it
-        merged.push({
-          ...cmsItem,
-          icon: cmsItem.icon || 'fas fa-star',
-          badge1Text: cmsItem.badge1Text || 'Interactive Sessions',
-          badge1Icon: cmsItem.badge1Icon || 'fas fa-clock',
-          badge2Text: cmsItem.badge2Text || 'Peer Collaboration',
-          badge2Icon: cmsItem.badge2Icon || 'fas fa-users',
-          badge3Text: cmsItem.badge3Text || 'Practical Application',
-          badge3Icon: cmsItem.badge3Icon || 'fas fa-lightbulb'
-        });
+        // Replace the hardcoded week with the CMS week
+        merged[defaultIndex] = cmsItem;
       }
     });
     
-    return merged;
+    // Sort by weekNumber and filter visible items
+    return merged.sort((a, b) => a.weekNumber - b.weekNumber).filter(item => item.isVisible);
   };
-  
-  const displayItems = mergeItemsWithDefaults();
-  const sortedItems = displayItems.sort((a, b) => a.order - b.order);
+
+  const sortedItems = getDisplayedItems();
 
   // Trigger decrypting animation on component mount (page load)
   useEffect(() => {
