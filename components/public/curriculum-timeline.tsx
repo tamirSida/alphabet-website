@@ -216,8 +216,20 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
         defaultItem.weekNumber === cmsItem.weekNumber
       );
       if (defaultIndex !== -1) {
-        // Replace the hardcoded week with the CMS week
-        merged[defaultIndex] = cmsItem;
+        // Replace the hardcoded week with the CMS week, ensuring all required fields are present
+        const defaultItem = merged[defaultIndex];
+        merged[defaultIndex] = {
+          ...defaultItem,
+          ...cmsItem,
+          // Ensure required fields have fallback values
+          icon: cmsItem.icon || defaultItem.icon,
+          badge1Text: cmsItem.badge1Text || defaultItem.badge1Text,
+          badge1Icon: cmsItem.badge1Icon || defaultItem.badge1Icon,
+          badge2Text: cmsItem.badge2Text || defaultItem.badge2Text,
+          badge2Icon: cmsItem.badge2Icon || defaultItem.badge2Icon,
+          badge3Text: cmsItem.badge3Text || defaultItem.badge3Text,
+          badge3Icon: cmsItem.badge3Icon || defaultItem.badge3Icon,
+        };
       }
     });
     
@@ -264,7 +276,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
     if (!isLoaded) return; // Don't allow clicks during decrypting
     
     // Open modal for mobile
-    const displayItems = mergeItemsWithDefaults();
+    const displayItems = getDisplayedItems();
     const item = displayItems.find(item => item.weekNumber === weekNumber);
     if (item) {
       setMobileModalItem(item);
