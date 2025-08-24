@@ -10,11 +10,12 @@ interface CurriculumTimelineProps {
   header?: CurriculumHeader | null;
   cta?: any;
   onEdit?: (item?: CurriculumItem) => void;
+  onDelete?: (itemId: string) => void;
   onEditHeader?: () => void;
   onEditCTA?: () => void;
 }
 
-export default function CurriculumTimeline({ items, header, cta, onEdit, onEditHeader, onEditCTA }: CurriculumTimelineProps) {
+export default function CurriculumTimeline({ items, header, cta, onEdit, onDelete, onEditHeader, onEditCTA }: CurriculumTimelineProps) {
   const { isAdminMode } = useAdmin();
   const [isDecrypting, setIsDecrypting] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -466,15 +467,32 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
 
               {/* Content Card */}
               <div className="flex-1 relative group">
-                {/* Admin Edit Button */}
+                {/* Admin Buttons */}
                 {isAdminMode && (
-                  <button
-                    onClick={(e) => handleEditClick(item, e)}
-                    className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg z-20"
-                    title="Edit this week"
-                  >
-                    <i className="fas fa-edit"></i>
-                  </button>
+                  <div className="absolute -top-2 -right-2 flex gap-2 z-20">
+                    <button
+                      onClick={(e) => handleEditClick(item, e)}
+                      className="w-8 h-8 bg-green-500 hover:bg-green-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg"
+                      title="Edit this week"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </button>
+                    {onDelete && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (confirm(`Are you sure you want to delete Week ${item.weekNumber}?`)) {
+                            onDelete(item.id);
+                          }
+                        }}
+                        className="w-8 h-8 bg-red-500 hover:bg-red-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg"
+                        title="Delete this week"
+                      >
+                        <i className="fas fa-trash"></i>
+                      </button>
+                    )}
+                  </div>
                 )}
                 
                 <div className={`relative overflow-hidden rounded-2xl border shadow-xl transition-all duration-500 ${
@@ -557,6 +575,20 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
               
             </div>
           ))}
+
+          {/* Add Week Button */}
+          {isAdminMode && onEdit && (
+            <div className="text-center mt-8">
+              <button
+                onClick={() => onEdit()}
+                className="inline-flex items-center gap-3 bg-blue-500 hover:bg-blue-400 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                title="Add new week"
+              >
+                <i className="fas fa-plus"></i>
+                <span>Add New Week</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Bottom Summary */}
