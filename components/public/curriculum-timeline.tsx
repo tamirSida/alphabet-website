@@ -326,14 +326,14 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
           
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1.5 mb-4">
             <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-            <span className="text-white/80 text-xs font-medium tracking-wide">{activeHeader.badge}</span>
+            <span className="text-blue-600 bg-gray-100 px-3 py-1 rounded-full text-xs font-medium tracking-wide">{activeHeader.badge}</span>
           </div>
           
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-3 tracking-tight" style={{ fontFamily: "'Black Ops One', cursive" }}>
             {activeHeader.title}
           </h2>
           
-          <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-blue-600 max-w-2xl mx-auto leading-relaxed">
             {activeHeader.description}
           </p>
         </div>
@@ -351,7 +351,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
             }}></div>
             
             {/* Fixed-size container to prevent resizing */}
-            <div className="relative bg-gray-900/90 border-2 border-gray-400 rounded-lg p-8 text-center w-96 h-80 flex flex-col justify-between shadow-2xl">
+            <div className="relative bg-blue-900/90 border-2 border-blue-400 rounded-lg p-8 text-center w-96 h-80 flex flex-col justify-between shadow-2xl">
               {/* Military Header */}
               <div className="border-b border-gray-600 pb-4">
                 <div className="flex items-center justify-center gap-3 mb-2">
@@ -497,39 +497,39 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
                           ? 'bg-white/30 scale-110' 
                           : 'bg-white/20 group-hover:scale-105'
                       }`}>
-                        <i className={`${item.icon} text-xl text-white`}></i>
+                        <i className={`${item.icon} text-xl text-blue-600`}></i>
                       </div>
                       <div className="flex-1">
-                        <div className="text-xs text-white/70 font-medium uppercase tracking-wider mb-1">
+                        <div className="text-xs text-gray-700 font-medium uppercase tracking-wider mb-1">
                           Week {item.weekNumber} of 10
                         </div>
-                        <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight group-hover:text-blue-100 transition-colors">
+                        <h3 className="text-xl sm:text-2xl font-bold text-black leading-tight group-hover:text-gray-800 transition-colors">
                           {item.title}
                         </h3>
                       </div>
                     </div>
                     
                     {/* Description */}
-                    <p className="text-base sm:text-lg text-gray-200 leading-relaxed mb-4">
+                    <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-4">
                       {item.description}
                     </p>
 
                     {/* Quick preview badges */}
                     <div className="flex flex-wrap gap-2">
                       {item.badge1Text && (
-                        <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                        <span className="px-3 py-1 bg-blue-50 rounded-full text-xs text-blue-700 border border-blue-200">
                           {item.badge1Icon && <i className={`${item.badge1Icon} mr-1`}></i>}
                           {item.badge1Text}
                         </span>
                       )}
                       {item.badge2Text && (
-                        <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                        <span className="px-3 py-1 bg-blue-50 rounded-full text-xs text-blue-700 border border-blue-200">
                           {item.badge2Icon && <i className={`${item.badge2Icon} mr-1`}></i>}
                           {item.badge2Text}
                         </span>
                       )}
                       {item.badge3Text && (
-                        <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                        <span className="px-3 py-1 bg-blue-50 rounded-full text-xs text-blue-700 border border-blue-200">
                           {item.badge3Icon && <i className={`${item.badge3Icon} mr-1`}></i>}
                           {item.badge3Text}
                         </span>
@@ -538,7 +538,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
 
                     {/* Mobile tap indicator */}
                     <div className="block md:hidden mt-4 pt-3 border-t border-white/10">
-                      <div className="flex items-center justify-center gap-2 text-white/60 text-xs">
+                      <div className="flex items-center justify-center gap-2 text-gray-600 text-xs">
                         <i className="fas fa-hand-pointer"></i>
                         <span>Tap to view full details</span>
                       </div>
@@ -586,7 +586,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
               </h3>
             </div>
             
-            <p className="text-lg text-gray-200 leading-relaxed mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-2xl mx-auto">
               {cta?.description || 'Transform 10 weeks of intensive learning into a lifetime of entrepreneurial success. Each week builds on the last, creating a comprehensive foundation for your startup journey.'}
             </p>
             
@@ -670,7 +670,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
 
             {/* Modal Content */}
             <div className="p-6">
-              <p className="text-gray-200 leading-relaxed mb-6">
+              <p className="text-gray-700 leading-relaxed mb-6">
                 {mobileModalItem.description}
               </p>
 
