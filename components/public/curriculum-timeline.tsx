@@ -581,7 +581,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
               <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
                 <i className="fas fa-rocket text-white text-lg"></i>
               </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-white">
+              <h3 className="text-2xl sm:text-3xl font-bold text-black">
                 {cta?.title || 'Your Entrepreneurial Journey Awaits'}
               </h3>
             </div>
@@ -592,19 +592,19 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
               <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                <div className="text-3xl font-bold text-blue-300 mb-2">10</div>
-                <div className="text-white font-medium">Intensive Weeks</div>
-                <div className="text-gray-300 text-sm">Structured Learning Path</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">10</div>
+                <div className="text-black font-medium">Intensive Weeks</div>
+                <div className="text-gray-700 text-sm">Structured Learning Path</div>
               </div>
               <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                <div className="text-3xl font-bold text-green-300 mb-2">100+</div>
-                <div className="text-white font-medium">Practical Hours</div>
-                <div className="text-gray-300 text-sm">Hands-On Experience</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">100+</div>
+                <div className="text-black font-medium">Practical Hours</div>
+                <div className="text-gray-700 text-sm">Hands-On Experience</div>
               </div>
               <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-                <div className="text-3xl font-bold text-purple-300 mb-2">∞</div>
-                <div className="text-white font-medium">Network Value</div>
-                <div className="text-gray-300 text-sm">Lifelong Connections</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">∞</div>
+                <div className="text-black font-medium">Network Value</div>
+                <div className="text-gray-700 text-sm">Lifelong Connections</div>
               </div>
             </div>
             
@@ -618,7 +618,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onEditH
               </a>
               <a 
                 href={cta?.secondaryButtonLink || '/curriculum'}
-                className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-6 py-3 text-white font-semibold hover:bg-white/15 transition-all duration-300"
+                className="inline-flex items-center gap-2 bg-white/10 text-blue-700 border-blue-200 shadow-lg hover:bg-white/15 hover:shadow-xl hover:border-blue-300 rounded-full px-6 py-3 font-semibold transition-all duration-300"
               >
                 <i className="fas fa-calendar-alt"></i>
                 <span>{cta?.secondaryButtonText || '10-Week Program'}</span>
