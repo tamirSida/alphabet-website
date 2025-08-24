@@ -650,7 +650,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
           onClick={() => setMobileModalOpen(false)}
         >
           <div 
-            className="bg-gradient-to-br from-gray-800/90 via-gray-700/90 to-gray-900/90 backdrop-blur-md rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto border border-gray-600/30 shadow-2xl transform transition-all duration-300 ease-out animate-scale-in relative"
+            className="bg-white backdrop-blur-md rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto border border-gray-300 shadow-2xl transform transition-all duration-300 ease-out animate-scale-in relative"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Popup indicator dots */}
@@ -660,16 +660,16 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
               <div className="w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
             </div>
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-white/20">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                   <i className={`${mobileModalItem.icon} text-white text-lg`}></i>
                 </div>
                 <div>
-                  <div className="text-xs text-white/70 font-medium uppercase tracking-wider">
+                  <div className="text-xs text-gray-700 font-medium uppercase tracking-wider">
                     Week {mobileModalItem.weekNumber} of 10
                   </div>
-                  <h3 className="text-lg font-bold text-white leading-tight">
+                  <h3 className="text-lg font-bold text-black leading-tight" style={{ fontFamily: "'Black Ops One', cursive" }}>
                     {mobileModalItem.title}
                   </h3>
                 </div>
@@ -685,11 +685,11 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
 
             {/* Modal Content */}
             <div className="p-6">
-              <p className="text-gray-700 leading-relaxed mb-6">
+              <p className="text-blue-600 leading-relaxed mb-6">
                 {mobileModalItem.description}
               </p>
 
-              <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <h4 className="text-lg font-bold text-black mb-4 flex items-center gap-2">
                 <i className="fas fa-info-circle text-blue-300"></i>
                 What You'll Learn
               </h4>
@@ -697,38 +697,38 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-book text-blue-300 text-sm"></i>
+                    <i className="fas fa-book text-blue-600 text-sm"></i>
                   </div>
                   <div>
-                    <div className="text-white font-medium text-sm">Core Concepts</div>
-                    <div className="text-gray-300 text-sm">Essential frameworks and methodologies</div>
+                    <div className="text-black font-medium text-sm">Core Concepts</div>
+                    <div className="text-gray-700 text-sm">Essential frameworks and methodologies</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-hammer text-green-300 text-sm"></i>
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <i className="fas fa-hammer text-blue-600 text-sm"></i>
                   </div>
                   <div>
-                    <div className="text-white font-medium text-sm">Hands-On Practice</div>
-                    <div className="text-gray-300 text-sm">Real-world application exercises</div>
+                    <div className="text-black font-medium text-sm">Hands-On Practice</div>
+                    <div className="text-gray-700 text-sm">Real-world application exercises</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-comments text-purple-300 text-sm"></i>
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <i className="fas fa-comments text-blue-600 text-sm"></i>
                   </div>
                   <div>
-                    <div className="text-white font-medium text-sm">Peer Review</div>
-                    <div className="text-gray-300 text-sm">Collaborative feedback sessions</div>
+                    <div className="text-black font-medium text-sm">Peer Review</div>
+                    <div className="text-gray-700 text-sm">Collaborative feedback sessions</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-trophy text-orange-300 text-sm"></i>
+                  <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <i className="fas fa-trophy text-blue-600 text-sm"></i>
                   </div>
                   <div>
-                    <div className="text-white font-medium text-sm">Milestone Achievement</div>
-                    <div className="text-gray-300 text-sm">Track your progress and wins</div>
+                    <div className="text-black font-medium text-sm">Milestone Achievement</div>
+                    <div className="text-gray-700 text-sm">Track your progress and wins</div>
                   </div>
                 </div>
               </div>
@@ -737,19 +737,19 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
               <div className="mt-6 pt-4 border-t border-white/10">
                 <div className="flex flex-wrap gap-2">
                   {mobileModalItem?.badge1Text && (
-                    <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                    <span className="px-3 py-1 bg-blue-50 rounded-full text-xs text-blue-700 border border-blue-200">
                       {mobileModalItem.badge1Icon && <i className={`${mobileModalItem.badge1Icon} mr-1`}></i>}
                       {mobileModalItem.badge1Text}
                     </span>
                   )}
                   {mobileModalItem?.badge2Text && (
-                    <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                    <span className="px-3 py-1 bg-blue-50 rounded-full text-xs text-blue-700 border border-blue-200">
                       {mobileModalItem.badge2Icon && <i className={`${mobileModalItem.badge2Icon} mr-1`}></i>}
                       {mobileModalItem.badge2Text}
                     </span>
                   )}
                   {mobileModalItem?.badge3Text && (
-                    <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80 border border-white/20">
+                    <span className="px-3 py-1 bg-blue-50 rounded-full text-xs text-blue-700 border border-blue-200">
                       {mobileModalItem.badge3Icon && <i className={`${mobileModalItem.badge3Icon} mr-1`}></i>}
                       {mobileModalItem.badge3Text}
                     </span>
