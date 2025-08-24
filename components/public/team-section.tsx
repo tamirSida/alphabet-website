@@ -208,7 +208,7 @@ export default function TeamSection({ members, showAll = false, onEdit, onDelete
   };
 
   return (
-    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+    <section className="py-16 sm:py-24 px-4 bg-gradient-to-r from-white via-white to-gray-200 text-white">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16 relative">

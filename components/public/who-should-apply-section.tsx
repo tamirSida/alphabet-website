@@ -99,7 +99,7 @@ export default function WhoShouldApplySection({ qualifications, onEdit, onEditHe
 
 
   return (
-    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
+    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-white via-white to-gray-200 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(120,119,198,0.15),transparent_50%)]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05),transparent_50%)]"></div>

@@ -150,7 +150,7 @@ export default function SplashPage() {
             muted
             playsInline
             preload="auto"
-            className="absolute inset-0 w-full h-full object-cover z-10 filter grayscale scale-110 sm:scale-100"
+            className="absolute inset-0 w-full h-full object-cover z-10 filter grayscale scale-100"
             onLoadStart={() => {
               console.log('Video load started');
               setVideoLoading(true);

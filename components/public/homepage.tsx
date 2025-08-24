@@ -417,7 +417,7 @@ function AlphaBetHomepageContent() {
       <SimpleAdminToggle />
       
       {/* Hero and Content Sections with Seamless Background */}
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      <div className="bg-gradient-to-r from-white via-white to-gray-200">
         {/* Hero Section */}
         <EditableSection
           sectionName="Hero"

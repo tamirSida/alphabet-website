@@ -49,15 +49,15 @@ export default function ContentSection({
       case 'why-alpha-bet':
         return {
           icon: 'fas fa-star',
-          accentColor: 'from-purple-500 to-purple-600', 
-          glowColor: 'shadow-purple-500/20',
+          accentColor: 'from-blue-500 to-blue-600',
+          glowColor: 'shadow-blue-500/20',
           description: 'What makes us unique'
         };
       case 'what-you-gain':
         return {
           icon: 'fas fa-trophy',
-          accentColor: 'from-yellow-500 to-yellow-600',
-          glowColor: 'shadow-yellow-500/20',
+          accentColor: 'from-blue-500 to-blue-600',
+          glowColor: 'shadow-blue-500/20',
           description: 'Your transformation journey'
         };
       default:
@@ -122,7 +122,7 @@ export default function ContentSection({
             </div>
           </div>
           
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-black mb-4 tracking-tight" style={{ fontFamily: "'Black Ops One', cursive" }}>
             {title}
           </h2>
           
@@ -132,7 +132,7 @@ export default function ContentSection({
             title={isAdminMode && onEditDescription ? 'Click to edit description' : undefined}
           >
             <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${config.accentColor}`}></div>
-            <span className="text-white/80 text-sm font-medium tracking-wide uppercase">
+            <span className="text-blue-600 text-sm font-medium tracking-wide uppercase">
               {displayDescription}
             </span>
           </div>
@@ -143,18 +143,18 @@ export default function ContentSection({
           {/* Intro Section */}
           {intro && (
             <div className="space-y-6">
-              <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-8 sm:p-10 hover:bg-white/10 transition-all duration-500 group">
+              <div className="relative bg-gray-100 backdrop-blur-sm rounded-2xl border border-gray-300 p-8 sm:p-10 hover:bg-gray-200 transition-all duration-500 group">
                 
                 <div className="flex items-start gap-4 mb-6">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${config.accentColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <i className="fas fa-quote-left text-white text-lg"></i>
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">Mission Brief</h3>
+                    <h3 className="text-xl font-semibold text-black mb-2">Mission Brief</h3>
                     <div className={`w-16 h-1 bg-gradient-to-r ${config.accentColor} rounded-full`}></div>
                   </div>
                 </div>
-                <p className="text-gray-200 leading-relaxed text-lg">
+                <p className="text-black leading-relaxed text-lg">
                   {intro}
                 </p>
               </div>
@@ -177,7 +177,7 @@ export default function ContentSection({
                 return (
                   <div
                     key={index}
-                    className="group relative bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all duration-300 cursor-default"
+                    className="group relative bg-gray-100 backdrop-blur-sm rounded-xl border border-gray-300 p-6 hover:bg-gray-200 transition-all duration-300 cursor-default"
                     onMouseEnter={() => setHoveredItem(index)}
                     onMouseLeave={() => setHoveredItem(null)}
                   >
@@ -190,7 +190,7 @@ export default function ContentSection({
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-gray-200 leading-relaxed group-hover:text-white transition-colors duration-300">
+                        <p className="text-black leading-relaxed group-hover:text-gray-800 transition-colors duration-300">
                           {bullet}
                         </p>
                       </div>
@@ -207,7 +207,7 @@ export default function ContentSection({
         </div>
 
         {/* Enhanced Decorative Footer */}
-        <div className="mt-16 sm:mt-20 pt-12 border-t border-white/10">
+        <div className="mt-16 sm:mt-20 pt-12 border-t border-gray-300">
           <div className="flex justify-center">
             <div className="flex items-center gap-3">
               <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${config.accentColor} animate-pulse`}></div>

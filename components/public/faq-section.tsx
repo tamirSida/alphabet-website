@@ -118,7 +118,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
   };
 
   return (
-    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-black via-gray-900 to-gray-800">
+    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-white via-white to-gray-200">
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -211,7 +211,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-2xl p-8 text-white">
+          <div className="bg-gradient-to-br from-white via-white to-gray-200 rounded-2xl p-8 text-white">
             <h3 className="text-2xl sm:text-3xl font-bold mb-4">
               Still Have Questions?
             </h3>

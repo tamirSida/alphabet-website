@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
         <SimpleAdminToggle />
         
         {/* Header */}
-        <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+        <section className="py-16 sm:py-24 px-4 bg-gradient-to-r from-white via-white to-gray-200 text-white">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
               Privacy Policy

@@ -17,7 +17,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
   if (testimonials.length === 0) return null;
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+    <section className="py-20 px-4 bg-gradient-to-r from-white via-white to-gray-200">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">

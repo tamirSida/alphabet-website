@@ -69,13 +69,14 @@ export default function HeroSection({
       } : undefined}
     >
       <div className="max-w-4xl mx-auto text-center text-white">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
           {headline}
         </h1>
         {/* First subtitle line */}
         <p 
           ref={subtitleRef}
-          className="text-lg sm:text-xl md:text-2xl text-gray-200 font-bold mb-4 max-w-3xl mx-auto leading-relaxed"
+          className="text-lg sm:text-xl md:text-2xl text-black font-bold mb-4 max-w-3xl mx-auto leading-relaxed"
+          style={{ fontFamily: "'Black Ops One', cursive" }}
         >
           {subHeadline}
         </p>
@@ -83,53 +84,53 @@ export default function HeroSection({
         {/* Gradient divider that matches first subtitle width */}
         <div className="flex justify-center mb-4">
           <div 
-            className="h-1 bg-gradient-to-r from-purple-500 to-red-500 rounded-full transition-all duration-300"
+            className="h-1 bg-blue-700 rounded-full transition-all duration-300"
             style={{ width: `${dividerWidth}px` }}
           ></div>
         </div>
         
         {/* Second subtitle line */}
         {subHeadline2 && (
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-black mb-8 max-w-3xl mx-auto leading-relaxed">
             {subHeadline2}
           </p>
         )}
         
         {/* Application Window Section */}
         {(applicationWindowOpens || applicationWindowCloses || programStartDate || programEndDate) && (
-          <div className="bg-gradient-to-r from-purple-500/10 to-red-500/10 backdrop-blur-md rounded-xl border border-white/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 max-w-3xl mx-auto shadow-lg">
+          <div className="bg-gradient-to-r from-blue-500/10 to-gray-500/10 backdrop-blur-md rounded-xl border border-gray-400/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 max-w-3xl mx-auto shadow-lg">
             <div className="text-center space-y-2 sm:space-y-4">
               {(applicationWindowOpens || applicationWindowCloses) && (
-                <div className="text-xs sm:text-lg text-gray-100">
+                <div className="text-xs sm:text-lg text-gray-800">
                   <div className="flex items-center justify-center mb-2 sm:mb-3">
-                    <i className="fas fa-calendar-alt mr-2 text-purple-400"></i>
-                    <span className="font-bold text-white">Application Window</span>
+                    <i className="fas fa-calendar-alt mr-2 text-blue-600"></i>
+                    <span className="font-bold text-black">Application Window</span>
                   </div>
                   <div className="leading-relaxed">
                     {applicationWindowOpens && applicationWindowCloses ? (
                       <div className="space-y-1 sm:space-y-0">
                         <div className="block sm:inline-block">
-                          <span className="text-purple-300 font-medium">Opens:</span>{' '}
-                          <span className="font-medium text-white">{formatDate(applicationWindowOpens)}</span>
+                          <span className="text-blue-500 font-medium">Opens:</span>{' '}
+                          <span className="font-medium text-black">{formatDate(applicationWindowOpens)}</span>
                         </div>
                         <div className="block sm:inline-block sm:ml-6">
-                          <span className="text-red-300 font-medium">Closes:</span>{' '}
-                          <span className="font-medium text-white">{formatDate(applicationWindowCloses)}</span>
+                          <span className="text-gray-600 font-medium">Closes:</span>{' '}
+                          <span className="font-medium text-black">{formatDate(applicationWindowCloses)}</span>
                         </div>
                       </div>
                     ) : applicationWindowOpens ? (
-                      <div><span className="text-purple-300 font-medium">Opens:</span>{' '}<span className="font-medium text-white">{formatDate(applicationWindowOpens)}</span></div>
+                      <div><span className="text-blue-500 font-medium">Opens:</span>{' '}<span className="font-medium text-black">{formatDate(applicationWindowOpens)}</span></div>
                     ) : applicationWindowCloses ? (
-                      <div><span className="text-red-300 font-medium">Closes:</span>{' '}<span className="font-medium text-white">{formatDate(applicationWindowCloses)}</span></div>
+                      <div><span className="text-gray-600 font-medium">Closes:</span>{' '}<span className="font-medium text-black">{formatDate(applicationWindowCloses)}</span></div>
                     ) : null}
                   </div>
                 </div>
               )}
               {(programStartDate || programEndDate) && (
-                <div className="text-xs sm:text-lg text-gray-100 pt-2 sm:pt-4 border-t border-white/20">
+                <div className="text-xs sm:text-lg text-gray-800 pt-2 sm:pt-4 border-t border-gray-400/20">
                   <div className="flex items-center justify-center mb-2 sm:mb-3">
-                    <i className="fas fa-graduation-cap mr-2 text-yellow-400"></i>
-                    <span className="font-bold text-white">Program Dates</span>
+                    <i className="fas fa-graduation-cap mr-2 text-blue-600"></i>
+                    <span className="font-bold text-black">Program Dates</span>
                   </div>
                   <div className="leading-relaxed">
                     {programStartDate && programEndDate ? (
