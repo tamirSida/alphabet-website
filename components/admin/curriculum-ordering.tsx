@@ -94,13 +94,13 @@ export default function CurriculumOrdering({ items, onReorder }: CurriculumOrder
   };
 
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
-      <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+    <div className="w-screen bg-gray-50 border-y border-gray-200 p-6 mb-6" style={{ marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}>
+      <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
         <i className="fas fa-sort text-blue-500"></i>
         Drag to Reorder Weeks
       </h3>
       
-      <div className="flex flex-wrap gap-1">
+      <div className="flex gap-2 justify-evenly items-center w-full">
         {sortedItems.map((item, index) => (
           <div key={item.id} className="flex items-center">
             {/* Drop zone before first item or between items */}
@@ -129,14 +129,19 @@ export default function CurriculumOrdering({ items, onReorder }: CurriculumOrder
               draggable
               onDragStart={(e) => handleDragStart(e, item)}
               onDragEnd={handleDragEnd}
-              className={`relative w-12 h-12 rounded-full flex items-center justify-center font-bold text-sm cursor-move transition-all duration-200 ${
+              className={`relative w-20 h-20 rounded-full flex items-center justify-center font-semibold text-xs cursor-move transition-all duration-200 ${
                 draggedItem?.id === item.id
                   ? 'opacity-50 scale-95 bg-gray-300 text-gray-500'
                   : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-blue-400 hover:shadow-md'
               }`}
               title={`Week ${item.weekNumber}: ${item.title}`}
             >
-              {item.weekNumber}
+              <span className="text-center leading-tight px-2 break-words">
+                {item.title.length > 12 
+                  ? item.title.split(' ').slice(0, 2).join(' ')
+                  : item.title
+                }
+              </span>
               
               {/* Drag indicator */}
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center opacity-75">
@@ -168,8 +173,8 @@ export default function CurriculumOrdering({ items, onReorder }: CurriculumOrder
         </div>
       </div>
       
-      <p className="text-xs text-gray-500 mt-2">
-        Drag the numbered circles to reorder curriculum weeks. Changes will be saved automatically.
+      <p className="text-sm text-gray-500 mt-4 text-center">
+        Drag the circles to reorder curriculum weeks. Changes will be saved automatically.
       </p>
     </div>
   );

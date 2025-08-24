@@ -120,23 +120,6 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
       updatedAt: new Date() 
     },
     { 
-      id: 'week-6', 
-      weekNumber: 6, 
-      title: 'Networking', 
-      description: 'Build powerful connections with investors, mentors, and peers.', 
-      icon: 'fas fa-network-wired', 
-      badge1Text: 'Interactive Sessions',
-      badge1Icon: 'fas fa-clock',
-      badge2Text: 'Peer Collaboration', 
-      badge2Icon: 'fas fa-users',
-      badge3Text: 'Practical Application',
-      badge3Icon: 'fas fa-lightbulb',
-      order: 6, 
-      isVisible: true, 
-      createdAt: new Date(), 
-      updatedAt: new Date() 
-    },
-    { 
       id: 'week-7', 
       weekNumber: 7, 
       title: 'Market Analysis', 
