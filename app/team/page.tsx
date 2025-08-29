@@ -115,6 +115,27 @@ export default function TeamPage() {
     }
   }, [loadContent]);
 
+  const handleReorder = useCallback(async (reorderedMembers: TeamMember[]) => {
+    try {
+      const service = CMSServiceFactory.getAlphaBetTeamService();
+      
+      // Update each team member's order in Firebase
+      const updatePromises = reorderedMembers.map(member =>
+        service.update(member.id, { ...member, order: member.order })
+      );
+      
+      await Promise.all(updatePromises);
+      
+      // Reload content to ensure consistency
+      await loadContent();
+    } catch (error: unknown) {
+      console.error('Error reordering team members:', error);
+      alert(`Failed to reorder team members. Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // Reload content to revert any local changes
+      await loadContent();
+    }
+  }, [loadContent]);
+
   const memberFields = useMemo(() => [
     { key: 'name', label: 'Name', type: 'text' as const, required: true, placeholder: 'Enter full name' },
     { 
@@ -178,6 +199,7 @@ export default function TeamPage() {
           onEdit={handleEdit} 
           onDelete={handleDelete} 
           onEditHeader={handleEditHeader} 
+          onReorder={handleReorder}
         />
 
         {/* Bottom Navigation */}
