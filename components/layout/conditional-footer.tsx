@@ -6,10 +6,6 @@ import Footer from '@/components/public/footer';
 export default function ConditionalFooter() {
   const pathname = usePathname();
   
-  // Don't show footer on the splash page (root path)
-  if (pathname === '/') {
-    return null;
-  }
-  
+  // Show footer on all pages now that splash page is removed
   return <Footer />;
 }

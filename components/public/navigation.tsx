@@ -11,17 +11,17 @@ export default function Navigation() {
   const router = useRouter();
 
   const navigationItems = [
-    { name: 'Home', href: '/home' },
+    { name: 'Home', href: '/' },
     { name: 'Team', href: '/team' },
     { name: 'Curriculum', href: '/curriculum' },
     { name: 'Qualifications', href: '/qualifications' },
-    { name: 'FAQ', href: '/home#faq' },
+    { name: 'FAQ', href: '/#faq' },
     { name: 'Apply', href: '/apply' },
   ];
 
   const isActive = (href: string) => {
-    if (href === '/home') {
-      return pathname === '/home';
+    if (href === '/') {
+      return pathname === '/';
     }
     return pathname.startsWith(href);
   };
@@ -30,7 +30,7 @@ export default function Navigation() {
     e.preventDefault();
     setIsMobileMenuOpen(false); // Close mobile menu if open
     
-    if (pathname === '/home') {
+    if (pathname === '/') {
       // Already on home page, just scroll to FAQ
       const faqElement = document.getElementById('faq');
       if (faqElement) {
@@ -38,7 +38,7 @@ export default function Navigation() {
       }
     } else {
       // Navigate to home page first, then scroll to FAQ
-      router.push('/home');
+      router.push('/');
       // Use multiple attempts with increasing delays to ensure content is loaded
       const scrollToFAQ = () => {
         const faqElement = document.getElementById('faq');
@@ -60,7 +60,7 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
-          <Link href="/home" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center relative">
                 <Image 
