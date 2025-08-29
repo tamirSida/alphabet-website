@@ -495,13 +495,20 @@ function AlphaBetHomepageContent() {
       <SimpleAdminToggle />
       
       {/* Hero Section with Split Layout */}
-      <div className="bg-gradient-to-r from-white via-white to-gray-200">
+      <div className="bg-gradient-to-r from-white via-white to-gray-200 relative">
+        
         <EditableSection
           sectionName="Hero"
           onEdit={() => handleEdit('hero', activeHero)}
         >
           <section className="relative min-h-screen flex items-center justify-center px-4 py-16">
-            <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            {/* Military corner accents */}
+            <div className="absolute top-8 left-8 w-16 h-16 border-l-4 border-t-4 border-gray-800 opacity-20"></div>
+            <div className="absolute top-8 right-8 w-16 h-16 border-r-4 border-t-4 border-gray-800 opacity-20"></div>
+            <div className="absolute bottom-8 left-8 w-16 h-16 border-l-4 border-b-4 border-gray-800 opacity-20"></div>
+            <div className="absolute bottom-8 right-8 w-16 h-16 border-r-4 border-b-4 border-gray-800 opacity-20"></div>
+            
+            <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-center relative z-10">
               {/* Left side - Hero content */}
               <div className="order-2 lg:order-1 text-center lg:text-left">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
@@ -526,13 +533,47 @@ function AlphaBetHomepageContent() {
                   </p>
                 )}
                 {(activeHero.applicationWindowOpens || activeHero.applicationWindowCloses || activeHero.programStartDate) && (
-                  <div className="bg-gradient-to-r from-blue-500/10 to-gray-500/10 backdrop-blur-md rounded-xl border border-gray-400/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 shadow-lg">
-                    <div className="text-center lg:text-left">
-                      <div className="text-sm sm:text-lg text-black font-medium leading-relaxed">
-                        Applications for March Semester will begin on January 15, 2025
+                  (() => {
+                    const now = new Date();
+                    const openDate = activeHero.applicationWindowOpens ? new Date(activeHero.applicationWindowOpens) : null;
+                    const closeDate = activeHero.applicationWindowCloses ? new Date(activeHero.applicationWindowCloses) : null;
+                    
+                    let isActive = false;
+                    let statusText = "Closed";
+                    let statusColor = "text-red-500";
+                    let dotColor = "bg-red-500";
+                    
+                    if (openDate && closeDate) {
+                      if (now >= openDate && now <= closeDate) {
+                        isActive = true;
+                        statusText = "Active";
+                        statusColor = "text-green-500";
+                        dotColor = "bg-green-500";
+                      } else if (now < openDate) {
+                        statusText = "Opening Soon";
+                        statusColor = "text-yellow-500";
+                        dotColor = "bg-yellow-500";
+                      }
+                    } else if (openDate && now < openDate) {
+                      statusText = "Opening Soon";
+                      statusColor = "text-yellow-500";
+                      dotColor = "bg-yellow-500";
+                    }
+                    
+                    return (
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-4 mb-6">
+                        <div className="text-center lg:text-left">
+                          <div className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
+                            Applications for March Semester will begin on January 15, 2025
+                          </div>
+                          <div className="flex items-center justify-center lg:justify-start gap-2">
+                            <div className={`w-2 h-2 ${dotColor} rounded-full ${isActive ? 'animate-pulse' : ''}`}></div>
+                            <span className={`text-xs font-medium ${statusColor}`}>Status: {statusText}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    );
+                  })()
                 )}
               </div>
               
