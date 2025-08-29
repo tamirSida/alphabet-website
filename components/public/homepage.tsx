@@ -85,6 +85,12 @@ function AlphaBetHomepageContent() {
     });
 
     setActiveSection(closestIndex);
+    
+    // Adjust container height to match active section
+    const activeSection = sectionRefs.current[closestIndex];
+    if (activeSection && container) {
+      container.style.height = activeSection.scrollHeight + 'px';
+    }
   }, []);
 
   // Keyboard navigation
@@ -463,6 +469,15 @@ function AlphaBetHomepageContent() {
     loadContent();
   }, [loadContent]);
 
+  // Set initial container height when sections are loaded
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    const activeSectionElement = sectionRefs.current[activeSection];
+    if (container && activeSectionElement) {
+      container.style.height = activeSectionElement.scrollHeight + 'px';
+    }
+  }, [loading, activeSection]);
+
   // Show loading state
   if (loading) {
     return (
@@ -735,7 +750,7 @@ function AlphaBetHomepageContent() {
           {/* Horizontal Scroll Container */}
           <div 
             ref={scrollContainerRef}
-            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8"
+            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8 items-start"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             onScroll={handleScroll}
           >

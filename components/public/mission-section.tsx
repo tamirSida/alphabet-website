@@ -20,7 +20,7 @@ export default function MissionSection({ mission, onEdit }: MissionSectionProps)
   };
 
   return (
-    <section className="py-8 sm:py-12 px-4 bg-transparent">
+    <section className="py-0 px-4 bg-transparent">
       <div className="max-w-7xl mx-auto">
         {/* Compact Section Header */}
         <div className="text-center mb-6 sm:mb-8">

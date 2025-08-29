@@ -105,7 +105,7 @@ export default function ContentSection({
   const { bullets } = parseContent(content);
 
   return (
-    <section className={`py-4 sm:py-8 lg:py-12 px-4 bg-transparent ${className}`}>
+    <section className={`py-0 px-4 bg-transparent ${className}`}>
       <div className="max-w-7xl mx-auto">
         {/* Compact Section Header */}
         <div className="text-center mb-6 sm:mb-8">
