@@ -15,8 +15,9 @@ export default function SplashPage() {
   const [timeLeft, setTimeLeft] = useState(4);
   const [loading, setLoading] = useState(true);
   const [videoLoading, setVideoLoading] = useState(false);
-  const [videoReady, setVideoReady] = useState(true); // Start true, set false only if video is loading
+  const [videoReady, setVideoReady] = useState(false); // Start false, set true when video loads
   const [timerPaused, setTimerPaused] = useState(false);
+  const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
   const router = useRouter();
   const { isAdminMode } = useAdmin();
 
@@ -61,16 +62,21 @@ export default function SplashPage() {
     loadContent();
   }, [loadContent]);
 
-  // Fallback timeout to prevent infinite loading
+  // Video loading timeout - redirect to home if video doesn't load in 3 seconds
   useEffect(() => {
+    // Only start timeout if CMS data is loaded and video isn't ready yet
+    if (loading || videoReady) return;
+
+    console.log('Starting 3-second video loading timeout');
+    setShowLoadingSpinner(true);
+
     const timeout = setTimeout(() => {
-      console.log('Video loading timeout - showing content anyway');
-      setVideoLoading(false);
-      setVideoReady(true);
-    }, 10000); // 10 seconds max wait
+      console.log('Video loading timeout after 3 seconds - redirecting to home');
+      router.push('/home');
+    }, 3000); // 3 seconds timeout
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [loading, videoReady, router]);
 
   // Timer countdown - only start when video is ready
   useEffect(() => {
@@ -131,6 +137,26 @@ export default function SplashPage() {
     );
   }
 
+  // Show loading spinner if video is trying to load
+  if (showLoadingSpinner && !videoReady) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mb-8"></div>
+        <div className="text-white text-lg font-medium" style={{ fontFamily: "'Black Ops One', cursive" }}>
+          Loading Video...
+        </div>
+        <div className="text-gray-400 text-sm mt-2">
+          Redirecting to home if video doesn't load...
+        </div>
+      </div>
+    );
+  }
+
+  // Don't show splash content until video is ready
+  if (!videoReady) {
+    return null;
+  }
+
   return (
     <div className="relative">
       {/* Discrete Admin Access Components */}
@@ -158,22 +184,25 @@ export default function SplashPage() {
               console.log('Video data loaded');
               setVideoLoading(false);
               setVideoReady(true);
+              setShowLoadingSpinner(false);
             }}
             onCanPlay={() => {
               console.log('Video can play');
               setVideoLoading(false);
               setVideoReady(true);
+              setShowLoadingSpinner(false);
             }}
             onPlaying={() => {
               console.log('Video is playing');
               setVideoLoading(false);
               setVideoReady(true);
+              setShowLoadingSpinner(false);
             }}
             onError={(e) => {
               console.error('Video error:', e);
-              // If video fails, still show content
-              setVideoLoading(false);
-              setVideoReady(true);
+              // If video fails, redirect to home immediately
+              console.log('Video failed to load - redirecting to home');
+              router.push('/home');
             }}
             onEnded={(e) => {
               (e.target as HTMLVideoElement).currentTime = (e.target as HTMLVideoElement).duration;
