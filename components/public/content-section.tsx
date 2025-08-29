@@ -105,7 +105,7 @@ export default function ContentSection({
   const { bullets } = parseContent(content);
 
   return (
-    <section className={`py-8 sm:py-12 px-4 bg-transparent ${className}`}>
+    <section className={`py-4 sm:py-8 lg:py-12 px-4 bg-transparent ${className}`}>
       <div className="max-w-7xl mx-auto">
         {/* Compact Section Header */}
         <div className="text-center mb-6 sm:mb-8">
@@ -129,7 +129,7 @@ export default function ContentSection({
 
           {/* Bullet Points */}
           {bullets.length > 0 && (
-            <div className="space-y-4">
+            <div className="space-y-3 lg:space-y-4">
               {bullets.map((bullet, index) => {
               const highlight: Highlight = {
                 id: `highlight-${index}`,

@@ -502,16 +502,23 @@ function AlphaBetHomepageContent() {
           onEdit={() => handleEdit('hero', activeHero)}
         >
           <section className="relative min-h-screen flex items-center justify-center px-4 py-16">
-            {/* Military corner accents */}
-            <div className="absolute top-8 left-8 w-16 h-16 border-l-4 border-t-4 border-gray-800 opacity-20"></div>
-            <div className="absolute top-8 right-8 w-16 h-16 border-r-4 border-t-4 border-gray-800 opacity-20"></div>
-            <div className="absolute bottom-8 left-8 w-16 h-16 border-l-4 border-b-4 border-gray-800 opacity-20"></div>
-            <div className="absolute bottom-8 right-8 w-16 h-16 border-r-4 border-b-4 border-gray-800 opacity-20"></div>
+            {/* Military corner accents - hidden on mobile */}
+            <div className="hidden lg:block absolute top-8 left-8 w-16 h-16 border-l-4 border-t-4 border-gray-800 opacity-20"></div>
+            <div className="hidden lg:block absolute top-8 right-8 w-16 h-16 border-r-4 border-t-4 border-gray-800 opacity-20"></div>
+            <div className="hidden lg:block absolute bottom-8 left-8 w-16 h-16 border-l-4 border-b-4 border-gray-800 opacity-20"></div>
+            <div className="hidden lg:block absolute bottom-8 right-8 w-16 h-16 border-r-4 border-b-4 border-gray-800 opacity-20"></div>
             
             <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-center relative z-10">
+              {/* Mobile headline - shows above image on mobile only */}
+              <div className="lg:hidden order-1 text-center mb-4">
+                <h1 className="text-3xl sm:text-4xl font-bold leading-tight text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
+                  Alpha-Bet<br />By Version Bravo
+                </h1>
+              </div>
+              
               {/* Left side - Hero content */}
-              <div className="order-2 lg:order-1 text-center lg:text-left">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
+              <div className="order-3 lg:order-1 text-center lg:text-left">
+                <h1 className="hidden lg:block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
                   {activeHero.headline.includes('By Version Bravo') ? (
                     <>
                       {activeHero.headline.replace(' By Version Bravo', '')}<br />
@@ -527,13 +534,60 @@ function AlphaBetHomepageContent() {
                 <div className="flex justify-center lg:justify-start mb-4">
                   <div className="h-1 bg-blue-700 rounded-full w-48 transition-all duration-300"></div>
                 </div>
+                
+                {/* Mobile application status - shows above subHeadline2 on mobile only */}
+                {(activeHero.applicationWindowOpens || activeHero.applicationWindowCloses || activeHero.programStartDate) && (
+                  <div className="lg:hidden mb-6">
+                    {(() => {
+                      const now = new Date();
+                      const openDate = activeHero.applicationWindowOpens ? new Date(activeHero.applicationWindowOpens) : null;
+                      const closeDate = activeHero.applicationWindowCloses ? new Date(activeHero.applicationWindowCloses) : null;
+                      
+                      let isActive = false;
+                      let statusText = "Closed";
+                      let statusColor = "text-red-500";
+                      let dotColor = "bg-red-500";
+                      
+                      if (openDate && closeDate) {
+                        if (now >= openDate && now <= closeDate) {
+                          isActive = true;
+                          statusText = "Active";
+                          statusColor = "text-green-500";
+                          dotColor = "bg-green-500";
+                        } else if (now < openDate) {
+                          statusText = "Opening Soon";
+                          statusColor = "text-yellow-500";
+                          dotColor = "bg-yellow-500";
+                        }
+                      } else if (openDate && now < openDate) {
+                        statusText = "Opening Soon";
+                        statusColor = "text-yellow-500";
+                        dotColor = "bg-yellow-500";
+                      }
+                      
+                      return (
+                        <div className="text-center">
+                          <div className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
+                            Applications for March Semester will begin on<br />January 15, 2025
+                          </div>
+                          <div className="flex items-center justify-center gap-2">
+                            <div className={`w-2 h-2 ${dotColor} rounded-full ${isActive ? 'animate-pulse' : ''}`}></div>
+                            <span className={`text-xs font-medium ${statusColor}`}>Status: {statusText}</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
+                
                 {activeHero.subHeadline2 && (
-                  <p className="text-lg sm:text-xl md:text-2xl text-black mb-8 leading-relaxed">
+                  <p className="hidden lg:block text-lg sm:text-xl md:text-2xl text-black mb-8 leading-relaxed">
                     {activeHero.subHeadline2}
                   </p>
                 )}
                 {(activeHero.applicationWindowOpens || activeHero.applicationWindowCloses || activeHero.programStartDate) && (
-                  (() => {
+                  <div className="hidden lg:block">
+                    {(() => {
                     const now = new Date();
                     const openDate = activeHero.applicationWindowOpens ? new Date(activeHero.applicationWindowOpens) : null;
                     const closeDate = activeHero.applicationWindowCloses ? new Date(activeHero.applicationWindowCloses) : null;
@@ -573,12 +627,13 @@ function AlphaBetHomepageContent() {
                         </div>
                       </div>
                     );
-                  })()
+                  })()}
+                  </div>
                 )}
               </div>
               
               {/* Right side - Hero image */}
-              <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+              <div className="order-2 lg:order-2 flex justify-center lg:justify-end">
                 <div className="relative w-full max-w-md lg:max-w-lg">
                   <div className="aspect-square relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-black">
                     {(() => {
@@ -656,7 +711,7 @@ function AlphaBetHomepageContent() {
         {/* Horizontal Scrollable Content Sections */}
         <div className="relative">
           {/* Navigation Indicators */}
-          <div className="flex justify-center mb-6 px-4">
+          <div className="flex justify-center mb-3 lg:mb-6 px-4">
             <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 shadow-lg">
               {['Our Mission', 'Why Alpha-Bet?', 'What You\'ll Gain'].map((title, index) => (
                 <button
