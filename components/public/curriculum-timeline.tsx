@@ -21,6 +21,13 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
   const [isLoaded, setIsLoaded] = useState(false);
   const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
   
+  // Button configuration state
+  const [buttonConfig, setButtonConfig] = useState({
+    type: 'navigate', // 'download' or 'navigate'
+    url: 'https://docs.google.com/document/d/1eW75jeCq_okY8_tLZ45wJgRobbEuFTFjEWDxGKEqJjg/edit?tab=t.0'
+  });
+  const [showButtonEdit, setShowButtonEdit] = useState(false);
+  
   // Default header values with fallback to CMS data
   const activeHeader = {
     badge: header?.badge || '10-WEEK CURRICULUM',
@@ -640,13 +647,37 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
                 <i className="fas fa-graduation-cap"></i>
                 <span>{cta?.buttonText || 'Start Your Journey'}</span>
               </a>
-              <a 
-                href={cta?.secondaryButtonLink || '/curriculum'}
-                className="inline-flex items-center gap-2 bg-white/10 text-blue-700 border-blue-200 shadow-lg hover:bg-white/15 hover:shadow-xl hover:border-blue-300 rounded-full px-6 py-3 font-semibold transition-all duration-300"
-              >
-                <i className="fas fa-calendar-alt"></i>
-                <span>{cta?.secondaryButtonText || '10-Week Program'}</span>
-              </a>
+              <div className="relative">
+                {buttonConfig.type === 'download' ? (
+                  <a 
+                    href={buttonConfig.url}
+                    download
+                    className="inline-flex items-center gap-2 bg-white/10 text-blue-700 border-blue-200 shadow-lg hover:bg-white/15 hover:shadow-xl hover:border-blue-300 rounded-full px-6 py-3 font-semibold transition-all duration-300"
+                  >
+                    <i className="fas fa-download"></i>
+                    <span>10-Week Program</span>
+                  </a>
+                ) : (
+                  <a 
+                    href={buttonConfig.url}
+                    className="inline-flex items-center gap-2 bg-white/10 text-blue-700 border-blue-200 shadow-lg hover:bg-white/15 hover:shadow-xl hover:border-blue-300 rounded-full px-6 py-3 font-semibold transition-all duration-300"
+                  >
+                    <i className="fas fa-calendar-alt"></i>
+                    <span>10-Week Program</span>
+                  </a>
+                )}
+                
+                {/* Admin Edit Button */}
+                {isAdminMode && (
+                  <button
+                    onClick={() => setShowButtonEdit(true)}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-purple-500 hover:bg-purple-400 text-white rounded-full flex items-center justify-center text-xs transition-all shadow-lg hover:shadow-xl hover:scale-110 z-10"
+                    title="Edit button configuration"
+                  >
+                    <i className="fas fa-cog text-xs"></i>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -764,6 +795,87 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
                     </span>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Button Configuration Modal */}
+      {showButtonEdit && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowButtonEdit(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl transform transition-all duration-300 ease-out"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Configure 10-Week Program Button</h3>
+            
+            <div className="space-y-4">
+              {/* Toggle between download and navigate */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Button Action</label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setButtonConfig(prev => ({ ...prev, type: 'navigate' }))}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      buttonConfig.type === 'navigate'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <i className="fas fa-external-link-alt mr-2"></i>
+                    Navigate
+                  </button>
+                  <button
+                    onClick={() => setButtonConfig(prev => ({ ...prev, type: 'download' }))}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      buttonConfig.type === 'download'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <i className="fas fa-download mr-2"></i>
+                    Download
+                  </button>
+                </div>
+              </div>
+
+              {/* URL/Path input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {buttonConfig.type === 'download' ? 'File URL' : 'Navigation Path'}
+                </label>
+                <input
+                  type="text"
+                  value={buttonConfig.url}
+                  onChange={(e) => setButtonConfig(prev => ({ ...prev, url: e.target.value }))}
+                  placeholder={buttonConfig.type === 'download' ? 'https://example.com/file.pdf' : '/path or https://...'}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex gap-2 pt-4">
+                <button
+                  onClick={() => setShowButtonEdit(false)}
+                  className="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                >
+                  Done
+                </button>
+                <button
+                  onClick={() => {
+                    setButtonConfig({
+                      type: 'navigate',
+                      url: 'https://docs.google.com/document/d/1eW75jeCq_okY8_tLZ45wJgRobbEuFTFjEWDxGKEqJjg/edit?tab=t.0'
+                    });
+                  }}
+                  className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm"
+                >
+                  Reset
+                </button>
               </div>
             </div>
           </div>

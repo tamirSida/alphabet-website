@@ -68,19 +68,11 @@ export default function CurriculumPage() {
       title: 'Your Entrepreneurial Journey Awaits',
       description: 'Transform 10 weeks of intensive learning into a lifetime of entrepreneurial success. Each week builds on the last, creating a comprehensive foundation for your startup journey.',
       buttonText: 'Start Your Journey',
-      buttonLink: '/qualifications',
-      secondaryButtonText: '10-Week Program',
-      secondaryButtonLink: '/curriculum'
+      buttonLink: '/qualifications'
     };
     
-    // Merge existing CTA data with defaults to ensure all fields are populated
-    const ctaToEdit = {
-      ...defaultCTA,
-      ...curriculumCTA,
-      // Ensure secondary button fields have fallback values if they're empty
-      secondaryButtonText: curriculumCTA?.secondaryButtonText || defaultCTA.secondaryButtonText,
-      secondaryButtonLink: curriculumCTA?.secondaryButtonLink || defaultCTA.secondaryButtonLink
-    };
+    // Use CMS data or defaults for editing
+    const ctaToEdit = curriculumCTA || defaultCTA;
     
     setEditingItem(ctaToEdit);
     setEditingType('cta');
@@ -114,8 +106,6 @@ export default function CurriculumPage() {
           description: data.description,
           buttonText: data.buttonText,
           buttonLink: data.buttonLink,
-          secondaryButtonText: data.secondaryButtonText,
-          secondaryButtonLink: data.secondaryButtonLink,
           isVisible: true,
           order: 1
         };
@@ -186,9 +176,7 @@ export default function CurriculumPage() {
         { key: 'title', label: 'CTA Title', type: 'text' as const, required: true, placeholder: 'e.g., Your Entrepreneurial Journey Awaits' },
         { key: 'description', label: 'CTA Description', type: 'textarea' as const, required: true, placeholder: 'Enter CTA description...' },
         { key: 'buttonText', label: 'Primary Button Text', type: 'text' as const, required: true, placeholder: 'e.g., Start Your Journey' },
-        { key: 'buttonLink', label: 'Primary Button Link', type: 'text' as const, required: true, placeholder: 'e.g., /qualifications' },
-        { key: 'secondaryButtonText', label: 'Secondary Button Text', type: 'text' as const, required: false, placeholder: 'e.g., 10-Week Program' },
-        { key: 'secondaryButtonLink', label: 'Secondary Button Link', type: 'text' as const, required: false, placeholder: 'e.g., /curriculum' }
+        { key: 'buttonLink', label: 'Primary Button Link', type: 'text' as const, required: true, placeholder: 'e.g., /qualifications' }
       ];
     }
     return [
