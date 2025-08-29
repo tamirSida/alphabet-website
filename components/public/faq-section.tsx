@@ -92,7 +92,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
   };
 
   return (
-    <section className="py-16 sm:py-24 px-4 bg-gradient-to-br from-white via-white to-gray-200">
+    <section id="faq" className="py-16 sm:py-24 px-4 bg-gradient-to-br from-white via-white to-gray-200">
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">

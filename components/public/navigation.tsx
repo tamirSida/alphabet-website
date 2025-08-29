@@ -14,6 +14,7 @@ export default function Navigation() {
     { name: 'Team', href: '/team' },
     { name: 'Curriculum', href: '/curriculum' },
     { name: 'Qualifications', href: '/qualifications' },
+    { name: 'FAQ', href: '/home#faq' },
     { name: 'Apply', href: '/apply' },
   ];
 
