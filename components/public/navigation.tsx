@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const navigationItems = [
     { name: 'Home', href: '/home' },
@@ -23,6 +24,35 @@ export default function Navigation() {
       return pathname === '/home';
     }
     return pathname.startsWith(href);
+  };
+
+  const handleFAQClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false); // Close mobile menu if open
+    
+    if (pathname === '/home') {
+      // Already on home page, just scroll to FAQ
+      const faqElement = document.getElementById('faq');
+      if (faqElement) {
+        faqElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // Navigate to home page first, then scroll to FAQ
+      router.push('/home');
+      // Use multiple attempts with increasing delays to ensure content is loaded
+      const scrollToFAQ = () => {
+        const faqElement = document.getElementById('faq');
+        if (faqElement) {
+          faqElement.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          // Try again if element not found
+          setTimeout(scrollToFAQ, 200);
+        }
+      };
+      
+      // Start trying to scroll after a short delay
+      setTimeout(scrollToFAQ, 300);
+    }
   };
 
   return (
@@ -54,17 +84,31 @@ export default function Navigation() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`text-sm font-medium transition-colors duration-200 ${
-                  isActive(item.href)
-                    ? 'text-white'
-                    : 'text-gray-300 hover:text-white'
-                }`}
-              >
-                {item.name}
-              </Link>
+              item.name === 'FAQ' ? (
+                <button
+                  key={item.name}
+                  onClick={handleFAQClick}
+                  className={`text-sm font-medium transition-colors duration-200 cursor-pointer ${
+                    isActive(item.href)
+                      ? 'text-white'
+                      : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  {item.name}
+                </button>
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`text-sm font-medium transition-colors duration-200 ${
+                    isActive(item.href)
+                      ? 'text-white'
+                      : 'text-gray-300 hover:text-white'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
           </div>
 
@@ -89,18 +133,32 @@ export default function Navigation() {
         <div className="md:hidden bg-gray-900/98 backdrop-blur-md border-t border-blue-800">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
-                  isActive(item.href)
-                    ? 'text-white bg-gray-800'
-                    : 'text-gray-300 hover:text-white hover:bg-blue-800'
-                }`}
-              >
-                {item.name}
-              </Link>
+              item.name === 'FAQ' ? (
+                <button
+                  key={item.name}
+                  onClick={handleFAQClick}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 w-full text-left cursor-pointer ${
+                    isActive(item.href)
+                      ? 'text-white bg-gray-800'
+                      : 'text-gray-300 hover:text-white hover:bg-blue-800'
+                  }`}
+                >
+                  {item.name}
+                </button>
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                    isActive(item.href)
+                      ? 'text-white bg-gray-800'
+                      : 'text-gray-300 hover:text-white hover:bg-blue-800'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
           </div>
         </div>
