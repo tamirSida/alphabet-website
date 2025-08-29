@@ -38,7 +38,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
     {
       id: 'faq-7',
       question: 'For the Alpha-Bet program, What service types qualify as a Combat Veteran?',
-      answer: '<a href="#service-requirements" class="text-blue-600 hover:text-blue-800 underline font-medium">Click here to see service requirements.</a>',
+      answer: '<a href="/service-requirements" class="text-blue-600 hover:text-blue-800 underline font-medium">Click here to see service requirements.</a>',
       order: 3,
       isVisible: true,
       createdAt: new Date(),
