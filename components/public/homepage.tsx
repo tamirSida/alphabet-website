@@ -157,6 +157,7 @@ function AlphaBetHomepageContent() {
         CMSServiceFactory.getMissionSectionService().getActiveMission()
       ]);
 
+      console.log('Loaded hero data:', heroData);
       setHero(heroData);
       setContentSections(contentData);
       setFaqs(faqData);
@@ -430,7 +431,7 @@ function AlphaBetHomepageContent() {
           { key: 'programEndDate', label: 'Program End Date', type: 'date' as const, required: false, placeholder: '2025-05-24' },
           { key: 'ctaText', label: 'Call-to-Action Text', type: 'text' as const, required: true, placeholder: 'e.g., Apply Now' },
           { key: 'ctaLink', label: 'Call-to-Action Link', type: 'text' as const, required: true, placeholder: '/curriculum or https://...' },
-          { key: 'backgroundImage', label: 'Background Image URL', type: 'url' as const, required: false, placeholder: 'https://...' }
+          { key: 'backgroundImage', label: 'Background Image URL', type: 'text' as const, required: false, placeholder: '/images/hero.jpeg or https://...' }
         ];
       case 'content':
         return [
@@ -539,19 +540,59 @@ function AlphaBetHomepageContent() {
               <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
                 <div className="relative w-full max-w-md lg:max-w-lg">
                   <div className="aspect-square relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-black">
-                    {hero?.backgroundImage ? (
-                      <Image
-                        src={hero.backgroundImage}
-                        alt="Alpha-Bet Program"
-                        fill
-                        className="object-cover"
-                        priority
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
-                        <div className="text-center text-white p-8">
-                          <i className="fas fa-shield-alt text-6xl mb-4 opacity-80"></i>
-                          <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Black Ops One', cursive" }}>
+                    {(() => {
+                      const imageUrl = hero?.backgroundImage;
+                      console.log('Hero backgroundImage:', imageUrl);
+                      
+                      // Check if it's a valid image path and normalize it
+                      const normalizeImageUrl = (url: string): string | null => {
+                        if (!url) return null;
+                        
+                        // If it starts with 'public/', convert to proper local path
+                        if (url.startsWith('public/')) {
+                          return '/' + url.substring(7); // Remove 'public/' and add leading slash
+                        }
+                        
+                        // If it starts with /, it's already a proper local path
+                        if (url.startsWith('/')) return url;
+                        
+                        // Check if it's a valid URL
+                        try {
+                          new URL(url);
+                          return url;
+                        } catch {
+                          return null;
+                        }
+                      };
+                      
+                      const normalizedUrl = normalizeImageUrl(imageUrl);
+                      console.log('Normalized URL:', normalizedUrl, 'from original:', imageUrl);
+                      
+                      if (normalizedUrl) {
+                        console.log('Rendering Image component with src:', normalizedUrl);
+                        return (
+                          <Image
+                            src={normalizedUrl}
+                            alt="Alpha-Bet Program"
+                            fill
+                            className="object-cover"
+                            priority
+                            onError={(e) => {
+                              console.error('Image failed to load:', normalizedUrl, e);
+                            }}
+                            onLoad={() => {
+                              console.log('Image loaded successfully:', normalizedUrl);
+                            }}
+                          />
+                        );
+                      }
+                      
+                      // Show placeholder if no valid image
+                      return (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
+                          <div className="text-center text-white p-8">
+                            <i className="fas fa-shield-alt text-6xl mb-4 opacity-80"></i>
+                            <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Black Ops One', cursive" }}>
                             Combat Veterans
                           </h3>
                           <p className="text-lg opacity-90">
@@ -559,7 +600,8 @@ function AlphaBetHomepageContent() {
                           </p>
                         </div>
                       </div>
-                    )}
+                      );
+                    })()}
                   </div>
                   {/* Decorative elements */}
                   <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full opacity-20 animate-pulse"></div>
