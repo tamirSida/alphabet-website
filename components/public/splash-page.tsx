@@ -135,8 +135,6 @@ export default function SplashPage() {
     <div className="relative">
       {/* Discrete Admin Access Components */}
       <DiscreteAdminAccess />
-      <DiscreteAdminDot />
-      <SimpleAdminToggle />
 
       {/* CMS Admin Controls */}
       <EditableSection

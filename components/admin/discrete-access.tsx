@@ -10,14 +10,14 @@ import { X } from 'lucide-react';
 export default function DiscreteAdminAccess() {
   const router = useRouter();
   const [keySequence, setKeySequence] = useState<string[]>([]);
-  const [dotClicks, setDotClicks] = useState(0);
+  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Secret key combination: Ctrl+Shift+A (for admin)
       if (event.ctrlKey && event.shiftKey && event.key === 'A') {
         event.preventDefault();
-        router.push('/admin');
+        setShowDialog(true);
         return;
       }
 
@@ -29,7 +29,7 @@ export default function DiscreteAdminAccess() {
 
       if (newSequence.length === sequence.length && 
           newSequence.every((key, index) => key === sequence[index])) {
-        router.push('/admin');
+        setShowDialog(true);
         setKeySequence([]);
       }
     };
@@ -39,42 +39,32 @@ export default function DiscreteAdminAccess() {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [keySequence]); // Remove router from dependencies
+  }, [keySequence]);
 
-  return null; // This component doesn't render anything
+  return (
+    <>
+      {showDialog && (
+        <AdminLoginDialog 
+          onClose={() => setShowDialog(false)}
+        />
+      )}
+    </>
+  );
 }
 
 export function useUrlAdminAccess() {
-  const router = useRouter();
-  
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Secret URL parameter: ?alpha=bet
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('alpha') === 'bet') {
-        router.push('/admin');
-        return;
-      }
-      
-      // Secret hash: #admin2024
-      if (window.location.hash === '#admin2024') {
-        router.push('/admin');
-      }
-    }
-  }, []); // Remove router dependency to prevent infinite loops
+  return null; // Deprecated - use discrete access methods instead
 }
 
 // Discrete dot access component that can be embedded anywhere
 export function DiscreteAdminDot({ className = '' }: { className?: string }) {
-  const [clicks, setClicks] = useState(0);
   const [showDialog, setShowDialog] = useState(false);
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   const handleDotClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    console.log('Dot clicked - opening dialog'); // Debug log
+    // Only show dialog on intentional click
     setShowDialog(true);
   };
 
@@ -82,14 +72,14 @@ export function DiscreteAdminDot({ className = '' }: { className?: string }) {
     <>
       <div 
         onClick={handleDotClick}
-        className={`w-2 h-2 rounded-full bg-gray-300 cursor-default opacity-20 hover:opacity-40 transition-opacity ${className}`}
+        className={`w-3 h-3 rounded-full bg-gray-400 cursor-pointer opacity-30 hover:opacity-60 transition-opacity ${className}`}
         style={{ 
           position: 'fixed', 
           top: '80px', 
-          right: '10px', 
-          zIndex: 30 
+          right: '15px', 
+          zIndex: 50 
         }}
-        title=""
+        title="Admin Access"
       />
       {showDialog && (
         <AdminLoginDialog 
