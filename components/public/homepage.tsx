@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import HeroSection from './hero-section';
 import ContentSection from './content-section';
+import MissionSection from './mission-section';
 import FAQSection from './faq-section';
 import BottomNavigation from './bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
@@ -18,13 +19,16 @@ import { CMSServiceFactory } from '@/lib/cms/content-services';
 import { 
   HeroSection as HeroType, 
   ContentSection as ContentType,
-  FAQ
+  FAQ,
+  MissionSection as MissionSectionType
 } from '@/lib/types/cms';
+import MissionEditModal from '@/components/admin/mission-edit-modal';
 
 function AlphaBetHomepageContent() {
   const [hero, setHero] = useState<HeroType | null>(null);
   const [contentSections, setContentSections] = useState<ContentType[]>([]);
   const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [missionSection, setMissionSection] = useState<MissionSectionType | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -32,6 +36,7 @@ function AlphaBetHomepageContent() {
   
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [missionEditModalOpen, setMissionEditModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
   const [editingType, setEditingType] = useState<string>('');
 
@@ -143,16 +148,19 @@ function AlphaBetHomepageContent() {
       const [
         heroData,
         contentData,
-        faqData
+        faqData,
+        missionData
       ] = await Promise.all([
         CMSServiceFactory.getHeroService().getActiveHero(),
         CMSServiceFactory.getContentSectionService().getVisible(),
-        CMSServiceFactory.getFAQService().getVisible()
+        CMSServiceFactory.getFAQService().getVisible(),
+        CMSServiceFactory.getMissionSectionService().getActiveMission()
       ]);
 
       setHero(heroData);
       setContentSections(contentData);
       setFaqs(faqData);
+      setMissionSection(missionData);
       
       // Load CMS content into local state for sections that exist
       setSectionContent(prev => {
@@ -239,6 +247,34 @@ function AlphaBetHomepageContent() {
     });
     setEditModalOpen(true);
   }, []);
+
+  const handleEditMission = useCallback(() => {
+    setMissionEditModalOpen(true);
+  }, []);
+
+  const handleSaveMission = useCallback(async (data: Partial<MissionSectionType>) => {
+    try {
+      if (missionSection && missionSection.id) {
+        // Update existing mission
+        await CMSServiceFactory.getMissionSectionService().update(missionSection.id, data);
+      } else {
+        // Create new mission - ensure required fields are provided
+        const newMissionData = {
+          title: data.title || 'Our Mission',
+          description: data.description || 'Our foundation and purpose',
+          bullets: data.bullets || [],
+          type: 'mission' as const,
+          isVisible: data.isVisible ?? true,
+          order: data.order || 1
+        };
+        await CMSServiceFactory.getMissionSectionService().create(newMissionData);
+      }
+      await loadContent();
+    } catch (error) {
+      console.error('Error saving mission:', error);
+      throw error;
+    }
+  }, [missionSection, loadContent]);
 
   const handleEditDescription = useCallback((sectionType: string) => {
     // Find the content section by type
@@ -567,48 +603,39 @@ function AlphaBetHomepageContent() {
           >
             {/* Mission Section */}
             <div 
-              ref={el => sectionRefs.current[0] = el}
+              ref={el => { sectionRefs.current[0] = el; }}
               className="min-w-full snap-center"
             >
               <EditableSection
                 sectionName="Mission"
-                onEdit={() => {
-                  const contentSection = contentSections.find(section => section.type === 'mission');
-                  const getDefaultDescription = (type: string) => {
-                    switch (type) {
-                      case 'mission': return 'Our foundation and purpose';
-                      case 'why-alpha-bet': return 'What makes us unique';
-                      case 'what-you-gain': return 'Your transformation journey';
-                      default: return 'Learn more';
-                    }
-                  };
-                  
-                  handleEdit('content', {
-                    ...contentSection,
-                    id: contentSection?.id || "default-mission",
-                    title: contentSection?.title || "Our Mission",
-                    content: contentSection?.content || "You've demonstrated courage, discipline, and leadership in the most challenging environments. Now, we're here to help you apply those same traits to the world of entrepreneurship.\n\n• Bridge military experience with entrepreneurial skills\n• Get practical MBA-level education designed for founders\n• Join a community of battle-tested veteran entrepreneurs\n• Create lasting impact through veteran-led innovation",
-                    description: contentSection?.description || getDefaultDescription('mission'),
-                    type: "mission"
-                  });
-                }}
+                onEdit={handleEditMission}
               >
-                <ContentSection
-                  title="Our Mission"
-                  content={sectionContent.mission}
-                  type="mission"
-                  description={contentSections.find(section => section.type === 'mission')?.description}
-                  onEditHighlight={(highlight, index) => handleEditHighlight('mission', highlight, index)}
-                  onDeleteHighlight={(highlight, index) => handleDeleteHighlight('mission', highlight, index)}
-                  onAddHighlight={() => handleAddHighlight('mission')}
-                  onEditDescription={() => handleEditDescription('mission')}
-                />
+                {missionSection ? (
+                  <MissionSection 
+                    mission={missionSection}
+                    onEdit={handleEditMission}
+                  />
+                ) : (
+                  <div className="py-16 text-center">
+                    <div className="text-gray-500 mb-4">
+                      <i className="fas fa-bullseye text-4xl opacity-30"></i>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-600 mb-2">No Mission Section</h3>
+                    <p className="text-gray-500 mb-6">Create your mission section to get started.</p>
+                    <button
+                      onClick={handleEditMission}
+                      className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Create Mission Section
+                    </button>
+                  </div>
+                )}
               </EditableSection>
             </div>
 
             {/* Why Alpha-Bet Section */}
             <div 
-              ref={el => sectionRefs.current[1] = el}
+              ref={el => { sectionRefs.current[1] = el; }}
               className="min-w-full snap-center"
             >
               <EditableSection
@@ -649,7 +676,7 @@ function AlphaBetHomepageContent() {
 
             {/* What You'll Gain Section */}
             <div 
-              ref={el => sectionRefs.current[2] = el}
+              ref={el => { sectionRefs.current[2] = el; }}
               className="min-w-full snap-center"
             >
               <EditableSection
@@ -744,6 +771,15 @@ function AlphaBetHomepageContent() {
         title={`Edit ${editingType}`}
         fields={editingType ? getEditFields(editingType) : []}
         initialData={editingItem}
+        loading={loading}
+      />
+
+      {/* Mission Edit Modal */}
+      <MissionEditModal
+        isOpen={missionEditModalOpen}
+        onClose={() => setMissionEditModalOpen(false)}
+        onSave={handleSaveMission}
+        initialData={missionSection}
         loading={loading}
       />
 

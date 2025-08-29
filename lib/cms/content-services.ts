@@ -15,7 +15,8 @@ import {
   ParticipantType,
   CandidateProfile,
   ProgramExclusions,
-  SplashSection
+  SplashSection,
+  MissionSection
 } from '@/lib/types/cms';
 
 export class HeroService extends BaseFirestoreService<HeroSection> {
@@ -193,6 +194,67 @@ export class SplashService extends BaseFirestoreService<SplashSection> {
   }
 }
 
+export class MissionSectionService extends BaseFirestoreService<MissionSection> {
+  constructor() {
+    super('mission-sections');
+  }
+
+  async getActiveMission(): Promise<MissionSection | null> {
+    const missions = await this.getVisible(1);
+    return missions.length > 0 ? missions[0] : null;
+  }
+
+  async addBullet(missionId: string, bulletText: string): Promise<void> {
+    const mission = await this.getById(missionId);
+    if (!mission) throw new Error('Mission not found');
+
+    const newBullet = {
+      id: Date.now().toString(),
+      text: bulletText,
+      order: mission.bullets.length + 1
+    };
+
+    const updatedMission = {
+      ...mission,
+      bullets: [...mission.bullets, newBullet]
+    };
+
+    await this.update(missionId, updatedMission);
+  }
+
+  async deleteBullet(missionId: string, bulletId: string): Promise<void> {
+    const mission = await this.getById(missionId);
+    if (!mission) throw new Error('Mission not found');
+
+    const updatedBullets = mission.bullets
+      .filter(bullet => bullet.id !== bulletId)
+      .map((bullet, index) => ({ ...bullet, order: index + 1 }));
+
+    const updatedMission = {
+      ...mission,
+      bullets: updatedBullets
+    };
+
+    await this.update(missionId, updatedMission);
+  }
+
+  async updateBullet(missionId: string, bulletId: string, newText: string): Promise<void> {
+    const mission = await this.getById(missionId);
+    if (!mission) throw new Error('Mission not found');
+
+    const updatedBullets = mission.bullets.map(bullet =>
+      bullet.id === bulletId ? { ...bullet, text: newText } : bullet
+    );
+
+    const updatedMission = {
+      ...mission,
+      bullets: updatedBullets
+    };
+
+    await this.update(missionId, updatedMission);
+  }
+}
+
 
 // Service factory for easy instantiation
 export class CMSServiceFactory {
@@ -322,5 +384,12 @@ export class CMSServiceFactory {
       this.instances.set('splash', new SplashService());
     }
     return this.instances.get('splash');
+  }
+
+  static getMissionSectionService(): MissionSectionService {
+    if (!this.instances.has('missionSection')) {
+      this.instances.set('missionSection', new MissionSectionService());
+    }
+    return this.instances.get('missionSection');
   }
 }

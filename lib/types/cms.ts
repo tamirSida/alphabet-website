@@ -193,6 +193,24 @@ export interface SplashSection {
   updatedAt: Date;
 }
 
+export interface MissionBullet {
+  id: string;
+  text: string;
+  order: number;
+}
+
+export interface MissionSection {
+  id: string;
+  title: string; // "Our Mission"
+  description?: string; // "Our foundation and purpose"
+  bullets: MissionBullet[]; // Array of mission bullets
+  type: 'mission';
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type ContentType = 
   | 'hero'
   | 'content-section'
