@@ -435,7 +435,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
               {/* Week Number Circle */}
               <div className="flex-shrink-0 relative">
                 <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center shadow-xl transition-all duration-500 ${
-                  isLoaded ? 'cursor-pointer' : 'cursor-not-allowed'
+                  isLoaded ? 'md:cursor-default cursor-pointer' : 'cursor-not-allowed'
                 } ${
                   hoveredWeek === item.weekNumber && isLoaded
                     ? 'bg-gradient-to-br from-white via-blue-50 to-blue-100 scale-110' 
@@ -488,7 +488,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
                 )}
                 
                 <div className={`relative overflow-hidden rounded-2xl border shadow-xl transition-all duration-500 ${
-                  isLoaded ? 'cursor-pointer' : 'cursor-not-allowed'
+                  isLoaded ? 'md:cursor-default cursor-pointer' : 'cursor-not-allowed'
                 } ${
                   hoveredWeek === item.weekNumber && isLoaded
                     ? 'bg-gradient-to-br from-white/15 via-white/10 to-white/5 border-white/30 shadow-2xl scale-105'
