@@ -85,12 +85,6 @@ function AlphaBetHomepageContent() {
     });
 
     setActiveSection(closestIndex);
-    
-    // Adjust container height to match active section
-    const activeSection = sectionRefs.current[closestIndex];
-    if (activeSection && container) {
-      container.style.height = activeSection.scrollHeight + 'px';
-    }
   }, []);
 
   // Keyboard navigation
@@ -469,14 +463,6 @@ function AlphaBetHomepageContent() {
     loadContent();
   }, [loadContent]);
 
-  // Set initial container height when sections are loaded
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    const activeSectionElement = sectionRefs.current[activeSection];
-    if (container && activeSectionElement) {
-      container.style.height = activeSectionElement.scrollHeight + 'px';
-    }
-  }, [loading, activeSection]);
 
   // Show loading state
   if (loading) {
@@ -583,7 +569,7 @@ function AlphaBetHomepageContent() {
                       return (
                         <div className="text-center">
                           <div className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
-                            Applications for March Semester will begin on<br />January 15, 2025
+                            Applications for March Semester will open on<br />January 15, 2025
                           </div>
                           <div className="flex items-center justify-center gap-2">
                             <div className={`w-2 h-2 ${dotColor} rounded-full ${isActive ? 'animate-pulse' : ''}`}></div>
@@ -633,7 +619,7 @@ function AlphaBetHomepageContent() {
                       <div className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-4 mb-6">
                         <div className="text-center lg:text-left">
                           <div className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
-                            Applications for March Semester will begin on January 15, 2025
+                            Applications for March Semester will open on January 15, 2025
                           </div>
                           <div className="flex items-center justify-center lg:justify-start gap-2">
                             <div className={`w-2 h-2 ${dotColor} rounded-full ${isActive ? 'animate-pulse' : ''}`}></div>
@@ -750,8 +736,8 @@ function AlphaBetHomepageContent() {
           {/* Horizontal Scroll Container */}
           <div 
             ref={scrollContainerRef}
-            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8 items-start"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', touchAction: 'pan-x' }}
             onScroll={handleScroll}
           >
             {/* Mission Section */}

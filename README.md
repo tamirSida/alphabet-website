@@ -1,88 +1,78 @@
-# Alpha-Bet - Veteran Entrepreneurship Program
+# Alpha-Bet Program Website
 
-A sophisticated, military-themed website with comprehensive Content Management System for the Alpha-Bet entrepreneurship program - designed specifically for US and Israeli combat veterans.
+An entrepreneurship program website for US and Israeli combat veterans, built with Next.js 15 and featuring a comprehensive content management system.
 
-## 🎖️ Mission
+## 🎯 Project Overview
 
-Alpha-Bet is a free, 10-week entrepreneurship program that transforms combat veterans into successful startup founders. Our platform provides practical MBA-level education, veteran-to-veteran mentorship, and direct access to the Version Bravo accelerator ecosystem.
+Alpha-Bet is a specialized entrepreneurship program designed exclusively for combat veterans from the United States and Israel. This website serves as the primary platform for program information, applications, and curriculum details.
 
-## ✨ Features
+## 🏗️ Architecture
+
+- **Framework**: Next.js 15.4.6 with TypeScript
+- **Styling**: Tailwind CSS with custom military-themed design
+- **Database**: Firebase/Firestore for content management
+- **Authentication**: Firebase Auth for admin access
+- **Icons**: Font Awesome integration
+- **Fonts**: Custom Gunplay and Black Ops One military fonts
+
+## ✨ Key Features
+
+### 🔐 Comprehensive CMS System
+- **Granular Content Management**: Individual editing of all content sections
+- **Admin Access**: Multiple discrete authentication methods (`?admin=true`, keyboard shortcuts)
+- **Real-time Updates**: Live content editing with Firebase persistence
+- **Fallback Content**: Default content when CMS data is empty
+- **Drag-and-Drop**: Team member and content reordering
+
+### 📱 Multi-Page Architecture
+- **Splash Page**: Video background with 3-second timeout optimization
+- **Homepage**: Hero section, mission overview, FAQ, testimonials
+- **Team**: Drag-and-drop team member management with classification system
+- **Curriculum**: 10-week program timeline with interactive mobile modals
+- **Qualifications**: Comprehensive eligibility requirements
+- **Service Requirements**: Detailed military service criteria
+- **Legal Pages**: Privacy policy and terms of service
 
 ### 🎨 Military-Themed Design
-- **Mission Control Aesthetic** - Sophisticated dark themes with military styling
-- **Responsive Design** - Mobile-first approach optimized for all devices
-- **Interactive Elements** - Touch gestures, hover effects, and smooth animations
-- **Consistent Iconography** - Font Awesome icons throughout with military motifs
+- **Color Scheme**: Gray-900 to Black gradients with white accents
+- **Visual Elements**: Shield icons, badges, glass morphism effects
+- **Typography**: Gunplay and Black Ops One military fonts
+- **Responsive Design**: Mobile-first approach with breakpoints
+- **Animation Effects**: Pulse animations, hover effects, scaling transforms
 
-### 🛠️ Complete CMS Integration
-- **Real-time Content Management** - Edit all sections through intuitive admin interface
-- **Discrete Admin Access** - Multiple secure entry points for content management
-- **Type-Safe Development** - Full TypeScript coverage with proper interfaces
-- **Firebase Integration** - Firestore database with optimized queries
+### 🛠️ Advanced Features
+- **Video Splash Page**: Optimized loading with 3-second timeout and redirect
+- **Smart FAQ Navigation**: Custom hash navigation with proper scrolling
+- **Team Management**: Drag-and-drop reordering with Firebase integration
+- **Lightweight Button CMS**: Toggle between download/navigate modes
+- **SEO Optimization**: Comprehensive meta tags and structured data
 
-### 📱 Advanced UX Features
-- **Touch Gesture Support** - Swipe navigation with scroll/tap differentiation
-- **Loading Animations** - Military-styled "decrypting files" sequences
-- **Curriculum Timeline** - Interactive Mission Control Center interface
-- **Content Fallbacks** - Graceful handling when CMS data is unavailable
+## 📊 Content Management
 
-## 🏗️ Technical Architecture
+### CMS-Enabled Sections
+- Hero sections with split subtitles and application windows
+- Content sections with add/remove functionality
+- Team members with multiple titles and dynamic positions
+- Curriculum timeline with week details and badges
+- Testimonials with author information
+- Call-to-action sections with dual button support
+- FAQ items with order and visibility controls
+- Qualification requirements and eligibility criteria
 
-### Frontend (`/components/public/`)
-- **hero-section.tsx** - Landing page with military gradient backgrounds
-- **content-section.tsx** - Alternating light/dark themed content cards
-- **curriculum-timeline.tsx** - Interactive Mission Control Center curriculum
-- **team-section.tsx** - Enhanced team member cards with veteran badges
-- **testimonials-section.tsx** - Quote-focused testimonial cards
-- **cta-section.tsx** - Final mission briefing style call-to-action
+### Admin Features
+- **Multiple Access Methods**: URL params, keyboard shortcuts, discrete toggles
+- **Contextual Editing**: Edit buttons appear on hover in admin mode
+- **Form Validation**: Required fields and input type validation
+- **Delete Functionality**: Remove items with confirmation dialogs
+- **Ordering System**: Drag-and-drop and manual ordering
+- **Visibility Controls**: Show/hide content sections
 
-### CMS System (`/components/admin/`)
-- **discrete-access.tsx** - URL-based admin authentication
-- **editable-section.tsx** - Wrapper component for CMS editing
-- **edit-modal.tsx** - Universal content editing modal
-- **admin-context.tsx** - Global admin state management
-
-### Services (`/lib/cms/`)
-- **base-service.ts** - Abstract Firestore service with CRUD operations
-- **content-services.ts** - Specialized services for each content type
-- **Firebase integration** - Optimized queries and real-time updates
-
-## 🔐 Admin Access
-
-Access the CMS using discrete methods for security:
-
-### URL Parameter Method
-- Add `?admin=true` to any URL to enable admin mode
-- Example: `https://yoursite.com?admin=true`
-
-### Discrete Access Elements  
-- Look for the small admin toggle in the corner of pages
-- Multiple entry points throughout the site for authorized users
-
-## 📱 Content Management Features
-
-### Fully CMS-Enabled Sections
-- **Hero Section** - Headline, sub-headline, CTA text/link, background images
-- **Content Sections** - Mission statement, program details, application requirements
-- **Curriculum Timeline** - 10-week program structure with interactive Mission Control interface
-- **Team Members** - Mentor profiles with photos, bios, and LinkedIn integration
-- **Testimonials** - Veteran success stories with quotes and profile information
-- **Call-to-Action** - Application prompts and program enrollment buttons
-
-### CMS Capabilities
-- **Inline Editing** - Click-to-edit functionality throughout the site
-- **Form Validation** - Required fields, input type validation, error handling
-- **Content Ordering** - Drag-and-drop reordering for dynamic content
-- **Image Management** - URL-based image integration with fallback support
-- **Real-time Updates** - Changes appear immediately on the live site
-
-## 🛠️ Development Setup
+## 🚀 Development
 
 ### Prerequisites
-```bash
-Node.js 18+ and npm
-Firebase account with project configured
-```
+- Node.js 18+
+- Firebase project setup
+- Environment variables configured
 
 ### Installation
 ```bash
@@ -90,7 +80,7 @@ Firebase account with project configured
 git clone <repository-url>
 cd alpha-bet
 
-# Install dependencies  
+# Install dependencies
 npm install
 
 # Set up environment variables
@@ -98,117 +88,134 @@ cp .env.local.example .env.local
 # Add your Firebase configuration
 ```
 
-### Development Commands
+### Key Commands
 ```bash
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Run type checking
-npm run typecheck
-
-# Run linting
-npm run lint
+npm run dev          # Development server
+npm run build        # Production build
+npm run lint         # ESLint checking
+npm run typecheck    # TypeScript validation
 ```
 
-## 🔧 Technical Stack
-
-### Core Technologies
-- **Next.js 15.4.6** - React framework with App Router
-- **TypeScript** - Type-safe development with strict configuration
-- **Tailwind CSS** - Utility-first CSS with custom military theme
-- **Firebase/Firestore** - Backend database and authentication
-- **Font Awesome** - Comprehensive icon library
-
-### Key Architecture Patterns
-- **Service Layer Pattern** - BaseFirestoreService with specialized extensions
-- **Component Composition** - Reusable, configurable components
-- **Context-Based State** - Admin state management with React Context
-- **Type-Safe CMS** - Full TypeScript coverage for all content types
-
-## 📋 Content Structure
-
-### Site Sections (in order)
-1. **Hero** - "From Battlefield to Business" introduction
-2. **Mission** - Program overview and value proposition
-3. **Why Alpha-Bet** - Network, mentorship, and accelerator benefits
-4. **Who Should Apply** - Target audience and requirements
-5. **Curriculum** - Interactive 10-week program timeline
-6. **Team** - Mentor and instructor profiles
-7. **Testimonials** - Veteran success stories
-8. **What You'll Gain** - Program outcomes and benefits
-9. **Call-to-Action** - Final enrollment prompt
+### Environment Variables
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+```
 
 ## 🎨 Design System
 
 ### Color Palette
-- **Primary**: Gray-900 to Black gradients (military aesthetic)
-- **Secondary**: White and Gray-100 for contrast
-- **Accent**: Strategic use of green for success states
+- **Primary**: Gray-900 to Black gradients (military theme)
+- **Accent**: White for contrast, Blue for interactive elements
 - **Text**: High contrast ratios for accessibility
+- **Borders**: Gray-600 for subtle separation
 
-### Typography & Spacing
-- **Font**: Inter for body text, Monospace for military elements
-- **Scale**: Responsive typography with mobile-first approach
-- **Spacing**: Consistent 8px grid system throughout
+### Typography
+- **Primary Font**: Gunplay (custom military font)
+- **Fallback Font**: Black Ops One
+- **Body Text**: System fonts for optimal readability
 
-### Component Patterns
-- **Cards**: Elevated surfaces with subtle shadows and hover effects
-- **Buttons**: Military-inspired styling with icon integration
-- **Forms**: Comprehensive validation and error states
-- **Navigation**: Touch-friendly with gesture support
+### Visual Elements
+- **Military Aesthetic**: Shield icons, badges, monospace loading screens
+- **Glass Morphism**: Backdrop blur effects and transparent overlays
+- **Grid Layouts**: 2-column responsive grids for content
+- **Animation**: Smooth transitions, hover effects, loading states
 
-## 🚀 Deployment & Configuration
+## 🔧 Technical Implementation
 
-### Environment Variables
-```env
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-```
+### Performance Optimizations
+- **Video Loading**: 3-second timeout with automatic fallback
+- **Image Optimization**: Next.js Image with lazy loading
+- **Code Splitting**: Route-based and dynamic imports
+- **Efficient Rendering**: Optimized React patterns and state management
 
-### Deployment Platforms
+### Security Features
+- **Firebase Security Rules**: Authenticated write, public read access
+- **Input Sanitization**: Form validation and XSS protection
+- **Admin Authentication**: Secure login flow with session management
+
+## 📱 User Experience
+
+### Desktop Features
+- **Hover Effects**: Interactive elements with visual feedback
+- **Keyboard Navigation**: Full keyboard accessibility support
+- **Admin Interface**: Contextual edit buttons and management tools
+
+### Mobile Optimizations
+- **Touch Gestures**: Swipe navigation and touch-friendly interactions
+- **Responsive Modals**: Full-screen overlays for curriculum details
+- **Mobile-First Design**: Optimized layouts for all screen sizes
+
+## 🎯 Content Structure
+
+### Page Flow
+1. **Splash Page** (`/`) - Video introduction with timeout
+2. **Homepage** (`/home`) - Main content and navigation
+3. **Team** (`/team`) - Staff and mentor profiles
+4. **Curriculum** (`/curriculum`) - 10-week program details
+5. **Qualifications** (`/qualifications`) - Eligibility requirements
+6. **Service Requirements** (`/service-requirements`) - Military criteria
+7. **Legal Pages** (`/privacy`, `/terms`) - Policies and terms
+
+### Content Types
+- Hero sections with customizable messaging
+- Dynamic content blocks with highlights
+- Team member profiles with drag-and-drop ordering
+- Interactive curriculum timeline
+- FAQ system with fallback content
+- Testimonials and success stories
+
+## 🔐 Admin Access
+
+### Access Methods
+- **URL Parameter**: Add `?admin=true` to any URL
+- **Keyboard Shortcut**: Press `Ctrl+Shift+A` for login dialog
+- **ALPHABET Sequence**: Type "ALPHABET" on any page
+- **Discrete Dot**: Click admin dot in top-right corner
+
+### Admin Capabilities
+- Edit all content sections in real-time
+- Manage team member ordering and classification
+- Configure FAQ visibility and ordering
+- Upload and manage images via URLs
+- Toggle content visibility across the site
+
+## 🚢 Deployment
+
+### Supported Platforms
 - **Vercel** (recommended) - Automatic deployments from Git
 - **Netlify** - JAMstack-optimized hosting
 - **Firebase Hosting** - Integrated with Firebase backend
 - **Any Node.js Platform** - Standard Next.js deployment
 
-### Firebase Configuration
-- **Firestore Collections**: hero-sections, content-sections, team-members, testimonials, curriculum-items, call-to-actions
-- **Authentication**: Email/password for admin users
-- **Security Rules**: Admin-only write access, public read access
+### Firebase Setup
+- **Collections**: Comprehensive content type collections
+- **Authentication**: Admin user management
+- **Security Rules**: Proper access control
+- **External Images**: LinkedIn and media domain support
 
-## 📊 Performance & Optimization
+## 🎖️ Target Audience
 
-- **Image Optimization** - Next.js Image component with lazy loading
-- **Code Splitting** - Automatic route-based splitting
-- **Caching Strategy** - Aggressive caching for static content
-- **Mobile Performance** - Optimized touch interactions and gestures
+This platform serves combat veterans who are:
+- Exploring entrepreneurship opportunities
+- Looking to transition military leadership into business success
+- Seeking structured learning and mentorship
+- Ready to commit to a 10-week intensive program
 
-## 🎯 Getting Started Guide
+## 🏅 Military Heritage
 
-### For Administrators
-1. Access admin mode via `?admin=true` URL parameter
-2. All sections become editable with visible edit buttons
-3. Click any section to open the edit modal
-4. Fill out forms with validation feedback
-5. Save changes for immediate live updates
-
-### For Developers
-1. Review the component structure in `/components/public/`
-2. Understand the CMS integration in `/components/admin/`
-3. Examine service patterns in `/lib/cms/`
-4. Test responsive design across breakpoints
-5. Verify admin functionality with Firebase auth
+The design and functionality honor the military background of participants through:
+- Battle-tested visual metaphors and military styling
+- Mission-oriented language and structure
+- Emphasis on discipline and excellence in user experience
+- Community and brotherhood themes throughout
 
 ---
 
-**Built with precision and care for the Alpha-Bet veteran entrepreneurship community.**
+**Built with precision, designed for veterans, powered by innovation.**
+
+*For detailed technical documentation, see `CLAUDE.md`*

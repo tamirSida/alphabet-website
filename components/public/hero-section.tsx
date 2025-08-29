@@ -132,7 +132,7 @@ export default function HeroSection({
                 ) : (
                   // Applications not yet open
                   <>
-                    Applications for {getProgramStartMonth(programStartDate || '')} Semester will begin on {formatDate(applicationWindowOpens || '')}
+                    Applications for {getProgramStartMonth(programStartDate || '')} Semester will open on {formatDate(applicationWindowOpens || '')}
                   </>
                 )}
               </div>
