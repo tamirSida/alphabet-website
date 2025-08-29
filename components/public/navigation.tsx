@@ -30,28 +30,32 @@ export default function Navigation() {
     e.preventDefault();
     setIsMobileMenuOpen(false); // Close mobile menu if open
     
-    if (pathname === '/') {
-      // Already on home page, just scroll to FAQ
+    const scrollToFAQ = (maxAttempts: number = 10) => {
       const faqElement = document.getElementById('faq');
       if (faqElement) {
+        console.log('FAQ element found, scrolling...');
         faqElement.scrollIntoView({ behavior: 'smooth' });
+        return true;
+      } else if (maxAttempts > 0) {
+        console.log(`FAQ element not found, retrying... (${maxAttempts} attempts left)`);
+        setTimeout(() => scrollToFAQ(maxAttempts - 1), 200);
+        return false;
+      } else {
+        console.error('FAQ element not found after all attempts, trying URL navigation as fallback');
+        // Fallback: use URL-based navigation
+        window.location.href = '/#faq';
+        return false;
       }
+    };
+    
+    if (pathname === '/') {
+      // Already on home page, wait a bit then scroll to FAQ
+      setTimeout(() => scrollToFAQ(), 100);
     } else {
       // Navigate to home page first, then scroll to FAQ
       router.push('/');
-      // Use multiple attempts with increasing delays to ensure content is loaded
-      const scrollToFAQ = () => {
-        const faqElement = document.getElementById('faq');
-        if (faqElement) {
-          faqElement.scrollIntoView({ behavior: 'smooth' });
-        } else {
-          // Try again if element not found
-          setTimeout(scrollToFAQ, 200);
-        }
-      };
-      
-      // Start trying to scroll after a short delay
-      setTimeout(scrollToFAQ, 300);
+      // Wait longer for navigation to complete
+      setTimeout(() => scrollToFAQ(), 500);
     }
   };
 
