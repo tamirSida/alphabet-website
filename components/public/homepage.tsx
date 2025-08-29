@@ -514,7 +514,7 @@ function AlphaBetHomepageContent() {
                     activeHero.headline
                   )}
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-black font-bold mb-4 leading-relaxed" style={{ fontFamily: "'Black Ops One', cursive" }}>
+                <p className="text-lg sm:text-xl md:text-2xl text-black font-bold mb-4 leading-relaxed" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
                   {activeHero.subHeadline}
                 </p>
                 <div className="flex justify-center lg:justify-start mb-4">

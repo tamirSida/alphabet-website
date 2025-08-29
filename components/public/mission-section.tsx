@@ -57,7 +57,7 @@ export default function MissionSection({ mission, onEdit }: MissionSectionProps)
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-xl sm:text-2xl font-bold text-black mb-2 group-hover:text-gray-800 transition-colors duration-300">
+                    <h4 className="text-xl sm:text-2xl font-bold text-black mb-2 group-hover:text-gray-800 transition-colors duration-300" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
                       {bullet.text}
                     </h4>
                   </div>

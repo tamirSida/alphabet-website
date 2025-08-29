@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+/* Custom Gunplay Font */
+@font-face {
+  font-family: 'Gunplay';
+  src: url('/fonts/gunplay/gunplay rg.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gunplay 3D';
+  src: url('/fonts/gunplay/gunplay 3d.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
