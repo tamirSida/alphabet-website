@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import HeroSection from './hero-section';
 import ContentSection from './content-section';
 import FAQSection from './faq-section';
@@ -9,6 +9,9 @@ import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/comp
 import EditableSection from '@/components/admin/editable-section';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
 import EditModal from '@/components/admin/edit-modal';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 // AdminProvider is now in root layout
 
 import { CMSServiceFactory } from '@/lib/cms/content-services';
@@ -23,6 +26,9 @@ function AlphaBetHomepageContent() {
   const [contentSections, setContentSections] = useState<ContentType[]>([]);
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -32,12 +38,64 @@ function AlphaBetHomepageContent() {
   // State to store the current content for each section
   const [sectionContent, setSectionContent] = useState({
     mission: "You've demonstrated courage, discipline, and leadership in the most challenging environments. Now, we're here to help you apply those same traits to the world of entrepreneurship.\n\n• Bridge military experience with entrepreneurial skills\n• Get practical MBA-level education designed for founders  \n• Join a community of battle-tested veteran entrepreneurs\n• Create lasting impact through veteran-led innovation",
-    'why-alpha-bet': "This isn't a traditional classroom. This is a community of like-minded individuals who share your unique experiences and understand the 'battle-tested' approach to problem-solving.\n\n• Proven Network: Access to Version Bravo ecosystem with US and Israeli operators\n• Veteran-to-Veteran Mentorship: Learn from successful entrepreneur combat veterans\n• Fast-Track to Success: Priority application to Version Bravo accelerator with investment",
-    'what-you-gain': "Transform your military experience into entrepreneurial success through our comprehensive 10-week program.\n\n• Build a Strong Team: Connect and develop startups with mission-driven veteran peers\n• Gain Confidence & Knowledge: Master the entrepreneurial process from ideation to venture creation\n• Experience Real-World Pitching: Present your startup to actual investors\n• Receive Priority for Acceleration: Direct path to Version Bravo accelerator with investment opportunity"
+    'why-alpha-bet': "• ⁠A Unique Partnership Between U.S. and Israel Veterans: We are the only platform uniting elite U.S. and Israeli operators. This gives our founders a distinct advantage: Israeli startups gain a trusted path to the U.S. market, while American founders get direct access to Israel's deep-tech ecosystem.\n• Recognized as a Proven Platform & Led By People Who've Been There: Our team includes multi-exit, combat veteran entrepreneurs and academics. Veteran Founders choose us for our proven track record and practical, in-the-trenches and purpose-built curriculum.\n• An Unparalleled Network of Mission-Driven Leaders: We connect our students with a curated network of unicorn founders and top executives. Amidst growing support for veterans, these leaders are personally invested in our mission and actively mentor our companies as the premier platform for giving back to this community.",
+    'what-you-gain': "• Build a Strong Team: During the program you will work in cross border teams to develop a startup. The program provides an opportunity to meet and work with other mission-driven veterans.\n• Gain Confidence & Knowledge: Learn to translate the skills you gained in your service to a new career in entrepreneurship. You will leave with a practical understanding of the entrepreneurial process, from ideation to venture creation.\n• Not just lessons, gain practical experience: Work in groups on real ideas and present to  investors and industry experts.\n• Priority Application to Version Bravo Accelerator: This gives you a direct path to the next level of funding and mentorship."
   });
 
   // Enable URL-based admin access
   useUrlAdminAccess();
+
+  // Scroll to section function
+  const scrollToSection = useCallback((index: number) => {
+    const container = scrollContainerRef.current;
+    const section = sectionRefs.current[index];
+    if (container && section) {
+      const scrollLeft = section.offsetLeft - (container.offsetWidth - section.offsetWidth) / 2;
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
+      });
+      setActiveSection(index);
+    }
+  }, []);
+
+  // Handle scroll to update active section
+  const handleScroll = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    sectionRefs.current.forEach((section, index) => {
+      if (section) {
+        const sectionCenter = section.offsetLeft + section.offsetWidth / 2;
+        const distance = Math.abs(containerCenter - sectionCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      }
+    });
+
+    setActiveSection(closestIndex);
+  }, []);
+
+  // Keyboard navigation
+  const handleKeyPress = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'ArrowLeft' && activeSection > 0) {
+      scrollToSection(activeSection - 1);
+    } else if (e.key === 'ArrowRight' && activeSection < 2) {
+      scrollToSection(activeSection + 1);
+    }
+  }, [activeSection, scrollToSection]);
+
+  // Set up keyboard listeners
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
 
   const updateContentSection = useCallback((sectionType: string, newContent: string) => {
     console.log(`Updating ${sectionType} content:`, newContent);
@@ -121,17 +179,6 @@ function AlphaBetHomepageContent() {
     setEditModalOpen(true);
   }, []);
 
-  // Granular content section handlers
-  const handleEditBrief = useCallback((sectionType: string) => {
-    const currentContent = sectionContent[sectionType as keyof typeof sectionContent];
-    const intro = currentContent.split('\n\n')[0] || currentContent.split('\n')[0] || '';
-    setEditingType('brief');
-    setEditingItem({
-      type: sectionType,
-      text: intro.trim()
-    });
-    setEditModalOpen(true);
-  }, [sectionContent]);
 
   const handleEditHighlight = useCallback((sectionType: string, highlight?: any, index?: number) => {
     setEditingType('highlight');
@@ -149,22 +196,27 @@ function AlphaBetHomepageContent() {
       try {
         const currentContent = sectionContent[sectionType as keyof typeof sectionContent];
         // Parse current content and remove the highlight
-        const sections = currentContent.split('\n\n');
-        const bullets = sections.flatMap(section => 
-          section.split('\n').filter(line => 
-            line.trim().startsWith('•') || line.trim().startsWith('-')
-          )
+        const allLines = currentContent.split('\n');
+        const nonBulletLines = allLines.filter(line => 
+          !line.trim().startsWith('•') && !line.trim().startsWith('-') && line.trim() !== ''
+        );
+        const bullets = allLines.filter(line => 
+          line.trim().startsWith('•') || line.trim().startsWith('-')
         );
         
         // Remove the highlight at the specified index
         bullets.splice(index, 1);
         
         // Reconstruct content
-        const intro = sections.find(section => 
-          !section.includes('•') && !section.includes('-')
-        ) || '';
-        
-        const newContent = intro.trim() + '\n\n' + bullets.join('\n');
+        let newContent = '';
+        if (nonBulletLines.length > 0) {
+          newContent = nonBulletLines.join('\n').trim();
+          if (bullets.length > 0) {
+            newContent += '\n\n' + bullets.join('\n');
+          }
+        } else {
+          newContent = bullets.join('\n');
+        }
         
         // Save to database
         await saveContentToDatabase(sectionType, newContent);
@@ -253,31 +305,16 @@ function AlphaBetHomepageContent() {
           };
           await CMSServiceFactory.getContentSectionService().create(contentData);
         }
-      } else if (editingType === 'brief') {
-        // Handle mission brief editing
-        const sectionType = editingItem.type;
-        const currentContent = sectionContent[sectionType as keyof typeof sectionContent];
-        const sections = currentContent.split('\n\n');
-        const bullets = sections.filter(section => section.includes('•') || section.includes('-'));
-        
-        // Update with new brief + existing bullets
-        const newContent = data.text.trim() + (bullets.length > 0 ? '\n\n' + bullets.join('\n\n') : '');
-        
-        // Save to database
-        await saveContentToDatabase(sectionType, newContent);
-        
-        // Update local state
-        updateContentSection(sectionType, newContent);
       } else if (editingType === 'highlight') {
         // Handle individual highlight editing
         const { type: sectionType, isNew, index } = editingItem;
         const currentContent = sectionContent[sectionType as keyof typeof sectionContent];
-        const sections = currentContent.split('\n\n');
-        const intro = sections.find(section => !section.includes('•') && !section.includes('-')) || '';
-        const bullets = sections.flatMap(section => 
-          section.split('\n').filter(line => 
-            line.trim().startsWith('•') || line.trim().startsWith('-')
-          )
+        const allLines = currentContent.split('\n');
+        const nonBulletLines = allLines.filter(line => 
+          !line.trim().startsWith('•') && !line.trim().startsWith('-') && line.trim() !== ''
+        );
+        const bullets = allLines.filter(line => 
+          line.trim().startsWith('•') || line.trim().startsWith('-')
         );
         
         if (isNew) {
@@ -289,7 +326,15 @@ function AlphaBetHomepageContent() {
         }
         
         // Reconstruct content
-        const newContent = intro.trim() + '\n\n' + bullets.join('\n');
+        let newContent = '';
+        if (nonBulletLines.length > 0) {
+          newContent = nonBulletLines.join('\n').trim();
+          if (bullets.length > 0) {
+            newContent += '\n\n' + bullets.join('\n');
+          }
+        } else {
+          newContent = bullets.join('\n');
+        }
         
         // Save to database
         await saveContentToDatabase(sectionType, newContent);
@@ -334,7 +379,7 @@ function AlphaBetHomepageContent() {
       console.error('Error saving:', error);
       throw error;
     }
-  }, [editingType, editingItem, contentSections.length, faqs.length, loadContent]);
+  }, [editingType, editingItem, contentSections.length, faqs.length, loadContent, sectionContent, saveContentToDatabase, updateContentSection]);
 
   const getEditFields = useCallback((type: string) => {
     switch (type) {
@@ -361,10 +406,6 @@ function AlphaBetHomepageContent() {
       case 'section-description':
         return [
           { key: 'description', label: 'Section Description', type: 'text' as const, required: false, placeholder: 'What makes us unique' }
-        ];
-      case 'brief':
-        return [
-          { key: 'text', label: 'Mission Brief', type: 'textarea' as const, required: true, placeholder: 'Enter the mission brief description...' }
         ];
       case 'highlight':
         return [
@@ -416,134 +457,263 @@ function AlphaBetHomepageContent() {
       <DiscreteAdminDot />
       <SimpleAdminToggle />
       
-      {/* Hero and Content Sections with Seamless Background */}
+      {/* Hero Section with Split Layout */}
       <div className="bg-gradient-to-r from-white via-white to-gray-200">
-        {/* Hero Section */}
         <EditableSection
           sectionName="Hero"
           onEdit={() => handleEdit('hero', activeHero)}
         >
-          <HeroSection
-            headline={activeHero.headline}
-            subHeadline={activeHero.subHeadline}
-            subHeadline2={activeHero.subHeadline2}
-            ctaText={activeHero.ctaText}
-            ctaLink={activeHero.ctaLink}
-            backgroundImage={hero?.backgroundImage}
-            applicationWindowOpens={activeHero.applicationWindowOpens}
-            applicationWindowCloses={activeHero.applicationWindowCloses}
-            programStartDate={activeHero.programStartDate}
-            programEndDate={activeHero.programEndDate}
-          />
-        </EditableSection>
-        {/* Default homepage content sections */}
-        <EditableSection
-          sectionName="Mission"
-          onEdit={() => {
-            const contentSection = contentSections.find(section => section.type === 'mission');
-            const getDefaultDescription = (type: string) => {
-              switch (type) {
-                case 'mission': return 'Our foundation and purpose';
-                case 'why-alpha-bet': return 'What makes us unique';
-                case 'what-you-gain': return 'Your transformation journey';
-                default: return 'Learn more';
-              }
-            };
-            
-            handleEdit('content', {
-              ...contentSection,
-              id: contentSection?.id || "default-mission",
-              title: contentSection?.title || "Our Mission",
-              content: contentSection?.content || "You've demonstrated courage, discipline, and leadership in the most challenging environments. Now, we're here to help you apply those same traits to the world of entrepreneurship.\n\n• Bridge military experience with entrepreneurial skills\n• Get practical MBA-level education designed for founders\n• Join a community of battle-tested veteran entrepreneurs\n• Create lasting impact through veteran-led innovation",
-              description: contentSection?.description || getDefaultDescription('mission'),
-              type: "mission"
-            });
-          }}
-        >
-          <ContentSection
-            title="Our Mission"
-            content={sectionContent.mission}
-            type="mission"
-            description={contentSections.find(section => section.type === 'mission')?.description}
-            onEditBrief={() => handleEditBrief('mission')}
-            onEditHighlight={(highlight, index) => handleEditHighlight('mission', highlight, index)}
-            onDeleteHighlight={(highlight, index) => handleDeleteHighlight('mission', highlight, index)}
-            onAddHighlight={() => handleAddHighlight('mission')}
-            onEditDescription={() => handleEditDescription('mission')}
-          />
-        </EditableSection>
-
-        <EditableSection
-          sectionName="Why Alpha-Bet"
-          onEdit={() => {
-            const contentSection = contentSections.find(section => section.type === 'why-alpha-bet');
-            const getDefaultDescription = (type: string) => {
-              switch (type) {
-                case 'mission': return 'Our foundation and purpose';
-                case 'why-alpha-bet': return 'What makes us unique';
-                case 'what-you-gain': return 'Your transformation journey';
-                default: return 'Learn more';
-              }
-            };
-            
-            handleEdit('content', {
-              ...contentSection,
-              id: contentSection?.id || "default-why-alpha-bet",
-              title: contentSection?.title || "Why Alpha-Bet?",
-              content: contentSection?.content || "This isn't a traditional classroom. This is a community of like-minded individuals who share your unique experiences and understand the 'battle-tested' approach to problem-solving.\n\n• Proven Network: Access to Version Bravo ecosystem with US and Israeli operators\n• Veteran-to-Veteran Mentorship: Learn from successful entrepreneur combat veterans\n• Fast-Track to Success: Priority application to Version Bravo accelerator with investment",
-              description: contentSection?.description || getDefaultDescription('why-alpha-bet'),
-              type: "why-alpha-bet"
-            });
-          }}
-        >
-          <ContentSection
-            title="Why Alpha-Bet?"
-            content={sectionContent['why-alpha-bet']}
-            type="why-alpha-bet"
-            description={contentSections.find(section => section.type === 'why-alpha-bet')?.description}
-            onEditBrief={() => handleEditBrief('why-alpha-bet')}
-            onEditHighlight={(highlight, index) => handleEditHighlight('why-alpha-bet', highlight, index)}
-            onDeleteHighlight={(highlight, index) => handleDeleteHighlight('why-alpha-bet', highlight, index)}
-            onAddHighlight={() => handleAddHighlight('why-alpha-bet')}
-            onEditDescription={() => handleEditDescription('why-alpha-bet')}
-          />
+          <section className="relative min-h-screen flex items-center justify-center px-4 py-16">
+            <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+              {/* Left side - Hero content */}
+              <div className="order-2 lg:order-1 text-center lg:text-left">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
+                  {activeHero.headline.includes('By Version Bravo') ? (
+                    <>
+                      {activeHero.headline.replace(' By Version Bravo', '')}<br />
+                      By Version Bravo
+                    </>
+                  ) : (
+                    activeHero.headline
+                  )}
+                </h1>
+                <p className="text-lg sm:text-xl md:text-2xl text-black font-bold mb-4 leading-relaxed" style={{ fontFamily: "'Black Ops One', cursive" }}>
+                  {activeHero.subHeadline}
+                </p>
+                <div className="flex justify-center lg:justify-start mb-4">
+                  <div className="h-1 bg-blue-700 rounded-full w-48 transition-all duration-300"></div>
+                </div>
+                {activeHero.subHeadline2 && (
+                  <p className="text-lg sm:text-xl md:text-2xl text-black mb-8 leading-relaxed">
+                    {activeHero.subHeadline2}
+                  </p>
+                )}
+                {(activeHero.applicationWindowOpens || activeHero.applicationWindowCloses || activeHero.programStartDate) && (
+                  <div className="bg-gradient-to-r from-blue-500/10 to-gray-500/10 backdrop-blur-md rounded-xl border border-gray-400/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 shadow-lg">
+                    <div className="text-center lg:text-left">
+                      <div className="text-sm sm:text-lg text-black font-medium leading-relaxed">
+                        Applications for March Semester will begin on January 15, 2025
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Right side - Hero image */}
+              <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+                <div className="relative w-full max-w-md lg:max-w-lg">
+                  <div className="aspect-square relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-black">
+                    {hero?.backgroundImage ? (
+                      <Image
+                        src={hero.backgroundImage}
+                        alt="Alpha-Bet Program"
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900">
+                        <div className="text-center text-white p-8">
+                          <i className="fas fa-shield-alt text-6xl mb-4 opacity-80"></i>
+                          <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Black Ops One', cursive" }}>
+                            Combat Veterans
+                          </h3>
+                          <p className="text-lg opacity-90">
+                            Building Tomorrow's Startups
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  {/* Decorative elements */}
+                  <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full opacity-20 animate-pulse"></div>
+                  <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full opacity-30 animate-pulse delay-1000"></div>
+                </div>
+              </div>
+            </div>
+          </section>
         </EditableSection>
 
-        <EditableSection
-          sectionName="What You'll Gain"
-          onEdit={() => {
-            const contentSection = contentSections.find(section => section.type === 'what-you-gain');
-            const getDefaultDescription = (type: string) => {
-              switch (type) {
-                case 'mission': return 'Our foundation and purpose';
-                case 'why-alpha-bet': return 'What makes us unique';
-                case 'what-you-gain': return 'Your transformation journey';
-                default: return 'Learn more';
-              }
-            };
-            
-            handleEdit('content', {
-              ...contentSection,
-              id: contentSection?.id || "default-what-you-gain",
-              title: contentSection?.title || "What You'll Gain",
-              content: contentSection?.content || "Transform your military experience into entrepreneurial success through our comprehensive 10-week program.\n\n• Build a Strong Team: Connect and develop startups with mission-driven veteran peers\n• Gain Confidence & Knowledge: Master the entrepreneurial process from ideation to venture creation\n• Experience Real-World Pitching: Present your startup to actual investors\n• Receive Priority for Acceleration: Direct path to Version Bravo accelerator with investment opportunity",
-              description: contentSection?.description || getDefaultDescription('what-you-gain'),
-              type: "what-you-gain"
-            });
-          }}
-        >
-          <ContentSection
-            title="What You'll Gain"
-            content={sectionContent['what-you-gain']}
-            type="what-you-gain"
-            description={contentSections.find(section => section.type === 'what-you-gain')?.description}
-            onEditBrief={() => handleEditBrief('what-you-gain')}
-            onEditHighlight={(highlight, index) => handleEditHighlight('what-you-gain', highlight, index)}
-            onDeleteHighlight={(highlight, index) => handleDeleteHighlight('what-you-gain', highlight, index)}
-            onAddHighlight={() => handleAddHighlight('what-you-gain')}
-            onEditDescription={() => handleEditDescription('what-you-gain')}
-          />
-        </EditableSection>
+        {/* Horizontal Scrollable Content Sections */}
+        <div className="relative">
+          {/* Navigation Indicators */}
+          <div className="flex justify-center mb-6 px-4">
+            <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 shadow-lg">
+              {['Our Mission', 'Why Alpha-Bet?', 'What You\'ll Gain'].map((title, index) => (
+                <button
+                  key={index}
+                  onClick={() => scrollToSection(index)}
+                  className={`flex items-center gap-1 px-3 py-1 rounded-full transition-all duration-300 ${
+                    activeSection === index 
+                      ? 'bg-blue-600 text-white shadow-md' 
+                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                  }`}
+                >
+                  <div className={`w-2 h-2 rounded-full transition-colors ${
+                    activeSection === index ? 'bg-white' : 'bg-gray-400'
+                  }`}></div>
+                  <span className="hidden sm:inline text-sm font-medium">{title}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Horizontal Scroll Container */}
+          <div 
+            ref={scrollContainerRef}
+            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            onScroll={handleScroll}
+          >
+            {/* Mission Section */}
+            <div 
+              ref={el => sectionRefs.current[0] = el}
+              className="min-w-full snap-center"
+            >
+              <EditableSection
+                sectionName="Mission"
+                onEdit={() => {
+                  const contentSection = contentSections.find(section => section.type === 'mission');
+                  const getDefaultDescription = (type: string) => {
+                    switch (type) {
+                      case 'mission': return 'Our foundation and purpose';
+                      case 'why-alpha-bet': return 'What makes us unique';
+                      case 'what-you-gain': return 'Your transformation journey';
+                      default: return 'Learn more';
+                    }
+                  };
+                  
+                  handleEdit('content', {
+                    ...contentSection,
+                    id: contentSection?.id || "default-mission",
+                    title: contentSection?.title || "Our Mission",
+                    content: contentSection?.content || "You've demonstrated courage, discipline, and leadership in the most challenging environments. Now, we're here to help you apply those same traits to the world of entrepreneurship.\n\n• Bridge military experience with entrepreneurial skills\n• Get practical MBA-level education designed for founders\n• Join a community of battle-tested veteran entrepreneurs\n• Create lasting impact through veteran-led innovation",
+                    description: contentSection?.description || getDefaultDescription('mission'),
+                    type: "mission"
+                  });
+                }}
+              >
+                <ContentSection
+                  title="Our Mission"
+                  content={sectionContent.mission}
+                  type="mission"
+                  description={contentSections.find(section => section.type === 'mission')?.description}
+                  onEditHighlight={(highlight, index) => handleEditHighlight('mission', highlight, index)}
+                  onDeleteHighlight={(highlight, index) => handleDeleteHighlight('mission', highlight, index)}
+                  onAddHighlight={() => handleAddHighlight('mission')}
+                  onEditDescription={() => handleEditDescription('mission')}
+                />
+              </EditableSection>
+            </div>
+
+            {/* Why Alpha-Bet Section */}
+            <div 
+              ref={el => sectionRefs.current[1] = el}
+              className="min-w-full snap-center"
+            >
+              <EditableSection
+                sectionName="Why Alpha-Bet"
+                onEdit={() => {
+                  const contentSection = contentSections.find(section => section.type === 'why-alpha-bet');
+                  const getDefaultDescription = (type: string) => {
+                    switch (type) {
+                      case 'mission': return 'Our foundation and purpose';
+                      case 'why-alpha-bet': return 'What makes us unique';
+                      case 'what-you-gain': return 'Your transformation journey';
+                      default: return 'Learn more';
+                    }
+                  };
+                  
+                  handleEdit('content', {
+                    ...contentSection,
+                    id: contentSection?.id || "default-why-alpha-bet",
+                    title: contentSection?.title || "Why Alpha-Bet?",
+                    content: contentSection?.content || "This isn't a traditional classroom. This is a community of like-minded individuals who share your unique experiences and understand the 'battle-tested' approach to problem-solving.\n\n• Proven Network: Access to Version Bravo ecosystem with US and Israeli operators\n• Veteran-to-Veteran Mentorship: Learn from successful entrepreneur combat veterans\n• Fast-Track to Success: Priority application to Version Bravo accelerator with investment",
+                    description: contentSection?.description || getDefaultDescription('why-alpha-bet'),
+                    type: "why-alpha-bet"
+                  });
+                }}
+              >
+                <ContentSection
+                  title="Why Alpha-Bet?"
+                  content={sectionContent['why-alpha-bet']}
+                  type="why-alpha-bet"
+                  description={contentSections.find(section => section.type === 'why-alpha-bet')?.description}
+                  onEditHighlight={(highlight, index) => handleEditHighlight('why-alpha-bet', highlight, index)}
+                  onDeleteHighlight={(highlight, index) => handleDeleteHighlight('why-alpha-bet', highlight, index)}
+                  onAddHighlight={() => handleAddHighlight('why-alpha-bet')}
+                  onEditDescription={() => handleEditDescription('why-alpha-bet')}
+                />
+              </EditableSection>
+            </div>
+
+            {/* What You'll Gain Section */}
+            <div 
+              ref={el => sectionRefs.current[2] = el}
+              className="min-w-full snap-center"
+            >
+              <EditableSection
+                sectionName="What You'll Gain"
+                onEdit={() => {
+                  const contentSection = contentSections.find(section => section.type === 'what-you-gain');
+                  const getDefaultDescription = (type: string) => {
+                    switch (type) {
+                      case 'mission': return 'Our foundation and purpose';
+                      case 'why-alpha-bet': return 'What makes us unique';
+                      case 'what-you-gain': return 'Your transformation journey';
+                      default: return 'Learn more';
+                    }
+                  };
+                  
+                  handleEdit('content', {
+                    ...contentSection,
+                    id: contentSection?.id || "default-what-you-gain",
+                    title: contentSection?.title || "What You'll Gain",
+                    content: contentSection?.content || "Transform your military experience into entrepreneurial success through our comprehensive 10-week program.\n\n• Build a Strong Team: Connect and develop startups with mission-driven veteran peers\n• Gain Confidence & Knowledge: Master the entrepreneurial process from ideation to venture creation\n• Experience Real-World Pitching: Present your startup to actual investors\n• Receive Priority for Acceleration: Direct path to Version Bravo accelerator with investment opportunity",
+                    description: contentSection?.description || getDefaultDescription('what-you-gain'),
+                    type: "what-you-gain"
+                  });
+                }}
+              >
+                <ContentSection
+                  title="What You'll Gain"
+                  content={sectionContent['what-you-gain']}
+                  type="what-you-gain"
+                  description={contentSections.find(section => section.type === 'what-you-gain')?.description}
+                  onEditHighlight={(highlight, index) => handleEditHighlight('what-you-gain', highlight, index)}
+                  onDeleteHighlight={(highlight, index) => handleDeleteHighlight('what-you-gain', highlight, index)}
+                  onAddHighlight={() => handleAddHighlight('what-you-gain')}
+                  onEditDescription={() => handleEditDescription('what-you-gain')}
+                />
+              </EditableSection>
+            </div>
+          </div>
+          
+          {/* Navigation Arrows */}
+          <button 
+            onClick={() => activeSection > 0 && scrollToSection(activeSection - 1)}
+            className={`absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
+              activeSection > 0 
+                ? 'bg-white shadow-lg hover:shadow-xl text-gray-600 hover:text-blue-600' 
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }`}
+            disabled={activeSection <= 0}
+          >
+            <i className="fas fa-chevron-left"></i>
+          </button>
+          
+          <button 
+            onClick={() => activeSection < 2 && scrollToSection(activeSection + 1)}
+            className={`absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
+              activeSection < 2 
+                ? 'bg-white shadow-lg hover:shadow-xl text-gray-600 hover:text-blue-600' 
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            }`}
+            disabled={activeSection >= 2}
+          >
+            <i className="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
 
       {/* FAQ Section */}
@@ -576,6 +746,17 @@ function AlphaBetHomepageContent() {
         initialData={editingItem}
         loading={loading}
       />
+
+      {/* Custom CSS for hiding scrollbar */}
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 }
