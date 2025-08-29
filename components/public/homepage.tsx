@@ -676,7 +676,7 @@ function AlphaBetHomepageContent() {
                         }
                       };
                       
-                      const normalizedUrl = normalizeImageUrl(imageUrl);
+                      const normalizedUrl = normalizeImageUrl(imageUrl || '');
                       console.log('Normalized URL:', normalizedUrl, 'from original:', imageUrl);
                       
                       if (normalizedUrl) {

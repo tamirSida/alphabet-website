@@ -18,19 +18,10 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
   // Default FAQ data
   const defaultFAQs: FAQ[] = [
     {
-      id: 'faq-1',
-      question: 'Who is eligible for the Alpha-Bet program?',
-      answer: 'The program is designed for US and Israeli combat veterans who have completed their military service and are ready to transition their leadership skills into entrepreneurship. You should be in the ideation phase or early stages of developing a business concept.',
-      order: 1,
-      isVisible: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
       id: 'faq-3',
       question: 'What time commitment is required?',
       answer: 'The program requires approximately 8-10 hours per week over 10 weeks. This includes live workshops, self-paced learning modules, peer collaboration sessions, and practical assignments to develop your business concept.',
-      order: 2,
+      order: 1,
       isVisible: true,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -39,47 +30,39 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
       id: 'faq-4',
       question: 'Is the program conducted online or in-person?',
       answer: 'The Alpha-Bet program is conducted entirely online, making it accessible to veterans regardless of location. All workshops, mentorship sessions, and networking events are held virtually using modern collaboration platforms.',
+      order: 2,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'faq-7',
+      question: 'For the Alpha-Bet program, What service types qualify as a Combat Veteran?',
+      answer: '<a href="#service-requirements" class="text-blue-600 hover:text-blue-800 underline font-medium">Click here to see service requirements.</a>',
       order: 3,
-      isVisible: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
-      id: 'faq-5',
-      question: 'Do I need to have a business idea already?',
-      answer: 'Not necessarily. While some participants come with existing ideas, others join to find co-founders and develop concepts together. The program includes dedicated ideation workshops and partner-matching opportunities.',
-      order: 4,
-      isVisible: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
-      id: 'faq-6',
-      question: 'What kind of support continues after graduation?',
-      answer: 'Graduates join our exclusive alumni network with ongoing access to mentors, investors, and fellow veteran entrepreneurs. We also provide continued resources, quarterly check-ins, and opportunities for advanced workshops.',
-      order: 5,
       isVisible: true,
       createdAt: new Date(),
       updatedAt: new Date()
     }
   ];
 
-  // Merge CMS FAQs with defaults
+  // Merge CMS FAQs with defaults - hardcoded FAQs first, then Firebase FAQs
   const mergeFAQsWithDefaults = () => {
-    const merged = [...defaultFAQs];
+    // Filter visible hardcoded FAQs and sort by order
+    const visibleDefaultFAQs = defaultFAQs
+      .filter(faq => faq.isVisible !== false)
+      .sort((a, b) => a.order - b.order);
     
-    faqs.forEach(cmsFaq => {
-      const defaultIndex = merged.findIndex(defaultFaq => 
-        defaultFaq.order === cmsFaq.order
-      );
-      if (defaultIndex !== -1) {
-        merged[defaultIndex] = cmsFaq;
-      } else {
-        merged.push(cmsFaq);
-      }
-    });
+    // Filter visible Firebase FAQs (exclude duplicates by ID or question) and sort by order
+    const visibleCmsFAQs = faqs
+      .filter(faq => faq.isVisible !== false)
+      .filter(faq => !defaultFAQs.some(defaultFaq => 
+        defaultFaq.id === faq.id || defaultFaq.question === faq.question
+      ))
+      .sort((a, b) => a.order - b.order);
     
-    return merged.filter(faq => faq.isVisible !== false).sort((a, b) => a.order - b.order);
+    // Return hardcoded FAQs first, then Firebase FAQs
+    return [...visibleDefaultFAQs, ...visibleCmsFAQs];
   };
 
   const displayFAQs = mergeFAQsWithDefaults();
@@ -157,7 +140,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
                   >
                     <i className="fas fa-edit"></i>
                   </button>
-                  {!faq.id.startsWith('faq-') && (
+                  {!defaultFAQs.some(defaultFaq => defaultFaq.id === faq.id || defaultFaq.question === faq.question) && (
                     <button
                       onClick={(e) => handleDeleteClick(faq, e)}
                       className="w-8 h-8 bg-red-500 hover:bg-red-400 text-white rounded-full flex items-center justify-center text-sm transition-colors shadow-lg"
@@ -190,9 +173,10 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
               {expandedFAQ === faq.id && (
                 <div className="px-6 pb-5 border-t border-white/10 bg-white/5">
                   <div className="pt-4">
-                    <p className="text-black leading-relaxed">
-                      {faq.answer}
-                    </p>
+                    <div 
+                      className="text-black leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: faq.answer }}
+                    />
                   </div>
                 </div>
               )}
