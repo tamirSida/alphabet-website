@@ -22,15 +22,15 @@ export default function TermsOfServicePage() {
         <SimpleAdminToggle />
         
         {/* Header */}
-        <section className="py-16 sm:py-24 px-4 bg-gradient-to-r from-white via-white to-gray-200 text-white">
+        <section className="py-16 sm:py-24 px-4 bg-gradient-to-r from-white via-white to-gray-200">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
               Terms of Service
             </h1>
-            <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
               Program guidelines and expectations for Alpha-Bet participants
             </p>
-            <div className="mt-8 text-sm text-gray-400">
+            <div className="mt-8 text-sm text-gray-600">
               Last Updated: August 16, 2025
             </div>
           </div>
