@@ -635,7 +635,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
                 href={cta?.buttonLink || '/qualifications'}
-                className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 text-gray-900 font-semibold hover:scale-105 transition-transform duration-300"
+                className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 text-gray-900 font-semibold hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 <i className="fas fa-graduation-cap"></i>
                 <span>{cta?.buttonText || 'Start Your Journey'}</span>
