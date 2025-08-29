@@ -264,6 +264,15 @@ export default function QualificationsPage() {
         <DiscreteAdminDot />
         <SimpleAdminToggle />
         
+        {/* Page Title Header */}
+        <section className="py-8 sm:py-12 px-4 bg-gradient-to-br from-white via-white to-gray-200">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6" style={{ fontFamily: "'Black Ops One', cursive" }}>
+              The Alpha-Bet Participant
+            </h1>
+          </div>
+        </section>
+        
         {/* Program Overview Section */}
         <ProgramOverviewSection 
           programIntro={programIntro}

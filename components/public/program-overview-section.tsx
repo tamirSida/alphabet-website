@@ -196,7 +196,8 @@ export default function ProgramOverviewSection({
 
             <h1 
               ref={titleRef}
-              className="text-xl sm:text-2xl md:text-3xl font-bold text-black mb-8 leading-tight tracking-tight"
+              className="text-xl sm:text-2xl md:text-3xl font-medium text-black mb-8 leading-tight tracking-tight"
+              style={{ fontFamily: "Gunplay, 'Black Ops One', cursive" }}
             >
               {displayIntro.description}
             </h1>
