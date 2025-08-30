@@ -78,11 +78,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
+              "@type": "EducationalOrganization",
               "name": "Alpha-Bet",
               "description": "Entrepreneurship program for US and Israeli combat veterans",
               "url": "https://alpha-bet.org",
-              "@type": "EducationalOrganization",
               "educationalCredentialAwarded": "Entrepreneurship Program Certificate",
               "hasOfferCatalog": {
                 "@type": "OfferCatalog",
