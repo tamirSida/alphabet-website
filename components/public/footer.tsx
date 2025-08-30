@@ -84,14 +84,6 @@ export default function Footer() {
                   style={{ width: 'auto', height: 'auto', maxWidth: '80px', maxHeight: '40px' }}
                 />
                 <Image 
-                  src="/partnerships/seal-future.png"
-                  alt="SEAL Future Partner" 
-                  width={80}
-                  height={40}
-                  className="object-contain filter brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
-                  style={{ width: 'auto', height: 'auto' }}
-                />
-                <Image 
                   src="/partnerships/shabak.png"
                   alt="Shabak Partner" 
                   width={80}

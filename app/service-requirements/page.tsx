@@ -47,74 +47,142 @@ export default function ServiceRequirementsPage() {
               </p>
             </div>
 
-            <h2>1. Honorable Service</h2>
-            <p>
-              Received an honorable discharge or its equivalent from the <strong>United States Armed Forces</strong> or the <strong>Israel Defense Forces (IDF)</strong>.
-            </p>
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Honorable Service</h2>
+                <div className="ml-6">
+                  <p className="text-gray-700 leading-relaxed">
+                    Received an honorable discharge or its equivalent from the <strong>United States Armed Forces</strong> or the <strong>Israel Defense Forces (IDF)</strong>.
+                  </p>
+                </div>
+              </div>
 
-            <h2>2. Combat Unit Service</h2>
-            <p>Must have served in an officially recognized combat-designated unit:</p>
-            
-            <h3>Israel (IDF)</h3>
-            <ul>
-              <li><strong>Infantry brigades:</strong> Golani, Givati, Paratroopers</li>
-              <li><strong>Special Forces:</strong> Shayetet 13, Sayeret Matkal, Duvdevan, Shaldag, Unit 669</li>
-              <li><strong>Equivalent combat roles</strong> in officially designated combat units</li>
-            </ul>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Combat Unit Service</h2>
+                <div className="ml-6">
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    Must have served in an officially recognized combat-designated unit:
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">a) Israel (IDF)</h3>
+                      <ul className="ml-6 space-y-1 text-gray-700">
+                        <li className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span><strong>Infantry brigades:</strong> Golani, Givati, Paratroopers</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span><strong>Special Forces:</strong> Shayetet 13, Sayeret Matkal, Duvdevan, Shaldag, Unit 669</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span><strong>Equivalent combat roles</strong> in officially designated combat units</span>
+                        </li>
+                      </ul>
+                    </div>
 
-            <h3>United States</h3>
-            <ul>
-              <li><strong>U.S. Special Operations:</strong> SEALs, Green Berets, Delta, Rangers, Marine Raiders, PJs, CCTs, SR, TACP</li>
-              <li><strong>Combat Arms:</strong> Infantry, Marine Infantry, and equivalent frontline roles</li>
-            </ul>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">b) United States</h3>
+                      <ul className="ml-6 space-y-1 text-gray-700">
+                        <li className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span><strong>U.S. Special Operations:</strong> SEALs, Green Berets, Delta, Rangers, Marine Raiders, PJs, CCTs, SR, TACP</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span><strong>Combat Arms:</strong> Infantry, Marine Infantry, and equivalent frontline roles</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-            <h2>3. Primary Combat Role</h2>
-            <p>
-              Served in a unit whose core mission involved direct engagement with opposing forces. Examples include:
-            </p>
-            <ul>
-              <li>Infantry</li>
-              <li>Special operations</li>
-              <li>Armor</li>
-              <li>Combat engineering</li>
-              <li>Field artillery</li>
-            </ul>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Primary Combat Role</h2>
+                <div className="ml-6">
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    Served in a unit whose core mission involved direct engagement with opposing forces. Examples include:
+                  </p>
+                  <ul className="ml-6 space-y-1 text-gray-700">
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>Infantry</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>Special operations</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>Armor</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>Combat engineering</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>Field artillery</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
-            <h2>4. Assigned to a Combat Unit</h2>
-            <p>
-              Veterans from combat support specialties are eligible if they were <strong>formally assigned or attached</strong> to a front-line combat unit and routinely operated in a forward, hostile environment as part of their primary duties.
-            </p>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Assigned to a Combat Unit</h2>
+                <div className="ml-6">
+                  <p className="text-gray-700 leading-relaxed">
+                    Veterans from combat support specialties are eligible if they were <strong>formally assigned or attached</strong> to a front-line combat unit and routinely operated in a forward, hostile environment as part of their primary duties.
+                  </p>
+                </div>
+              </div>
 
-            <h2>5. Verifiable Record</h2>
-            <p>Service and unit assignment must be verifiable through official documentation:</p>
-            <ul>
-              <li><strong>U.S. Veterans:</strong> DD-214 or equivalent service records</li>
-              <li><strong>Israeli Veterans:</strong> 'Teudat Shichrur' or other relevant service records</li>
-              <li><strong>Other Documentation:</strong> Official military records that verify combat unit service</li>
-            </ul>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Active Reserve Status (Israel Specific Requirement)</h2>
+                <div className="ml-6">
+                  <p className="text-gray-700 leading-relaxed">
+                    Israeli applicants must be currently serving as a combat-designated reservist or equivalent active reserve status.
+                  </p>
+                </div>
+              </div>
 
-            <h2>6. Active Reserve Status (Israel Specific Requirement)</h2>
-            <p>
-              Israeli applicants must be currently serving as a combat-designated reservist or equivalent active reserve status.
-            </p>
-
-            <h2>7. Entrepreneurial Alignment</h2>
-            <p>
-              Commitment to applying combat-honed leadership, resilience, and problem-solving skills to entrepreneurial ventures. Participants should demonstrate genuine interest in:
-            </p>
-            <ul>
-              <li>Translating military leadership experience into business contexts</li>
-              <li>Building innovative solutions and startups</li>
-              <li>Contributing to the veteran entrepreneurship community</li>
-              <li>Continuous learning and professional development</li>
-            </ul>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Entrepreneurial Alignment</h2>
+                <div className="ml-6">
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    Commitment to applying combat-honed leadership, resilience, and problem-solving skills to entrepreneurial ventures. Participants should demonstrate genuine interest in:
+                  </p>
+                  <ul className="ml-6 space-y-1 text-gray-700">
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>Translating military leadership experience into business contexts</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>Building innovative solutions and startups</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>Contributing to the veteran entrepreneurship community</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">•</span>
+                      <span>Continuous learning and professional development</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
 
             <hr className="my-8" />
 
             <div className="bg-amber-50 border-l-4 border-amber-400 p-6">
-              <h3 className="text-lg font-bold text-amber-900 mb-2">Documentation Requirements</h3>
+              <h3 className="text-lg font-bold text-amber-900 mb-2">Documentation Requirements / Verifiable Service Record:</h3>
               <p className="text-amber-800 mb-2">
-                All applicants must be prepared to provide official documentation verifying their military service and combat unit assignment during the application process.
+                Service and unit assignment must be verifiable through official documentation (e.g., DD-214 for U.S. veterans, 'Teudat Shichrur' for Israeli veterans, or other relevant service records) and provided during the application process.
               </p>
               <p className="text-amber-800 mb-0">
                 <strong>Note:</strong> Service records will be kept confidential and used solely for program eligibility verification.
