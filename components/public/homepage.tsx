@@ -672,7 +672,7 @@ function AlphaBetHomepageContent() {
                             src={normalizedUrl}
                             alt="Alpha-Bet Program"
                             fill
-                            className="object-cover"
+                            className="object-cover object-[80%_75%]"
                             priority
                             onError={(e) => {
                               console.error('Image failed to load:', normalizedUrl, e);
