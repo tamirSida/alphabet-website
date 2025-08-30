@@ -19,11 +19,39 @@ const blackOpsOne = Black_Ops_One({
 export const metadata: Metadata = {
   title: "Alpha-Bet | Entrepreneurship Program for Combat Veterans",
   description: "Entrepreneurship program for US and Israeli combat veterans. From battlefield to business - your next mission starts here.",
-  keywords: "veterans, entrepreneurship, startup, combat veterans, business program, Version Bravo",
+  keywords: "veterans, entrepreneurship, startup, combat veterans, business program, Version Bravo, military veterans, veteran business, startup accelerator",
+  authors: [{ name: "Alpha-Bet Program" }],
+  creator: "Alpha-Bet Program",
+  publisher: "Alpha-Bet Program",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     title: "Alpha-Bet | Entrepreneurship Program for Combat Veterans",
     description: "Entrepreneurship program for US and Israeli combat veterans. From battlefield to business - your next mission starts here.",
+    url: "https://alpha-bet.org",
+    siteName: "Alpha-Bet",
     type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Alpha-Bet | Entrepreneurship Program for Combat Veterans",
+    description: "Entrepreneurship program for US and Israeli combat veterans. From battlefield to business - your next mission starts here.",
+  },
+  alternates: {
+    canonical: "https://alpha-bet.org",
+  },
+  verification: {
+    google: "google-site-verification",
   },
 };
 
@@ -44,6 +72,40 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Alpha-Bet",
+              "description": "Entrepreneurship program for US and Israeli combat veterans",
+              "url": "https://alpha-bet.org",
+              "@type": "EducationalOrganization",
+              "educationalCredentialAwarded": "Entrepreneurship Program Certificate",
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Alpha-Bet Programs",
+                "itemListElement": [
+                  {
+                    "@type": "Course",
+                    "name": "10-Week Entrepreneurship Program",
+                    "description": "Comprehensive entrepreneurship program for combat veterans",
+                    "provider": {
+                      "@type": "Organization",
+                      "name": "Alpha-Bet"
+                    }
+                  }
+                ]
+              },
+              "audience": {
+                "@type": "Audience",
+                "audienceType": "Combat Veterans",
+                "geographicArea": ["United States", "Israel"]
+              }
+            })
+          }}
         />
       </head>
       <body
