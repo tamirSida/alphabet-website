@@ -50,6 +50,7 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 - `/team` - Team page with unified "Alpha-Bet Team" section, drag-and-drop reordering, and classification system
 - `/curriculum` - 10-week program curriculum with military loading animation and lightweight button CMS
 - `/qualifications` - Comprehensive eligibility requirements with participant types and candidate profiles
+- `/info-session` - Info sessions page with live Q&A events and pre-recorded session management
 - `/service-requirements` - Detailed military service eligibility criteria page
 - `/privacy` - Privacy policy page with comprehensive data protection information
 - `/terms` - Terms of service page with program guidelines and participant responsibilities
@@ -62,16 +63,17 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 ## Content Types & CMS Integration
 
 ### Fully CMS-Enabled Sections:
-1. **Hero Section** - Headline, split sub-headline with gradient divider, CTA text/link, background image, application window dates
+1. **Hero Section** - Headline, split sub-headline with dynamic gradient divider, CTA text/link, background image, application window dates with smart status logic
 2. **Content Sections** - **GRANULAR CMS**: Individual editing of Mission Brief + Key Highlights with add/remove functionality
 3. **Curriculum Timeline** - 10-week program with week number, title, description, icons, editable CTA with lightweight button configuration
 4. **Team Members** - Unified "Alpha-Bet Team" with drag-and-drop reordering, team classification, dynamic titles/positions
 5. **Qualifications Page** - Program Introduction, Participant Types (Explorers/Builders), Alpha-Bet Candidate profile, Program Exclusions
-6. **Testimonials** - Quote, author, title, company, profile image
-7. **Call to Action** - Title, description, button text/link with dual button support
-8. **FAQ Items** - Question, answer with HTML support, order, visibility controls, and hardcoded fallbacks
-9. **Splash Page** - Headline, sub-headline, redirect URL, timer duration with video optimization
-10. **Service Requirements** - Static page with comprehensive military service criteria
+6. **Info Sessions Page** - Live Q&A events with date/URL management and pre-recorded session with URL configuration
+7. **Testimonials** - Quote, author, title, company, profile image
+8. **Call to Action** - Title, description, button text/link with dual button support
+9. **FAQ Items** - Question, answer with HTML support, order, visibility controls, and hardcoded fallbacks including program eligibility and meeting times
+10. **Splash Page** - Headline, sub-headline, redirect URL, timer duration with video optimization
+11. **Service Requirements** - Static page with comprehensive military service criteria
 
 ### Advanced CMS Features:
 - **Fallback Content**: All components show hardcoded defaults when Firebase is empty
@@ -131,7 +133,7 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 - `npm run typecheck` - TypeScript checking
 
 ## Firebase Configuration
-- **Collections**: hero-sections, content-sections, curriculum-items, curriculum-headers, call-to-actions, faqs, testimonials, alpha-bet-team, program-intros, participant-types, candidate-profiles, program-exclusions, splash-sections
+- **Collections**: hero-sections, content-sections, curriculum-items, curriculum-headers, call-to-actions, faqs, testimonials, alpha-bet-team, program-intros, participant-types, candidate-profiles, program-exclusions, splash-sections, live-qa-events, pre-recorded-sessions, mission-sections
 - **Authentication**: Admin users for CMS access with discrete login methods
 - **Security Rules**: Authenticated users have full access, public read access
 - **External Images**: LinkedIn and other media domains configured in next.config.ts
@@ -150,16 +152,16 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 - ✅ Performance optimizations including image optimization and efficient rendering
 
 ## Recent Major Updates:
+- **Info Sessions Page**: Complete page with live Q&A event management and pre-recorded session configuration
+- **Application Status Logic**: Smart status display based on current date vs application/program dates with dynamic month detection
+- **Dynamic Gradient Divider**: Hero subtitle divider now spans the full width of the text dynamically
+- **Enhanced FAQ System**: Added new hardcoded FAQs including program eligibility and meeting schedules with HTML formatting support
+- **Mobile Footer Optimization**: Moved "Our Partners" section under Legal on mobile devices
+- **Hero Layout Improvements**: Better spacing, positioning, and visual hierarchy with military corner accents
+- **Touch Scroll Optimization**: Fixed nested scroll issues on mobile for horizontal content sections
 - **Video Splash Optimization**: 3-second timeout with loading states and automatic home redirect
 - **FAQ Navigation Fix**: Custom navigation handler with proper timing and scrolling behavior
 - **Service Requirements Page**: Comprehensive military eligibility criteria with footer integration
-- **Lightweight Button CMS**: Toggle between download/navigate modes for curriculum CTA button
-- **Team Drag-and-Drop**: Complete reordering system with team classification (Academic Team vs Program Staff)
-- **Font Integration**: Gunplay military font applied consistently across components
-- **Chrome Scroll Bug Fix**: CSS modifications to prevent infinite scroll issues
-- **Admin Access Unification**: Consistent login dialog system across all discrete access methods
-- **Legal Page Optimization**: Proper text contrast and styling for light gradient backgrounds
-- **CMS Cleanup**: Removed redundant secondary button fields from curriculum CTA management
 
 ## Environment Variables Needed:
 ```
