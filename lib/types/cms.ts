@@ -230,6 +230,26 @@ export interface CMSUser {
   lastLogin?: Date;
 }
 
+export interface LiveQAEvent {
+  id: string;
+  sessionDate: string; // ISO date string
+  sessionUrl: string; // URL to join the session
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PreRecordedSession {
+  id: string;
+  title: string; // "Pre-recorded Info Session"
+  sessionUrl: string; // URL to the pre-recorded session
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface ContentBase {
   id: string;
   isVisible: boolean;

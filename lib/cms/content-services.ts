@@ -16,7 +16,9 @@ import {
   CandidateProfile,
   ProgramExclusions,
   SplashSection,
-  MissionSection
+  MissionSection,
+  LiveQAEvent,
+  PreRecordedSession
 } from '@/lib/types/cms';
 
 export class HeroService extends BaseFirestoreService<HeroSection> {
@@ -255,6 +257,23 @@ export class MissionSectionService extends BaseFirestoreService<MissionSection> 
   }
 }
 
+export class LiveQAEventService extends BaseFirestoreService<LiveQAEvent> {
+  constructor() {
+    super('live-qa-events');
+  }
+}
+
+export class PreRecordedSessionService extends BaseFirestoreService<PreRecordedSession> {
+  constructor() {
+    super('pre-recorded-sessions');
+  }
+
+  async getActiveSession(): Promise<PreRecordedSession | null> {
+    const sessions = await this.getVisible(1);
+    return sessions.length > 0 ? sessions[0] : null;
+  }
+}
+
 
 // Service factory for easy instantiation
 export class CMSServiceFactory {
@@ -391,5 +410,19 @@ export class CMSServiceFactory {
       this.instances.set('missionSection', new MissionSectionService());
     }
     return this.instances.get('missionSection');
+  }
+
+  static getLiveQAEventService(): LiveQAEventService {
+    if (!this.instances.has('liveQAEvent')) {
+      this.instances.set('liveQAEvent', new LiveQAEventService());
+    }
+    return this.instances.get('liveQAEvent');
+  }
+
+  static getPreRecordedSessionService(): PreRecordedSessionService {
+    if (!this.instances.has('preRecordedSession')) {
+      this.instances.set('preRecordedSession', new PreRecordedSessionService());
+    }
+    return this.instances.get('preRecordedSession');
   }
 }
