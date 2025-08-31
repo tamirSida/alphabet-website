@@ -502,7 +502,7 @@ function AlphaBetHomepageContent() {
           sectionName="Hero"
           onEdit={() => handleEdit('hero', activeHero)}
         >
-          <section className="relative min-h-screen flex items-center justify-center px-4 py-16">
+          <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 py-16">
             {/* Military corner accents - hidden on mobile */}
             <div className="hidden lg:block absolute top-8 left-8 w-16 h-16 border-l-4 border-t-4 border-gray-800 opacity-20"></div>
             <div className="hidden lg:block absolute top-8 right-8 w-16 h-16 border-r-4 border-t-4 border-gray-800 opacity-20"></div>
@@ -586,7 +586,7 @@ function AlphaBetHomepageContent() {
                       }
                       
                       return (
-                        <div className="text-center">
+                        <div id="application-status-mobile" className="text-center">
                           <div 
                             className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" 
                             style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
@@ -656,7 +656,7 @@ function AlphaBetHomepageContent() {
                     }
                     
                     return (
-                      <div className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-4 mb-6">
+                      <div id="application-status" className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-4 mb-6">
                         <div className="text-center lg:text-left">
                           <div 
                             className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" 

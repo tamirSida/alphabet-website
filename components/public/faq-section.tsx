@@ -36,10 +36,28 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
       updatedAt: new Date()
     },
     {
+      id: 'faq-eligibility',
+      question: 'Who is eligible for the Alpha-Bet program?',
+      answer: 'The program is designed for US and Israeli combat veterans who have completed their military service in good standing (or active reservists) and are ready to start a career in entrepreneurship. <a href="/qualifications" class="text-blue-600 hover:text-blue-800 underline font-medium">See full qualifications here</a>',
+      order: 3,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'faq-program-dates',
+      question: 'When does the program run?',
+      answer: '<a href="#hero" class="text-blue-600 hover:text-blue-800 underline font-medium">See current program schedule</a>',
+      order: 5,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
       id: 'faq-7',
       question: 'For the Alpha-Bet program, What service types qualify as a Combat Veteran?',
       answer: '<a href="/service-requirements" class="text-blue-600 hover:text-blue-800 underline font-medium">Click here to see service requirements.</a>',
-      order: 3,
+      order: 4,
       isVisible: true,
       createdAt: new Date(),
       updatedAt: new Date()

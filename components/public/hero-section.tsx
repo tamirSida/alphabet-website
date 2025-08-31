@@ -174,7 +174,7 @@ export default function HeroSection({
         
         {/* Application Status Message */}
         {(applicationWindowOpens || applicationWindowCloses || programStartDate) && (
-          <div className="bg-gradient-to-r from-blue-500/10 to-gray-500/10 backdrop-blur-md rounded-xl border border-gray-400/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 max-w-3xl mx-auto shadow-lg">
+          <div id="application-status" className="bg-gradient-to-r from-blue-500/10 to-gray-500/10 backdrop-blur-md rounded-xl border border-gray-400/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 max-w-3xl mx-auto shadow-lg">
             <div className="text-center">
               <div 
                 className="text-sm sm:text-lg text-black font-medium leading-relaxed mb-3" 
