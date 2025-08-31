@@ -31,8 +31,10 @@ function AlphaBetHomepageContent() {
   const [missionSection, setMissionSection] = useState<MissionSectionType | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState(0);
+  const [dividerWidth, setDividerWidth] = useState(200);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
   
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -463,6 +465,21 @@ function AlphaBetHomepageContent() {
     loadContent();
   }, [loadContent]);
 
+  useEffect(() => {
+    const updateDividerWidth = () => {
+      if (subtitleRef.current) {
+        const textWidth = subtitleRef.current.scrollWidth;
+        const maxWidth = window.innerWidth * 0.9;
+        setDividerWidth(Math.min(textWidth, maxWidth));
+      }
+    };
+
+    // Update width on mount and resize
+    updateDividerWidth();
+    window.addEventListener('resize', updateDividerWidth);
+    
+    return () => window.removeEventListener('resize', updateDividerWidth);
+  }, [hero?.subHeadline]);
 
   // Show loading state
   if (loading) {
@@ -502,7 +519,7 @@ function AlphaBetHomepageContent() {
           sectionName="Hero"
           onEdit={() => handleEdit('hero', activeHero)}
         >
-          <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 py-16">
+          <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 py-8">
             {/* Military corner accents - hidden on mobile */}
             <div className="hidden lg:block absolute top-8 left-16 w-16 h-16 border-l-4 border-t-4 border-gray-800 opacity-20"></div>
             <div className="hidden lg:block absolute top-8 right-16 w-16 h-16 border-r-4 border-t-4 border-gray-800 opacity-20"></div>
@@ -529,11 +546,18 @@ function AlphaBetHomepageContent() {
                     activeHero.headline
                   )}
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-black font-bold mb-4 leading-relaxed" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
+                <p 
+                  ref={subtitleRef}
+                  className="text-lg sm:text-xl md:text-2xl text-black font-bold mb-4 leading-relaxed" 
+                  style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
+                >
                   {activeHero.subHeadline}
                 </p>
                 <div className="flex justify-center lg:justify-start mb-4">
-                  <div className="h-1 bg-blue-700 rounded-full w-48 transition-all duration-300"></div>
+                  <div 
+                    className="h-1 bg-blue-700 rounded-full transition-all duration-300"
+                    style={{ width: `${dividerWidth}px` }}
+                  ></div>
                 </div>
                 
                 {/* Mobile application status - shows above subHeadline2 on mobile only */}
