@@ -605,10 +605,19 @@ function AlphaBetHomepageContent() {
                 )}
                 
                 {activeHero.subHeadline2 && (
-                  <p className="hidden lg:block text-lg sm:text-xl md:text-2xl text-black mb-8 leading-relaxed">
+                  <p className="hidden lg:block text-base sm:text-lg text-black mb-6 leading-relaxed">
                     {activeHero.subHeadline2}
                   </p>
                 )}
+                
+                {/* Info Session Button */}
+                <div className="hidden lg:block mb-6">
+                  <Link href="/info-session">
+                    <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                      Live & Pre-recorded Info Sessions
+                    </button>
+                  </Link>
+                </div>
                 {(activeHero.applicationWindowOpens || activeHero.applicationWindowCloses || activeHero.programStartDate) && (
                   <div className="hidden lg:block">
                     {(() => {
