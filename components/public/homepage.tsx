@@ -637,7 +637,7 @@ function AlphaBetHomepageContent() {
                 {/* Info Session Button */}
                 <div className="hidden lg:block mb-6">
                   <Link href="/info-session">
-                    <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                    <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
                       Live & Pre-recorded Info Sessions
                     </button>
                   </Link>
@@ -691,7 +691,7 @@ function AlphaBetHomepageContent() {
                     }
                     
                     return (
-                      <div id="application-status" className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-4 mb-6">
+                      <div id="application-status" className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-3 mb-6">
                         <div className="text-center lg:text-left">
                           <div 
                             className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" 
