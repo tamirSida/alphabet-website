@@ -57,7 +57,16 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
       id: 'faq-7',
       question: 'For the Alpha-Bet program, What service types qualify as a Combat Veteran?',
       answer: '<a href="/service-requirements" class="text-blue-600 hover:text-blue-800 underline font-medium">Click here to see service requirements.</a>',
-      order: 4,
+      order: 5,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 'faq-weekly-meetings',
+      question: 'When are the weekly meetings?',
+      answer: 'You must attend two weekly meetings: a lecture and a lab. The mandatory lab is typically held on Thursdays at 10:00 Pacific / 13:00 Eastern / 20:00 Israel.<br><br>For the lecture, you will be assigned to one of two groups and will attend one lecture per week for the duration of the program. Lecture days are typically:<br><br>Group 1 - Monday at 09:30 Pacific / 12:30 Eastern / 19:30 Israel<br><br>Group 2 - Tuesday at 07:30 Pacific / 10:30 Eastern / 17:30 Israel<br><br>Please refer to the full curriculum and schedule for exact dates, as some weeks may adjust around holidays.',
+      order: 6,
       isVisible: true,
       createdAt: new Date(),
       updatedAt: new Date()
