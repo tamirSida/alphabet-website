@@ -575,7 +575,7 @@ function AlphaBetHomepageContent() {
                         const endDate = activeHero.programEndDate ? new Date(activeHero.programEndDate) : null;
                         const endDateFormatted = endDate ? endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
                         
-                        message = `Applications for ${programMonth} Class are open until ${closeDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+                        message = `Applications for ${programMonth} Class are open<br>until ${closeDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`;
                         if (startDateFormatted && endDateFormatted) {
                           message += `<br>Program Start Date: ${startDateFormatted}<br>Program End Date: ${endDateFormatted}`;
                         }
@@ -586,15 +586,17 @@ function AlphaBetHomepageContent() {
                       }
                       
                       return (
-                        <div id="application-status-mobile" className="text-center">
-                          <div 
-                            className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" 
-                            style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
-                            dangerouslySetInnerHTML={{ __html: message }}
-                          />
-                          <div className="flex items-center justify-center gap-2">
-                            <div className={`w-2 h-2 ${dotColor} rounded-full ${isActive ? 'animate-pulse' : ''}`}></div>
-                            <span className={`text-xs font-medium ${statusColor}`}>Status: {statusText}</span>
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-4 mb-6 shadow-lg">
+                          <div id="application-status-mobile" className="text-center">
+                            <div 
+                              className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" 
+                              style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
+                              dangerouslySetInnerHTML={{ __html: message }}
+                            />
+                            <div className="flex items-center justify-center gap-2">
+                              <div className={`w-2 h-2 ${dotColor} rounded-full ${isActive ? 'animate-pulse' : ''}`}></div>
+                              <span className={`text-xs font-medium ${statusColor}`}>Status: {statusText}</span>
+                            </div>
                           </div>
                         </div>
                       );
