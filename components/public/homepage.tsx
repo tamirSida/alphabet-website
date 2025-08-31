@@ -504,10 +504,10 @@ function AlphaBetHomepageContent() {
         >
           <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 py-16">
             {/* Military corner accents - hidden on mobile */}
-            <div className="hidden lg:block absolute top-8 left-8 w-16 h-16 border-l-4 border-t-4 border-gray-800 opacity-20"></div>
-            <div className="hidden lg:block absolute top-8 right-8 w-16 h-16 border-r-4 border-t-4 border-gray-800 opacity-20"></div>
-            <div className="hidden lg:block absolute bottom-8 left-8 w-16 h-16 border-l-4 border-b-4 border-gray-800 opacity-20"></div>
-            <div className="hidden lg:block absolute bottom-8 right-8 w-16 h-16 border-r-4 border-b-4 border-gray-800 opacity-20"></div>
+            <div className="hidden lg:block absolute top-8 left-16 w-16 h-16 border-l-4 border-t-4 border-gray-800 opacity-20"></div>
+            <div className="hidden lg:block absolute top-8 right-16 w-16 h-16 border-r-4 border-t-4 border-gray-800 opacity-20"></div>
+            <div className="hidden lg:block absolute bottom-20 left-16 w-16 h-16 border-l-4 border-b-4 border-gray-800 opacity-20"></div>
+            <div className="hidden lg:block absolute bottom-20 right-16 w-16 h-16 border-r-4 border-b-4 border-gray-800 opacity-20"></div>
             
             <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-center relative z-10">
               {/* Mobile headline - shows above image on mobile only */}
