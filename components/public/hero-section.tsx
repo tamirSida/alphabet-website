@@ -50,13 +50,66 @@ export default function HeroSection({
     return date.toLocaleDateString('en-US', { month: 'long' });
   };
 
-  // Check if we're currently in the application window
-  const isInApplicationWindow = () => {
-    if (!applicationWindowOpens || !applicationWindowCloses) return false;
+  // Get application status and message
+  const getApplicationStatus = () => {
     const now = new Date();
-    const opensDate = new Date(applicationWindowOpens);
-    const closesDate = new Date(applicationWindowCloses);
-    return now >= opensDate && now <= closesDate;
+    const openDate = applicationWindowOpens ? new Date(applicationWindowOpens) : null;
+    const closeDate = applicationWindowCloses ? new Date(applicationWindowCloses) : null;
+    const startDate = programStartDate ? new Date(programStartDate) : null;
+    
+    const programMonth = startDate ? startDate.toLocaleDateString('en-US', { month: 'long' }) : 'Spring';
+    
+    if (!openDate || !closeDate) {
+      return {
+        message: `Applications for ${programMonth} Class will be announced soon`,
+        status: 'Pending',
+        isActive: false,
+        statusColor: 'text-gray-500',
+        dotColor: 'bg-gray-500'
+      };
+    }
+    
+    if (now < openDate) {
+      const startDateFormatted = programStartDate ? formatDate(programStartDate) : '';
+      const endDateFormatted = programEndDate ? formatDate(programEndDate) : '';
+      
+      let message = `Applications for ${programMonth} Class open on ${formatDate(applicationWindowOpens || '')}`;
+      if (programStartDate && programEndDate) {
+        message += `<br>Program Start Date: ${startDateFormatted}<br>Program End Date: ${endDateFormatted}`;
+      }
+      
+      return {
+        message,
+        status: 'Opening Soon',
+        isActive: false,
+        statusColor: 'text-yellow-500',
+        dotColor: 'bg-yellow-500'
+      };
+    } else if (now >= openDate && now <= closeDate) {
+      const startDateFormatted = programStartDate ? formatDate(programStartDate) : '';
+      const endDateFormatted = programEndDate ? formatDate(programEndDate) : '';
+      
+      let message = `Applications for ${programMonth} Class are open until ${formatDate(applicationWindowCloses || '')}`;
+      if (startDateFormatted && endDateFormatted) {
+        message += `<br>Program Start Date: ${startDateFormatted}<br>Program End Date: ${endDateFormatted}`;
+      }
+      
+      return {
+        message,
+        status: 'Active',
+        isActive: true,
+        statusColor: 'text-green-500',
+        dotColor: 'bg-green-500'
+      };
+    } else {
+      return {
+        message: `Application window for ${programMonth} Class has closed`,
+        status: 'Unavailable',
+        isActive: false,
+        statusColor: 'text-red-500',
+        dotColor: 'bg-red-500'
+      };
+    }
   };
 
   useEffect(() => {
@@ -123,18 +176,14 @@ export default function HeroSection({
         {(applicationWindowOpens || applicationWindowCloses || programStartDate) && (
           <div className="bg-gradient-to-r from-blue-500/10 to-gray-500/10 backdrop-blur-md rounded-xl border border-gray-400/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 max-w-3xl mx-auto shadow-lg">
             <div className="text-center">
-              <div className="text-sm sm:text-lg text-black font-medium leading-relaxed">
-                {isInApplicationWindow() ? (
-                  // Currently accepting applications
-                  <>
-                    Applications for {getProgramStartMonth(programStartDate || '')} Semester Currently Being Accepted Through {formatDate(applicationWindowCloses || '')}
-                  </>
-                ) : (
-                  // Applications not yet open
-                  <>
-                    Applications for {getProgramStartMonth(programStartDate || '')} Semester will open on {formatDate(applicationWindowOpens || '')}
-                  </>
-                )}
+              <div 
+                className="text-sm sm:text-lg text-black font-medium leading-relaxed mb-3" 
+                style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
+                dangerouslySetInnerHTML={{ __html: getApplicationStatus().message }}
+              />
+              <div className="flex items-center justify-center gap-2">
+                <div className={`w-2 h-2 ${getApplicationStatus().dotColor} rounded-full ${getApplicationStatus().isActive ? 'animate-pulse' : ''}`}></div>
+                <span className={`text-xs font-medium ${getApplicationStatus().statusColor}`}>Status: {getApplicationStatus().status}</span>
               </div>
             </div>
           </div>
