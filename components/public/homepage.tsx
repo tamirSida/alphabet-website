@@ -781,7 +781,7 @@ function AlphaBetHomepageContent() {
           <div 
             ref={scrollContainerRef}
             className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', touchAction: 'pan-x' }}
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', touchAction: 'manipulation' }}
             onScroll={handleScroll}
           >
             {/* Mission Section */}
