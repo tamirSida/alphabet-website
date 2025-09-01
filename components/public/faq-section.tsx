@@ -65,7 +65,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
     {
       id: 'faq-weekly-meetings',
       question: 'When are the weekly meetings?',
-      answer: 'You must attend two weekly meetings: a lecture and a lab. The mandatory lab is typically held on Thursdays at 10:00 Pacific / 13:00 Eastern / 20:00 Israel.<br><br>For the lecture, you will be assigned to one of two groups and will attend one lecture per week for the duration of the program. Lecture days are typically:<br><br>Group 1 - Monday at 09:30 Pacific / 12:30 Eastern / 19:30 Israel<br><br>Group 2 - Tuesday at 07:30 Pacific / 10:30 Eastern / 17:30 Israel<br><br>Please refer to the full curriculum and schedule for exact dates, as some weeks may adjust around holidays.',
+      answer: 'You must attend two weekly meetings: a lecture and a lab.<br><br>There are multiple lecture days per week, however you will be assigned to one lecture group for the duration of the program.<br><br>Please refer to the full <a href="/curriculum" class="text-blue-600 hover:text-blue-800 underline font-medium">curriculum</a> and <a href="https://docs.google.com/document/d/1eW75jeCq_okY8_tLZ45wJgRobbEuFTFjEWDxGKEqJjg/edit?tab=t.0" class="text-blue-600 hover:text-blue-800 underline font-medium">schedule</a> for lecture times, exact dates, and exception weeks which adjust around holidays.',
       order: 6,
       isVisible: true,
       createdAt: new Date(),
