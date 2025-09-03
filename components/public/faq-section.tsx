@@ -221,13 +221,10 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
               Our team is here to help you understand if Alpha-Bet is the right fit for your entrepreneurial journey.
             </p>
             <div className="flex justify-center">
-              <a
-                href="mailto:info@versionbravo.com"
-                className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:scale-105 transition-transform duration-300"
-              >
+              <div className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-full font-semibold">
                 <i className="fas fa-envelope"></i>
-                <span>Contact Us</span>
-              </a>
+                <span>info@versionbravo.com</span>
+              </div>
             </div>
           </div>
         </div>

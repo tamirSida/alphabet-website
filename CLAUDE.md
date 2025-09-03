@@ -34,7 +34,7 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 - `discrete-access.tsx` - URL-based admin access (?admin=true) with keyboard shortcuts (Ctrl+Shift+A, ALPHABET sequence)
 - `editable-section.tsx` - Wrapper for CMS editing capability
 - `edit-modal.tsx` - Universal edit modal for all content types with form validation
-- `simple-admin-toggle.tsx` - Admin mode toggle with discrete dot access
+- `simple-admin-toggle.tsx` - Admin mode toggle with Edit Mode, Dashboard navigation (/admin), and Sign Out buttons
 
 ### Backend Services (`/lib/cms/`)
 - `base-service.ts` - Abstract Firestore service with CRUD operations
@@ -162,6 +162,7 @@ Alpha-Bet is an entrepreneurship program for US and Israeli combat veterans, des
 - **Video Splash Optimization**: 3-second timeout with loading states and automatic home redirect
 - **FAQ Navigation Fix**: Custom navigation handler with proper timing and scrolling behavior
 - **Service Requirements Page**: Comprehensive military eligibility criteria with footer integration
+- **Admin Dashboard Button**: Added Dashboard button to admin controls for easy navigation to `/admin` route
 
 ## Environment Variables Needed:
 ```
