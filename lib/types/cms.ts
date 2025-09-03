@@ -94,6 +94,17 @@ export interface CallToAction {
   updatedAt: Date;
 }
 
+export interface CurriculumButtonConfig {
+  id: string;
+  type: 'navigate' | 'download';
+  url: string;
+  buttonText?: string; // Optional custom button text
+  isVisible: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface TeamHeader {
   id: string;
   label: string; // "LEADERSHIP TEAM"

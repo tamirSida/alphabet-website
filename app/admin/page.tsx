@@ -103,6 +103,12 @@ export default function AdminDashboard() {
               View Site
             </Button>
           </Link>
+          <Link href="/admin/files">
+            <Button variant="outline" size="sm">
+              <i className="fas fa-cloud mr-2"></i>
+              File Manager
+            </Button>
+          </Link>
           {isAdmin && (
             <Button
               onClick={() => setShowCreateForm(!showCreateForm)}

@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useAdmin } from '@/lib/cms/admin-context';
-import { CurriculumItem, CurriculumHeader } from '@/lib/types/cms';
+import { CurriculumItem, CurriculumHeader, CurriculumButtonConfig } from '@/lib/types/cms';
+import { CMSServiceFactory } from '@/lib/cms/content-services';
 
 interface CurriculumTimelineProps {
   items: CurriculumItem[];
@@ -23,10 +24,12 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
   
   // Button configuration state
   const [buttonConfig, setButtonConfig] = useState({
-    type: 'navigate', // 'download' or 'navigate'
+    type: 'navigate' as 'navigate' | 'download',
     url: 'https://docs.google.com/document/d/1eW75jeCq_okY8_tLZ45wJgRobbEuFTFjEWDxGKEqJjg/edit?tab=t.0'
   });
+  const [buttonConfigData, setButtonConfigData] = useState<CurriculumButtonConfig | null>(null);
   const [showButtonEdit, setShowButtonEdit] = useState(false);
+  const [savingButton, setSavingButton] = useState(false);
   
   // Default header values with fallback to CMS data
   const activeHeader = {
@@ -245,6 +248,58 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
   };
 
   const sortedItems = getDisplayedItems();
+
+  // Load button configuration from database
+  const loadButtonConfig = async () => {
+    try {
+      const config = await CMSServiceFactory.getCurriculumButtonConfigService().getActiveConfig();
+      if (config) {
+        setButtonConfigData(config);
+        setButtonConfig({
+          type: config.type,
+          url: config.url
+        });
+      }
+    } catch (error) {
+      console.error('Error loading button config:', error);
+    }
+  };
+
+  // Save button configuration to database
+  const saveButtonConfig = async () => {
+    try {
+      setSavingButton(true);
+      const configData = {
+        type: buttonConfig.type,
+        url: buttonConfig.url,
+        buttonText: '10-Week Program',
+        isVisible: true,
+        order: 1
+      };
+
+      if (buttonConfigData && buttonConfigData.id) {
+        // Update existing config
+        await CMSServiceFactory.getCurriculumButtonConfigService().update(buttonConfigData.id, configData);
+      } else {
+        // Create new config
+        await CMSServiceFactory.getCurriculumButtonConfigService().create(configData);
+      }
+      
+      // Reload config to get updated data
+      await loadButtonConfig();
+      setShowButtonEdit(false);
+    } catch (error) {
+      console.error('Error saving button config:', error);
+      alert('Failed to save button configuration');
+    } finally {
+      setSavingButton(false);
+    }
+  };
+
+  // Load button config on component mount
+  useEffect(() => {
+    loadButtonConfig();
+  }, []);
 
   // Trigger decrypting animation on component mount (page load)
   useEffect(() => {
@@ -650,8 +705,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
               <div className="relative">
                 {buttonConfig.type === 'download' ? (
                   <a 
-                    href={buttonConfig.url}
-                    download
+                    href={`/api/download?url=${encodeURIComponent(buttonConfig.url)}&filename=Alpha-Bet-10-Week-Program.pdf`}
                     className="inline-flex items-center gap-2 bg-white/10 text-blue-700 border-blue-200 shadow-lg hover:bg-white/15 hover:shadow-xl hover:border-blue-300 rounded-full px-6 py-3 font-semibold transition-all duration-300"
                   >
                     <i className="fas fa-download"></i>
@@ -660,6 +714,8 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
                 ) : (
                   <a 
                     href={buttonConfig.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-white/10 text-blue-700 border-blue-200 shadow-lg hover:bg-white/15 hover:shadow-xl hover:border-blue-300 rounded-full px-6 py-3 font-semibold transition-all duration-300"
                   >
                     <i className="fas fa-calendar-alt"></i>
@@ -860,10 +916,28 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
               {/* Action buttons */}
               <div className="flex gap-2 pt-4">
                 <button
-                  onClick={() => setShowButtonEdit(false)}
-                  className="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  onClick={saveButtonConfig}
+                  disabled={savingButton}
+                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
-                  Done
+                  {savingButton ? (
+                    <>
+                      <i className="fas fa-spinner animate-spin"></i>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-save"></i>
+                      Save Configuration
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setShowButtonEdit(false)}
+                  disabled={savingButton}
+                  className="px-4 py-2 bg-gray-500 hover:bg-gray-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+                >
+                  Cancel
                 </button>
                 <button
                   onClick={() => {
@@ -872,6 +946,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
                       url: 'https://docs.google.com/document/d/1eW75jeCq_okY8_tLZ45wJgRobbEuFTFjEWDxGKEqJjg/edit?tab=t.0'
                     });
                   }}
+                  disabled={savingButton}
                   className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm"
                 >
                   Reset

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useAdmin } from '@/lib/cms/admin-context';
 import { Button } from '@/components/ui/button';
-import { Settings, Lock, LogOut, ChevronDown } from 'lucide-react';
+import { Settings, Lock, LogOut, ChevronDown, LayoutDashboard } from 'lucide-react';
 
 export default function SimpleAdminToggle() {
   const { isAdmin, isAdminMode, toggleAdminMode, signOut, user } = useAdmin();
@@ -30,6 +30,16 @@ export default function SimpleAdminToggle() {
             Edit Mode
           </>
         )}
+      </Button>
+      
+      <Button
+        onClick={() => window.location.href = '/admin'}
+        variant="outline"
+        size="sm"
+        className="shadow-lg"
+      >
+        <LayoutDashboard className="h-4 w-4 mr-2" />
+        Dashboard
       </Button>
       
       <Button
