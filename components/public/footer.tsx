@@ -127,7 +127,7 @@ export default function Footer() {
             <div className="space-y-2 text-sm text-gray-300">
               <p>
                 <i className="fas fa-envelope mr-2"></i>
-                info@alphabetprogram.com
+                info@versionbravo.com
               </p>
             </div>
             

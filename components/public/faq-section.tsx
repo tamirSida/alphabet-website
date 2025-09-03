@@ -222,7 +222,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
             </p>
             <div className="flex justify-center">
               <a
-                href="mailto:info@alphabetprogram.com"
+                href="mailto:info@versionbravo.com"
                 className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:scale-105 transition-transform duration-300"
               >
                 <i className="fas fa-envelope"></i>
