@@ -13,7 +13,7 @@ interface CloudinaryFile {
 }
 
 export default function AdminFilesPage() {
-  const { isAdminMode } = useAdmin();
+  const { isAdminMode, cmsUser } = useAdmin();
   const [files, setFiles] = useState<CloudinaryFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -21,13 +21,18 @@ export default function AdminFilesPage() {
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const [renamingFile, setRenamingFile] = useState<string | null>(null);
   const [newFilename, setNewFilename] = useState('');
+  const [uploadFilename, setUploadFilename] = useState('');
+  const [dragOver, setDragOver] = useState(false);
+  const [justUploaded, setJustUploaded] = useState<string | null>(null);
+
+  const isAdmin = Boolean(cmsUser); // Any authenticated user is admin
 
   // Redirect if not admin
   useEffect(() => {
-    if (!isAdminMode) {
+    if (!isAdmin) {
       window.location.href = '/';
     }
-  }, [isAdminMode]);
+  }, [isAdmin]);
 
   // Load files from Cloudinary
   const loadFiles = async () => {
@@ -46,10 +51,33 @@ export default function AdminFilesPage() {
   };
 
   useEffect(() => {
-    if (isAdminMode) {
+    if (isAdmin) {
       loadFiles();
     }
-  }, [isAdminMode]);
+  }, [isAdmin]);
+
+  // Handle drag and drop
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    
+    const droppedFiles = e.dataTransfer.files;
+    if (droppedFiles.length > 0) {
+      const file = droppedFiles[0];
+      setSelectedFile(file);
+      setUploadFilename(file.name);
+    }
+  };
 
   // Handle file upload
   const handleUpload = async () => {
@@ -58,8 +86,13 @@ export default function AdminFilesPage() {
     try {
       setUploading(true);
       const formData = new FormData();
-      formData.append('file', selectedFile);
-      formData.append('folder', 'alpha-bet/admin-files');
+      
+      // Use custom filename if provided, otherwise use original
+      const finalFilename = uploadFilename.trim() || selectedFile.name;
+      const fileToUpload = new File([selectedFile], finalFilename, { type: selectedFile.type });
+      
+      formData.append('file', fileToUpload);
+      formData.append('folder', 'alpha-bet/documents');
 
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -67,7 +100,11 @@ export default function AdminFilesPage() {
       });
 
       if (response.ok) {
+        const result = await response.json();
         setSelectedFile(null);
+        setUploadFilename('');
+        setJustUploaded(result.file.url);
+        setTimeout(() => setJustUploaded(null), 5000); // Clear after 5 seconds
         await loadFiles(); // Refresh the file list
       } else {
         const error = await response.json();
@@ -149,13 +186,17 @@ export default function AdminFilesPage() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  if (!isAdminMode) {
+  if (!isAdmin) {
     return <div>Access denied</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-r from-white via-white to-gray-200 relative">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(120,119,198,0.15),transparent_50%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.05),transparent_50%)]"></div>
+      
+      <div className="max-w-6xl mx-auto relative z-10 p-6">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
@@ -163,17 +204,17 @@ export default function AdminFilesPage() {
               <i className="fas fa-cloud text-white text-xl"></i>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white" style={{ fontFamily: "'Black Ops One', cursive" }}>
+              <h1 className="text-3xl font-bold text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
                 File Manager
               </h1>
-              <p className="text-gray-400">Manage Cloudinary files for Alpha-Bet CMS</p>
+              <p className="text-gray-700">Manage Cloudinary files for Alpha-Bet CMS</p>
             </div>
           </div>
           
           <div className="flex items-center gap-4">
             <a
               href="/admin"
-              className="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
             >
               <i className="fas fa-arrow-left"></i>
               Back to Admin
@@ -182,54 +223,124 @@ export default function AdminFilesPage() {
         </div>
 
         {/* Upload Section */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8 border border-white/20">
-          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 mb-8 border border-gray-200 shadow-xl">
+          <h2 className="text-xl font-bold text-black mb-4 flex items-center gap-2">
             <i className="fas fa-upload"></i>
             Upload New File
           </h2>
           
-          <div className="flex flex-col sm:flex-row gap-4 items-end">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Select File
-              </label>
+          {/* Drag and Drop Zone */}
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all ${
+              dragOver 
+                ? 'border-blue-500 bg-blue-50/50' 
+                : 'border-gray-300 hover:border-gray-400'
+            }`}
+          >
+            <div className="flex flex-col items-center gap-4">
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-colors ${
+                dragOver ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'
+              }`}>
+                <i className={`fas text-2xl ${dragOver ? 'fa-cloud-arrow-up' : 'fa-cloud-upload-alt'}`}></i>
+              </div>
+              
+              <div>
+                <p className={`font-medium ${dragOver ? 'text-blue-700' : 'text-gray-700'}`}>
+                  {dragOver ? 'Drop your file here' : 'Drag and drop your file here'}
+                </p>
+                <p className="text-sm text-gray-500 mt-1">or click to browse</p>
+              </div>
+              
               <input
                 type="file"
-                onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setSelectedFile(file);
+                  if (file) {
+                    setUploadFilename(file.name);
+                  }
+                }}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 accept="*/*"
               />
             </div>
-            <button
-              onClick={handleUpload}
-              disabled={!selectedFile || uploading}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center gap-2"
-            >
-              {uploading ? (
-                <>
-                  <i className="fas fa-spinner animate-spin"></i>
-                  Uploading...
-                </>
-              ) : (
-                <>
-                  <i className="fas fa-cloud-upload-alt"></i>
-                  Upload
-                </>
-              )}
-            </button>
           </div>
           
           {selectedFile && (
-            <div className="mt-3 text-sm text-gray-300">
-              Selected: {selectedFile.name} ({formatFileSize(selectedFile.size)})
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                <div className="w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                  <i className="fas fa-file text-blue-600"></i>
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-gray-900">{selectedFile.name}</p>
+                  <p className="text-sm text-gray-600">{formatFileSize(selectedFile.size)}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedFile(null);
+                    setUploadFilename('');
+                  }}
+                  className="w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded flex items-center justify-center transition-colors"
+                  title="Remove file"
+                >
+                  <i className="fas fa-times text-xs"></i>
+                </button>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Filename (optional - leave blank to use original)
+                </label>
+                <input
+                  type="text"
+                  value={uploadFilename}
+                  onChange={(e) => setUploadFilename(e.target.value)}
+                  className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder={selectedFile.name}
+                />
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={handleUpload}
+                  disabled={uploading}
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center gap-2 cursor-pointer"
+                >
+                  {uploading ? (
+                    <>
+                      <i className="fas fa-spinner animate-spin"></i>
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-cloud-upload-alt"></i>
+                      Upload File
+                    </>
+                  )}
+                </button>
+                
+                <button
+                  onClick={() => {
+                    setSelectedFile(null);
+                    setUploadFilename('');
+                  }}
+                  className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg font-medium transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           )}
         </div>
 
         {/* Files List */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
-          <div className="p-6 border-b border-white/20">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-200 overflow-hidden shadow-xl">
+          <div className="p-6 border-b border-gray-200">
+            <h2 className="text-xl font-bold text-black flex items-center gap-2">
               <i className="fas fa-files"></i>
               Uploaded Files ({files.length})
             </h2>
@@ -237,29 +348,29 @@ export default function AdminFilesPage() {
 
           {loading ? (
             <div className="p-8 text-center">
-              <i className="fas fa-spinner animate-spin text-white text-2xl mb-4"></i>
-              <p className="text-gray-300">Loading files...</p>
+              <i className="fas fa-spinner animate-spin text-blue-600 text-2xl mb-4"></i>
+              <p className="text-gray-700">Loading files...</p>
             </div>
           ) : files.length === 0 ? (
             <div className="p-8 text-center">
               <i className="fas fa-folder-open text-gray-500 text-4xl mb-4"></i>
-              <p className="text-gray-400">No files uploaded yet</p>
+              <p className="text-gray-600">No files uploaded yet</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-white/5">
+                <thead className="bg-gray-50">
                   <tr>
-                    <th className="text-left p-4 text-gray-300 font-medium">File</th>
-                    <th className="text-left p-4 text-gray-300 font-medium">Size</th>
-                    <th className="text-left p-4 text-gray-300 font-medium">Format</th>
-                    <th className="text-left p-4 text-gray-300 font-medium">URL</th>
-                    <th className="text-left p-4 text-gray-300 font-medium">Actions</th>
+                    <th className="text-left p-4 text-gray-700 font-medium">File</th>
+                    <th className="text-left p-4 text-gray-700 font-medium">Size</th>
+                    <th className="text-left p-4 text-gray-700 font-medium">Format</th>
+                    <th className="text-left p-4 text-gray-700 font-medium">URL</th>
+                    <th className="text-left p-4 text-gray-700 font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {files.map((file, index) => (
-                    <tr key={file.public_id} className={`border-t border-white/10 ${index % 2 === 0 ? 'bg-white/5' : ''}`}>
+                    <tr key={file.public_id} className={`border-t border-gray-200 ${index % 2 === 0 ? 'bg-gray-50/50' : ''}`}>
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-blue-600/20 rounded-lg flex items-center justify-center">
@@ -272,7 +383,7 @@ export default function AdminFilesPage() {
                                   type="text"
                                   value={newFilename}
                                   onChange={(e) => setNewFilename(e.target.value)}
-                                  className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm flex-1"
+                                  className="px-2 py-1 bg-white border border-gray-300 rounded text-gray-900 text-sm flex-1"
                                   placeholder="New filename"
                                   onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
@@ -304,7 +415,7 @@ export default function AdminFilesPage() {
                               </div>
                             ) : (
                               <div>
-                                <div className="text-white font-medium">
+                                <div className="text-gray-900 font-medium">
                                   {file.original_filename || file.public_id.split('/').pop()}
                                 </div>
                                 <div className="text-gray-400 text-sm">
@@ -315,17 +426,17 @@ export default function AdminFilesPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="p-4 text-gray-300">
+                      <td className="p-4 text-gray-700">
                         {formatFileSize(file.bytes)}
                       </td>
                       <td className="p-4">
-                        <span className="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs uppercase">
+                        <span className="px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs uppercase">
                           {file.format}
                         </span>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
-                          <code className="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded max-w-xs truncate">
+                          <code className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded max-w-xs truncate">
                             {file.secure_url}
                           </code>
                           <button
@@ -376,12 +487,12 @@ export default function AdminFilesPage() {
         </div>
 
         {/* Instructions */}
-        <div className="mt-8 bg-blue-900/20 backdrop-blur-md rounded-2xl p-6 border border-blue-500/30">
-          <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-            <i className="fas fa-info-circle"></i>
+        <div className="mt-8 bg-blue-50/80 backdrop-blur-md rounded-2xl p-6 border border-blue-200 shadow-lg">
+          <h3 className="text-lg font-bold text-black mb-3 flex items-center gap-2">
+            <i className="fas fa-info-circle text-blue-600"></i>
             How to Use
           </h3>
-          <div className="text-gray-300 space-y-2 text-sm">
+          <div className="text-gray-700 space-y-2 text-sm">
             <p>• Upload files here to make them available for download in your CMS</p>
             <p>• Click the copy button next to any file URL to copy it to your clipboard</p>
             <p>• Use these URLs in your CMS forms where you need downloadable files</p>
@@ -389,9 +500,26 @@ export default function AdminFilesPage() {
           </div>
         </div>
 
+        {/* Quick copy notification for newly uploaded files */}
+        {justUploaded && (
+          <div className="fixed bottom-4 right-4 bg-green-600 text-white p-4 rounded-lg shadow-xl border border-green-500">
+            <div className="flex items-center gap-3 mb-3">
+              <i className="fas fa-check-circle text-lg"></i>
+              <span className="font-medium">File uploaded successfully!</span>
+            </div>
+            <button
+              onClick={() => copyUrl(justUploaded)}
+              className="w-full bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <i className="fas fa-copy"></i>
+              Copy Link
+            </button>
+          </div>
+        )}
+
         {/* Copy confirmation */}
         {copiedUrl && (
-          <div className="fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg animate-bounce">
+          <div className="fixed bottom-4 left-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg animate-bounce">
             <i className="fas fa-check mr-2"></i>
             URL copied to clipboard!
           </div>

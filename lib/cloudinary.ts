@@ -24,7 +24,7 @@ export async function uploadFile(
     const result = await cloudinary.uploader.upload(
       `data:application/octet-stream;base64,${file.toString('base64')}`,
       {
-        resource_type: 'auto',
+        resource_type: 'image', // Use image resource type for PDFs to enable delivery
         public_id: `${folder}/${filename.replace(/\.[^/.]+$/, '')}`,
         use_filename: true,
         unique_filename: false,
@@ -70,6 +70,28 @@ export function getOptimizedUrl(
     width: options.width,
     height: options.height,
   });
+}
+
+export function getFileUrl(publicId: string, format?: string): string {
+  // For PDFs, force the extension to ensure proper delivery
+  if (format === 'pdf') {
+    return cloudinary.url(publicId, {
+      secure: true,
+      format: 'pdf'
+    });
+  }
+  
+  // For other document formats, use secure URL as-is
+  const documentFormats = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'zip', 'rar'];
+  if (format && documentFormats.includes(format.toLowerCase())) {
+    return cloudinary.url(publicId, {
+      secure: true,
+      format: format
+    });
+  }
+  
+  // For images and other media, use standard transformation
+  return cloudinary.url(publicId, { secure: true });
 }
 
 export default cloudinary;

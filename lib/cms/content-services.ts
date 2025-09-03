@@ -9,6 +9,7 @@ import {
   CurriculumItem, 
   CurriculumHeader,
   CallToAction,
+  CurriculumButtonConfig,
   Qualification,
   FAQ,
   ProgramIntro,
@@ -274,6 +275,17 @@ export class PreRecordedSessionService extends BaseFirestoreService<PreRecordedS
   }
 }
 
+export class CurriculumButtonConfigService extends BaseFirestoreService<CurriculumButtonConfig> {
+  constructor() {
+    super('curriculum-button-configs');
+  }
+
+  async getActiveConfig(): Promise<CurriculumButtonConfig | null> {
+    const configs = await this.getVisible(1);
+    return configs.length > 0 ? configs[0] : null;
+  }
+}
+
 
 // Service factory for easy instantiation
 export class CMSServiceFactory {
@@ -424,5 +436,12 @@ export class CMSServiceFactory {
       this.instances.set('preRecordedSession', new PreRecordedSessionService());
     }
     return this.instances.get('preRecordedSession');
+  }
+
+  static getCurriculumButtonConfigService(): CurriculumButtonConfigService {
+    if (!this.instances.has('curriculumButtonConfig')) {
+      this.instances.set('curriculumButtonConfig', new CurriculumButtonConfigService());
+    }
+    return this.instances.get('curriculumButtonConfig');
   }
 }

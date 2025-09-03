@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { uploadFile, deleteFile } from '@/lib/cloudinary';
+import { uploadFile, deleteFile, getFileUrl } from '@/lib/cloudinary';
 import { v2 as cloudinary } from 'cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const folder = formData.get('folder') as string || 'alpha-bet/curriculum';
+    const folder = formData.get('folder') as string || 'alpha-bet/documents';
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -21,7 +21,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      file: result,
+      file: {
+        ...result,
+        url: getFileUrl(result.publicId, result.format)
+      },
     });
   } catch (error) {
     console.error('Upload error:', error);
@@ -79,7 +82,7 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({
       success: true,
       file: {
-        url: result.secure_url,
+        url: getFileUrl(result.public_id, result.format),
         publicId: result.public_id,
         originalFilename: newFilename,
         format: result.format,
