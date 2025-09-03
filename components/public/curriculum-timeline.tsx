@@ -705,8 +705,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
               <div className="relative">
                 {buttonConfig.type === 'download' ? (
                   <a 
-                    href={buttonConfig.url}
-                    download
+                    href={`/api/download?url=${encodeURIComponent(buttonConfig.url)}&filename=Alpha-Bet-10-Week-Program.pdf`}
                     className="inline-flex items-center gap-2 bg-white/10 text-blue-700 border-blue-200 shadow-lg hover:bg-white/15 hover:shadow-xl hover:border-blue-300 rounded-full px-6 py-3 font-semibold transition-all duration-300"
                   >
                     <i className="fas fa-download"></i>
@@ -715,6 +714,8 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
                 ) : (
                   <a 
                     href={buttonConfig.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-white/10 text-blue-700 border-blue-200 shadow-lg hover:bg-white/15 hover:shadow-xl hover:border-blue-300 rounded-full px-6 py-3 font-semibold transition-all duration-300"
                   >
                     <i className="fas fa-calendar-alt"></i>
