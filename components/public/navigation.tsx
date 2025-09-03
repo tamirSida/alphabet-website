@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import { EXTERNAL_URLS } from '@/lib/config/urls';
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -16,7 +17,7 @@ export default function Navigation() {
     { name: 'Curriculum', href: '/curriculum' },
     { name: 'Qualifications', href: '/qualifications' },
     { name: 'FAQ', href: '/#faq' },
-    { name: 'Apply', href: '/apply' },
+    { name: 'Apply', href: EXTERNAL_URLS.APPLY_FORM, external: true },
   ];
 
   const isActive = (href: string) => {
@@ -100,6 +101,16 @@ export default function Navigation() {
                 >
                   {item.name}
                 </button>
+              ) : 'external' in item ? (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium transition-colors duration-200 text-gray-300 hover:text-white"
+                >
+                  {item.name}
+                </a>
               ) : (
                 <Link
                   key={item.name}
@@ -149,6 +160,17 @@ export default function Navigation() {
                 >
                   {item.name}
                 </button>
+              ) : 'external' in item ? (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 text-gray-300 hover:text-white hover:bg-blue-800"
+                >
+                  {item.name}
+                </a>
               ) : (
                 <Link
                   key={item.name}
