@@ -316,38 +316,11 @@ export default function InfoSession() {
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                               allowFullScreen
                               loading="lazy"
-                              onError={() => setEmbedError(preRecordedSession.sessionUrl)}
                             />
-                            {/* Fallback for embedding disabled videos - Mobile-friendly */}
-                            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 md:transition-opacity">
-                              <a
-                                href={preRecordedSession.sessionUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-4 py-2 sm:px-6 sm:py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center gap-2 text-sm sm:text-base"
-                                style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
-                              >
-                                <i className="fab fa-youtube"></i>
-                                <span className="hidden sm:inline">Watch on YouTube</span>
-                                <span className="sm:hidden">YouTube</span>
-                              </a>
-                            </div>
                           </div>
                           <h3 className="mt-4 text-lg sm:text-xl font-bold text-black text-center px-2" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
                             {preRecordedSession.title}
                           </h3>
-                          {/* Mobile-only direct link below video */}
-                          <div className="mt-3 text-center sm:hidden">
-                            <a
-                              href={preRecordedSession.sessionUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
-                            >
-                              <i className="fab fa-youtube"></i>
-                              Watch on YouTube
-                            </a>
-                          </div>
                         </>
                       ) : (
                         // Non-YouTube URL - show as button
