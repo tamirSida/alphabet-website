@@ -14,6 +14,7 @@ export default function InfoSession() {
   const [liveEvents, setLiveEvents] = useState<LiveQAEvent[]>([]);
   const [preRecordedSession, setPreRecordedSession] = useState<PreRecordedSession | null>(null);
   const [loading, setLoading] = useState(true);
+  const [embedError, setEmbedError] = useState<string | null>(null);
   
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -125,6 +126,30 @@ export default function InfoSession() {
       minute: '2-digit',
       timeZoneName: 'short'
     });
+  };
+
+  const getYouTubeEmbedUrl = (url: string) => {
+    if (!url) return '';
+    
+    // Handle different YouTube URL formats
+    const patterns = [
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,
+      /(?:https?:\/\/)?youtu\.be\/([a-zA-Z0-9_-]+)/,
+    ];
+
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        return `https://www.youtube.com/embed/${match[1]}`;
+      }
+    }
+
+    return url; // Return original URL if not a recognized YouTube format
+  };
+
+  const isYouTubeUrl = (url: string) => {
+    return url.includes('youtube.com') || url.includes('youtu.be');
   };
 
   useEffect(() => {
@@ -280,15 +305,49 @@ export default function InfoSession() {
                       </div>
                     )}
 
-                    <a
-                      href={preRecordedSession.sessionUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer text-lg"
-                      style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
-                    >
-                      {preRecordedSession.title}
-                    </a>
+                    <div className="max-w-4xl mx-auto">
+                      {isYouTubeUrl(preRecordedSession.sessionUrl) ? (
+                        <>
+                          <div className="relative aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
+                            <iframe
+                              src={getYouTubeEmbedUrl(preRecordedSession.sessionUrl)}
+                              title={preRecordedSession.title || "Alpha-Bet Program Overview"}
+                              className="w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              onError={() => setEmbedError(preRecordedSession.sessionUrl)}
+                            />
+                            {/* Fallback for embedding disabled videos */}
+                            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                              <a
+                                href={preRecordedSession.sessionUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center gap-2"
+                                style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
+                              >
+                                <i className="fab fa-youtube"></i>
+                                Watch on YouTube
+                              </a>
+                            </div>
+                          </div>
+                          <h3 className="mt-4 text-xl font-bold text-black text-center" style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}>
+                            {preRecordedSession.title}
+                          </h3>
+                        </>
+                      ) : (
+                        // Non-YouTube URL - show as button
+                        <a
+                          href={preRecordedSession.sessionUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer text-lg"
+                          style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
+                        >
+                          {preRecordedSession.title}
+                        </a>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <div className="text-center py-12 text-gray-600">

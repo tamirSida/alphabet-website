@@ -89,7 +89,7 @@ export default function HeroSection({
       const startDateFormatted = programStartDate ? formatDate(programStartDate) : '';
       const endDateFormatted = programEndDate ? formatDate(programEndDate) : '';
       
-      let message = `Applications for ${programMonth} Class are open until ${formatDate(applicationWindowCloses || '')}`;
+      let message = `Applications for ${programMonth} class are open until ${formatDate(applicationWindowCloses || '')}`;
       if (startDateFormatted && endDateFormatted) {
         message += `<br>Program Start Date: ${startDateFormatted}<br>Program End Date: ${endDateFormatted}`;
       }

@@ -91,6 +91,14 @@ export default function Footer() {
                   className="object-contain filter brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
                   style={{ width: 'auto', height: 'auto' }}
                 />
+                <Image 
+                  src="/partnerships/atalef.png"
+                  alt="Atalef Partner" 
+                  width={80}
+                  height={40}
+                  className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ width: 'auto', height: 'auto' }}
+                />
               </div>
             </div>
           </div>
@@ -179,6 +187,14 @@ export default function Footer() {
                   width={60}
                   height={30}
                   className="object-contain filter brightness-0 invert opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ width: 'auto', height: 'auto' }}
+                />
+                <Image 
+                  src="/partnerships/atalef.png"
+                  alt="Atalef Partner" 
+                  width={60}
+                  height={30}
+                  className="object-contain opacity-70 hover:opacity-100 transition-opacity"
                   style={{ width: 'auto', height: 'auto' }}
                 />
               </div>
