@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useAdmin } from '@/lib/cms/admin-context';
 import { CurriculumItem, CurriculumHeader, CurriculumButtonConfig } from '@/lib/types/cms';
 import { CMSServiceFactory } from '@/lib/cms/content-services';
+import { EXTERNAL_URLS } from '@/lib/config/urls';
 
 interface CurriculumTimelineProps {
   items: CurriculumItem[];
@@ -696,11 +697,11 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
-                href={cta?.buttonLink || '/qualifications'}
+                href={cta?.buttonLink || EXTERNAL_URLS.APPLY_FORM}
                 className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 text-gray-900 font-semibold hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 <i className="fas fa-graduation-cap"></i>
-                <span>{cta?.buttonText || 'Start Your Journey'}</span>
+                <span>{cta?.buttonText || 'Apply Now'}</span>
               </a>
               <div className="relative">
                 {buttonConfig.type === 'download' ? (

@@ -23,6 +23,14 @@ export const metadata: Metadata = {
   authors: [{ name: "Alpha-Bet Program" }],
   creator: "Alpha-Bet Program",
   publisher: "Alpha-Bet Program",
+  icons: {
+    icon: [
+      { url: "/logo.png", sizes: "32x32", type: "image/png" },
+      { url: "/logo.png", sizes: "16x16", type: "image/png" }
+    ],
+    apple: "/logo.png",
+    shortcut: "/logo.png",
+  },
   robots: {
     index: true,
     follow: true,
@@ -41,11 +49,13 @@ export const metadata: Metadata = {
     siteName: "Alpha-Bet",
     type: "website",
     locale: "en_US",
+    images: ["/logo.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Alpha-Bet | Entrepreneurship Program for Combat Veterans",
     description: "Entrepreneurship program for US and Israeli combat veterans. From battlefield to business - your next mission starts here.",
+    images: ["/logo.png"],
   },
   alternates: {
     canonical: "https://alpha-bet.org",
@@ -63,6 +73,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
+        <link rel="shortcut icon" href="/logo.png" />
         <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
