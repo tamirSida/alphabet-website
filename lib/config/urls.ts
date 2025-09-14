@@ -3,7 +3,7 @@
 
 export const EXTERNAL_URLS = {
   // Application form - Alpha-Bet application URL
-  APPLY_FORM: 'https://application.alphabet.versionbravo.com',
+  APPLY_FORM: 'https://application.alphabet.vbv.vc',
   
   // Social media links
   LINKEDIN: 'https://www.linkedin.com/school/versionbravo/posts/?feedView=all',
