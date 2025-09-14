@@ -26,12 +26,12 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 flex items-center justify-center relative">
+              <div className="w-12 h-12 flex items-center justify-center relative">
                 <Image 
                   src="/logo.png"
                   alt="Alpha-Bet Logo" 
-                  width={40}
-                  height={40}
+                  width={48}
+                  height={48}
                   className="object-contain filter brightness-0 invert"
                 />
               </div>
@@ -93,6 +93,14 @@ export default function Footer() {
                 <Image 
                   src="/partnerships/atalef.png"
                   alt="Atalef Partner" 
+                  width={80}
+                  height={40}
+                  className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ width: 'auto', height: 'auto' }}
+                />
+                <Image 
+                  src="/partnerships/versionbravo.png"
+                  alt="Version Bravo Partner" 
                   width={80}
                   height={40}
                   className="object-contain opacity-70 hover:opacity-100 transition-opacity"
@@ -191,6 +199,14 @@ export default function Footer() {
                 <Image 
                   src="/partnerships/atalef.png"
                   alt="Atalef Partner" 
+                  width={60}
+                  height={30}
+                  className="object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  style={{ width: 'auto', height: 'auto' }}
+                />
+                <Image 
+                  src="/partners/versionbravo.png"
+                  alt="Version Bravo Partner" 
                   width={60}
                   height={30}
                   className="object-contain opacity-70 hover:opacity-100 transition-opacity"

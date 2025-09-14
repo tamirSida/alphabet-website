@@ -67,12 +67,12 @@ export default function Navigation() {
           {/* Logo/Brand */}
           <Link href="/" className="flex items-center">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center relative">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center relative">
                 <Image 
                   src="/logo.png"
                   alt="Alpha-Bet Logo" 
-                  width={40}
-                  height={40}
+                  width={48}
+                  height={48}
                   className="object-contain filter brightness-0 invert" 
                   priority
                   onError={() => console.log('Logo failed to load on mobile')}
