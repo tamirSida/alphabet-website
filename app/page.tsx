@@ -6,7 +6,7 @@ export default function Home() {
     <>
       <SEOHead
         title="Alpha-Bet - Entrepreneurship Program for Combat Veterans"
-        description="Join Alpha-Bet by Version Bravo: Free 10-week entrepreneurship program for US & Israeli combat veterans. Learn startup fundamentals, build your network, and transform military leadership into business success."
+        description="Join Alpha-Bet: Free 10-week entrepreneurship program for US & Israeli combat veterans. Learn startup fundamentals, build your network, and transform military leadership into business success."
         keywords={[
           'entrepreneurship program',
           'combat veteran startup training',

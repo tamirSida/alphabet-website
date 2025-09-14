@@ -194,7 +194,7 @@ export default function ServiceRequirementsPage() {
             <div className="bg-gray-50 p-6 rounded-lg">
               <p className="mb-4">For questions about service requirements or eligibility:</p>
               <ul className="space-y-2">
-                <li><strong>Email:</strong> <span className="text-blue-600">info@versionbravo.com</span></li>
+                <li><strong>Email:</strong> <span className="text-blue-600">info@vbv.vc</span></li>
               </ul>
             </div>
 

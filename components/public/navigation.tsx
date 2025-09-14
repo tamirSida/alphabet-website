@@ -73,14 +73,13 @@ export default function Navigation() {
                   alt="Alpha-Bet Logo" 
                   width={40}
                   height={40}
-                  className="object-contain" 
+                  className="object-contain filter brightness-0 invert" 
                   priority
                   onError={() => console.log('Logo failed to load on mobile')}
                   onLoad={() => console.log('Logo loaded successfully')}
                 />
               </div>
               <div className="text-white font-bold text-sm sm:text-base leading-tight text-center" style={{ fontFamily: "'Black Ops One', cursive" }}>
-                <div>Version Bravo</div>
                 <div>Alpha-Bet</div>
               </div>
             </div>

@@ -530,21 +530,17 @@ function AlphaBetHomepageContent() {
               {/* Mobile headline - shows above image on mobile only */}
               <div className="lg:hidden order-1 text-center mb-4">
                 <h1 className="text-3xl sm:text-4xl font-bold leading-tight text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
-                  Alpha-Bet<br />By Version Bravo
+                  Alpha-Bet
                 </h1>
               </div>
               
               {/* Left side - Hero content */}
               <div className="order-3 lg:order-1 text-center lg:text-left">
                 <h1 className="hidden lg:block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
-                  {activeHero.headline.includes('By Version Bravo') ? (
-                    <>
-                      {activeHero.headline.replace(' By Version Bravo', '')}<br />
-                      By Version Bravo
-                    </>
-                  ) : (
+                  {activeHero.headline.includes('By Version Bravo') ? 
+                    activeHero.headline.replace(' By Version Bravo', '').replace('By Version Bravo', '') :
                     activeHero.headline
-                  )}
+                  }
                 </h1>
                 <p 
                   ref={subtitleRef}

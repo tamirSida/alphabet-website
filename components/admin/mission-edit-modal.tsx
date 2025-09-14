@@ -40,7 +40,7 @@ export default function MissionEditModal({
         },
         {
           id: '2', 
-          text: "The Version Bravo Alpha-Bet program is a non-profit initiative dedicated to empowering combat veterans.",
+          text: "The Alpha-Bet program is a non-profit initiative dedicated to empowering combat veterans.",
           order: 2
         },
         {

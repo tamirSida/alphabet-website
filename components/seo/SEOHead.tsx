@@ -49,8 +49,8 @@ export default function SEOHead({
   structuredData,
   noindex = false
 }: SEOProps) {
-  const siteTitle = 'Alpha-Bet - Entrepreneurship Program for Combat Veterans | Version Bravo';
-  const siteDescription = 'Alpha-Bet by Version Bravo: Free 10-week entrepreneurship program for US and Israeli combat veterans. Transform military experience into startup success with expert mentorship, proven frameworks, and veteran network.';
+  const siteTitle = 'Alpha-Bet - Entrepreneurship Program for Combat Veterans';
+  const siteDescription = 'Alpha-Bet: Free 10-week entrepreneurship program for US and Israeli combat veterans. Transform military experience into startup success with expert mentorship, proven frameworks, and veteran network.';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://alpha-bet.org';
   
   const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
@@ -83,7 +83,7 @@ export default function SEOHead({
         "contactPoint": {
           "@type": "ContactPoint",
           "contactType": "customer service",
-          "email": "info@versionbravo.com"
+          "email": "info@vbv.vc"
         }
       },
       {
@@ -204,7 +204,7 @@ export default function SEOHead({
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={fullOgImage} />
       <meta property="og:image:alt" content="Alpha-Bet Logo - Entrepreneurship Program for Veterans" />
-      <meta property="og:site_name" content="Alpha-Bet by Version Bravo" />
+      <meta property="og:site_name" content="Alpha-Bet" />
       <meta property="og:locale" content="en_US" />
       
       

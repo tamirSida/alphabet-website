@@ -139,14 +139,10 @@ export default function HeroSection({
     >
       <div className="max-w-4xl mx-auto text-center text-white">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-black" style={{ fontFamily: "'Black Ops One', cursive" }}>
-          {headline.includes('By Version Bravo') ? (
-            <>
-              {headline.replace(' By Version Bravo', '')}<br />
-              By Version Bravo
-            </>
-          ) : (
+          {headline.includes('By Version Bravo') ? 
+            headline.replace(' By Version Bravo', '').replace('By Version Bravo', '') :
             headline
-          )}
+          }
         </h1>
         {/* First subtitle line */}
         <p 
