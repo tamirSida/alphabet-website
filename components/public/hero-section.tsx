@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { EXTERNAL_URLS } from '@/lib/config/urls';
 
 interface HeroSectionProps {
   headline: string;
@@ -180,6 +181,16 @@ export default function HeroSection({
               <div className="flex items-center justify-center gap-2">
                 <div className={`w-2 h-2 ${getApplicationStatus().dotColor} rounded-full ${getApplicationStatus().isActive ? 'animate-pulse' : ''}`}></div>
                 <span className={`text-xs font-medium ${getApplicationStatus().statusColor}`}>Status: {getApplicationStatus().status}</span>
+              </div>
+              <div className="mt-4">
+                <Link href={EXTERNAL_URLS.APPLY_FORM}>
+                  <Button 
+                    size="sm"
+                    className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                  >
+                    Apply Now
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

@@ -13,6 +13,7 @@ import EditModal from '@/components/admin/edit-modal';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { EXTERNAL_URLS } from '@/lib/config/urls';
 // AdminProvider is now in root layout
 
 import { CMSServiceFactory } from '@/lib/cms/content-services';
@@ -617,6 +618,16 @@ function AlphaBetHomepageContent() {
                               <div className={`w-2 h-2 ${dotColor} rounded-full ${isActive ? 'animate-pulse' : ''}`}></div>
                               <span className={`text-xs font-medium ${statusColor}`}>Status: {statusText}</span>
                             </div>
+                            <div className="mt-4">
+                              <Link href={EXTERNAL_URLS.APPLY_FORM}>
+                                <Button 
+                                  size="sm"
+                                  className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                                >
+                                  Apply Now
+                                </Button>
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       );
@@ -694,9 +705,19 @@ function AlphaBetHomepageContent() {
                             style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
                             dangerouslySetInnerHTML={{ __html: message }}
                           />
-                          <div className="flex items-center justify-center lg:justify-start gap-2">
+                          <div className="flex items-center justify-center lg:justify-start gap-2 mb-3">
                             <div className={`w-2 h-2 ${dotColor} rounded-full ${isActive ? 'animate-pulse' : ''}`}></div>
                             <span className={`text-xs font-medium ${statusColor}`}>Status: {statusText}</span>
+                          </div>
+                          <div className="flex justify-center lg:justify-start">
+                            <Link href={EXTERNAL_URLS.APPLY_FORM}>
+                              <Button 
+                                size="sm"
+                                className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                              >
+                                Apply Now
+                              </Button>
+                            </Link>
                           </div>
                         </div>
                       </div>
