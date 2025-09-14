@@ -32,10 +32,9 @@ export default function Footer() {
                   alt="Alpha-Bet Logo" 
                   width={40}
                   height={40}
-                  className="object-contain"
+                  className="object-contain filter brightness-0 invert"
                 />
               </div>
-              <span className="text-white font-bold text-xl">Alpha-Bet</span>
             </div>
             <p className="text-gray-300 text-sm leading-relaxed max-w-md">
               An entrepreneurship program for US and Israeli combat veterans,

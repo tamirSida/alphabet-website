@@ -79,9 +79,6 @@ export default function Navigation() {
                   onLoad={() => console.log('Logo loaded successfully')}
                 />
               </div>
-              <div className="text-white font-bold text-sm sm:text-base leading-tight text-center" style={{ fontFamily: "'Black Ops One', cursive" }}>
-                <div>Alpha-Bet</div>
-              </div>
             </div>
           </Link>
 
