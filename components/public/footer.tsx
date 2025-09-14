@@ -205,7 +205,7 @@ export default function Footer() {
                   style={{ width: 'auto', height: 'auto' }}
                 />
                 <Image 
-                  src="/partners/versionbravo.png"
+                  src="/partnerships/versionbravo.png"
                   alt="Version Bravo Partner" 
                   width={60}
                   height={30}
