@@ -65,7 +65,7 @@ export default function FAQSection({ faqs, onEdit, onDelete }: FAQSectionProps) 
     {
       id: 'faq-weekly-meetings',
       question: 'When are the weekly meetings?',
-      answer: 'You must attend two weekly meetings: a lecture and a lab.<br><br>There are multiple lecture days per week, however you will be assigned to one lecture group for the duration of the program.<br><br>Please refer to the full <a href="/curriculum" class="text-blue-600 hover:text-blue-800 underline font-medium">curriculum</a> and <a href="https://docs.google.com/document/d/1eW75jeCq_okY8_tLZ45wJgRobbEuFTFjEWDxGKEqJjg/edit?tab=t.0" class="text-blue-600 hover:text-blue-800 underline font-medium">schedule</a> for lecture times, exact dates, and exception weeks which adjust around holidays.',
+      answer: 'You must attend two weekly meetings: a lecture and a lab.<br><br>There are multiple lecture days per week, however you will be assigned to one lecture group for the duration of the program.<br><br>Please refer to the full <a href="/curriculum" class="text-blue-600 hover:text-blue-800 underline font-medium">curriculum</a> and <a href="https://res.cloudinary.com/ddcj52sia/image/upload/v1/alpha-bet/documents/Alpha%20Bet%20-%20Fall%202025%20Curriculum%20Outline-4.pdf?_a=BAMAAADg0" class="text-blue-600 hover:text-blue-800 underline font-medium">schedule</a> for lecture times, exact dates, and exception weeks which adjust around holidays.',
       order: 6,
       isVisible: true,
       createdAt: new Date(),
