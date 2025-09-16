@@ -20,11 +20,18 @@ export async function GET(request: NextRequest) {
         // Determine content type based on file extension
         const contentType = url.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream';
         
-        return new NextResponse(fileBuffer, {
+        // Convert Buffer to ArrayBuffer
+        const arrayBuffer = new ArrayBuffer(fileBuffer.length);
+        const view = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < fileBuffer.length; i++) {
+          view[i] = fileBuffer[i];
+        }
+        
+        return new NextResponse(arrayBuffer, {
           headers: {
             'Content-Type': contentType,
             'Content-Disposition': `attachment; filename="${filename}"`,
-            'Content-Length': fileBuffer.byteLength.toString(),
+            'Content-Length': fileBuffer.length.toString(),
           },
         });
       } catch (error) {
