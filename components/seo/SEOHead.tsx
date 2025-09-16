@@ -203,6 +203,8 @@ export default function SEOHead({
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={fullOgImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="Alpha-Bet Logo - Entrepreneurship Program for Veterans" />
       <meta property="og:site_name" content="Alpha-Bet" />
       <meta property="og:locale" content="en_US" />
