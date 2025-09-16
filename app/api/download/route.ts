@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,7 +11,29 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'URL parameter required' }, { status: 400 });
     }
 
-    // Fetch the file from Cloudinary
+    // Handle local files from the public directory
+    if (url.startsWith('/')) {
+      try {
+        const filePath = join(process.cwd(), 'public', url);
+        const fileBuffer = await readFile(filePath);
+        
+        // Determine content type based on file extension
+        const contentType = url.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream';
+        
+        return new NextResponse(fileBuffer, {
+          headers: {
+            'Content-Type': contentType,
+            'Content-Disposition': `attachment; filename="${filename}"`,
+            'Content-Length': fileBuffer.byteLength.toString(),
+          },
+        });
+      } catch (error) {
+        console.error('Local file read error:', error);
+        return NextResponse.json({ error: 'Local file not found' }, { status: 404 });
+      }
+    }
+
+    // Handle external URLs (like Cloudinary)
     const response = await fetch(url);
     
     if (!response.ok) {
