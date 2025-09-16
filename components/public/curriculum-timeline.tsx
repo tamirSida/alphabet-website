@@ -26,7 +26,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
   // Button configuration state
   const [buttonConfig, setButtonConfig] = useState({
     type: 'navigate' as 'navigate' | 'download',
-    url: 'https://docs.google.com/document/d/1eW75jeCq_okY8_tLZ45wJgRobbEuFTFjEWDxGKEqJjg/edit?tab=t.0'
+    url: '/sched.pdf'
   });
   const [buttonConfigData, setButtonConfigData] = useState<CurriculumButtonConfig | null>(null);
   const [showButtonEdit, setShowButtonEdit] = useState(false);
@@ -944,7 +944,7 @@ export default function CurriculumTimeline({ items, header, cta, onEdit, onDelet
                   onClick={() => {
                     setButtonConfig({
                       type: 'navigate',
-                      url: 'https://docs.google.com/document/d/1eW75jeCq_okY8_tLZ45wJgRobbEuFTFjEWDxGKEqJjg/edit?tab=t.0'
+                      url: '/sched.pdf'
                     });
                   }}
                   disabled={savingButton}
