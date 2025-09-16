@@ -36,20 +36,45 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  console.log('Delete API called');
+  
   try {
-    const { publicId } = await request.json();
+    const body = await request.json();
+    console.log('Delete request body:', body);
+    
+    const { publicId } = body;
 
     if (!publicId) {
+      console.error('No public ID provided in delete request');
       return NextResponse.json({ error: 'No public ID provided' }, { status: 400 });
     }
 
+    console.log('Attempting to delete file:', publicId);
+    
+    // Check if Cloudinary is configured
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+    if (!cloudName || !apiKey || !apiSecret) {
+      console.error('Cloudinary not configured for delete operation');
+      return NextResponse.json({ error: 'Cloudinary not configured' }, { status: 500 });
+    }
+
     await deleteFile(publicId);
+    console.log('File deleted successfully:', publicId);
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Delete error:', error);
+    console.error('Delete error stack:', error instanceof Error ? error.stack : 'No stack');
+    
     return NextResponse.json(
-      { error: 'Failed to delete file' },
+      { 
+        error: 'Failed to delete file',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     );
   }

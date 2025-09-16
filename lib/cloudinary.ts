@@ -47,10 +47,36 @@ export async function uploadFile(
 
 export async function deleteFile(publicId: string): Promise<void> {
   try {
-    await cloudinary.uploader.destroy(publicId, { resource_type: 'auto' });
+    console.log('Deleting file from Cloudinary:', publicId);
+    
+    // Ensure Cloudinary is configured
+    const config = cloudinary.config();
+    if (!config.cloud_name || !config.api_key || !config.api_secret) {
+      throw new Error('Cloudinary not properly configured');
+    }
+    
+    // Based on documentation: PDFs uploaded as resource_type: 'image' must be deleted as 'image'
+    // Our upload function uses resource_type: 'image' for PDFs
+    const result = await cloudinary.uploader.destroy(publicId, { 
+      resource_type: 'image',
+      invalidate: true // Clear CDN cache
+    });
+    
+    console.log('Cloudinary delete result:', result);
+    
+    if (result.result === 'ok') {
+      console.log('File deleted successfully from Cloudinary');
+      return;
+    } else if (result.result === 'not found') {
+      throw new Error(`File not found: ${publicId}`);
+    } else {
+      throw new Error(`Delete failed with result: ${result.result}`);
+    }
+    
   } catch (error) {
     console.error('Cloudinary delete error:', error);
-    throw new Error('Failed to delete file from Cloudinary');
+    console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
+    throw new Error(`Failed to delete file from Cloudinary: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
