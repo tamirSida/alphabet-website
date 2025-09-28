@@ -98,11 +98,33 @@ export default function InfoSession() {
     }
   }, [editingType, editingItem, liveEvents.length, loadContent]);
 
-  const getEditFields = useCallback((type: string) => {
+  const getEditFields = useCallback((type: string, currentFormData?: any) => {
+    const getTimePreview = (dateString: string) => {
+      if (!dateString) return '';
+      
+      const estDate = new Date(dateString);
+      const ilDate = new Date(estDate.getTime() + (7 * 60 * 60 * 1000));
+      const pstDate = new Date(estDate.getTime() - (3 * 60 * 60 * 1000));
+      
+      const formatOptions: Intl.DateTimeFormatOptions = {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      };
+
+      return `Preview: IL: ${ilDate.toLocaleDateString('en-US', formatOptions)} | PST: ${pstDate.toLocaleDateString('en-US', formatOptions)} | EST: ${estDate.toLocaleDateString('en-US', formatOptions)}`;
+    };
+
     switch (type) {
       case 'live-event':
+        const baseHelper = 'Enter time in EST. Will display as IL (EST+7), PST (EST-3), and EST.';
+        const preview = currentFormData?.sessionDate ? getTimePreview(currentFormData.sessionDate) : '';
+        const fullHelper = preview ? `${baseHelper}\n\n${preview}` : baseHelper;
+        
         return [
-          { key: 'sessionDate', label: 'Session Date & Time (EST ONLY)', type: 'datetime-local' as const, required: true, placeholder: '2025-01-15T19:00', helper: 'Enter time in EST. Will display as IL (EST+7), PST (EST-3), and EST.' },
+          { key: 'sessionDate', label: 'Session Date & Time (EST ONLY)', type: 'datetime-local' as const, required: true, placeholder: '2025-01-15T19:00', helper: fullHelper },
           { key: 'sessionUrl', label: 'Session URL', type: 'text' as const, required: true, placeholder: 'https://zoom.us/...' }
         ];
       case 'pre-recorded':
@@ -384,6 +406,7 @@ export default function InfoSession() {
         title={`${editingItem ? 'Edit' : 'Add'} ${editingType === 'live-event' ? 'Live Event' : 'Pre-recorded Session'}`}
         fields={getEditFields(editingType)}
         initialData={editingItem}
+        getUpdatedFields={(formData) => getEditFields(editingType, formData)}
         loading={loading}
       />
     </div>

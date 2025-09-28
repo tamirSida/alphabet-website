@@ -25,6 +25,7 @@ interface EditModalProps {
   fields: FormField[];
   initialData?: any;
   loading?: boolean;
+  getUpdatedFields?: (formData: any) => FormField[];
 }
 
 export default function EditModal({ 
@@ -34,10 +35,12 @@ export default function EditModal({
   title, 
   fields,
   initialData = {},
-  loading = false
+  loading = false,
+  getUpdatedFields
 }: EditModalProps) {
   const [formData, setFormData] = useState<any>({});
   const [saving, setSaving] = useState(false);
+  const [dynamicFields, setDynamicFields] = useState<FormField[]>(fields);
   
   // Undo/Redo state
   const [formHistory, setFormHistory] = useState<any[]>([]);
@@ -71,6 +74,13 @@ export default function EditModal({
       console.log('Initializing form data with:', initData, 'from initialData:', initialData);
       setFormData(initData);
       
+      // Initialize dynamic fields
+      if (getUpdatedFields) {
+        setDynamicFields(getUpdatedFields(initData));
+      } else {
+        setDynamicFields(fields);
+      }
+      
       // Initialize history with the initial state
       setFormHistory([initData]);
       setHistoryIndex(0);
@@ -90,12 +100,17 @@ export default function EditModal({
   const updateFormData = useCallback((newData: any) => {
     setFormData(newData);
     
+    // Update dynamic fields if function provided
+    if (getUpdatedFields) {
+      setDynamicFields(getUpdatedFields(newData));
+    }
+    
     // Add to history (remove any future history if we're not at the end)
     const newHistory = formHistory.slice(0, historyIndex + 1);
     newHistory.push(newData);
     setFormHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
-  }, [formHistory, historyIndex]);
+  }, [formHistory, historyIndex, getUpdatedFields]);
 
   // Undo function
   const undo = useCallback(() => {
@@ -173,7 +188,7 @@ export default function EditModal({
         
         <form onSubmit={handleSubmit} className="p-6">
           <div className="space-y-4">
-            {fields.map((field) => (
+            {dynamicFields.map((field) => (
               <div key={field.key}>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   {field.label}
@@ -309,7 +324,7 @@ export default function EditModal({
                   />
                 )}
                 {field.helper && (
-                  <p className="text-sm text-gray-500 mt-1">{field.helper}</p>
+                  <p className="text-sm text-gray-500 mt-1 whitespace-pre-line">{field.helper}</p>
                 )}
               </div>
             ))}
