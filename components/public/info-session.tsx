@@ -102,7 +102,7 @@ export default function InfoSession() {
     switch (type) {
       case 'live-event':
         return [
-          { key: 'sessionDate', label: 'Session Date & Time', type: 'datetime-local' as const, required: true, placeholder: '2025-01-15T19:00' },
+          { key: 'sessionDate', label: 'Session Date & Time (EST ONLY)', type: 'datetime-local' as const, required: true, placeholder: '2025-01-15T19:00', helper: 'Enter time in EST. Will display as IL (EST+7), PST (EST-3), and EST.' },
           { key: 'sessionUrl', label: 'Session URL', type: 'text' as const, required: true, placeholder: 'https://zoom.us/...' }
         ];
       case 'pre-recorded':
@@ -116,16 +116,32 @@ export default function InfoSession() {
   }, []);
 
   const formatEventDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    const estDate = new Date(dateString);
+    
+    // Calculate other timezones based on EST
+    const ilDate = new Date(estDate.getTime() + (7 * 60 * 60 * 1000)); // EST + 7 hours
+    const pstDate = new Date(estDate.getTime() - (3 * 60 * 60 * 1000)); // EST - 3 hours
+    
+    const formatOptions: Intl.DateTimeFormatOptions = {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       hour: 'numeric',
-      minute: '2-digit',
-      timeZoneName: 'short'
-    });
+      minute: '2-digit'
+    };
+
+    const ilTime = ilDate.toLocaleDateString('en-US', formatOptions);
+    const pstTime = pstDate.toLocaleDateString('en-US', formatOptions);
+    const estTime = estDate.toLocaleDateString('en-US', formatOptions);
+
+    return (
+      <div className="space-y-1">
+        <div><strong>IL:</strong> {ilTime}</div>
+        <div><strong>PST:</strong> {pstTime}</div>
+        <div><strong>EST:</strong> {estTime}</div>
+      </div>
+    );
   };
 
   const getYouTubeEmbedUrl = (url: string) => {

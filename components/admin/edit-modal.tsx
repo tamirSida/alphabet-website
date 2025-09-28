@@ -14,6 +14,7 @@ interface FormField {
   placeholder?: string;
   value?: string;
   options?: { label: string; value: string | boolean }[];
+  helper?: string;
 }
 
 interface EditModalProps {
@@ -306,6 +307,9 @@ export default function EditModal({
                     required={field.required}
                     className="w-full"
                   />
+                )}
+                {field.helper && (
+                  <p className="text-sm text-gray-500 mt-1">{field.helper}</p>
                 )}
               </div>
             ))}
