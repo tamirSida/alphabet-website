@@ -33,14 +33,15 @@ export default function HeroSection({
   const [dividerWidth, setDividerWidth] = useState(200);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
 
-  // Format date for display
+  // Format date for display (consistent timezone)
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'America/New_York' // Force EST timezone for consistency
     });
   };
 
@@ -48,7 +49,10 @@ export default function HeroSection({
   const getProgramStartMonth = (dateString: string) => {
     if (!dateString) return 'Winter';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'long' });
+    return date.toLocaleDateString('en-US', { 
+      month: 'long',
+      timeZone: 'America/New_York' // Force EST timezone for consistency
+    });
   };
 
   // Get application status and message
@@ -58,7 +62,10 @@ export default function HeroSection({
     const closeDate = applicationWindowCloses ? new Date(applicationWindowCloses) : null;
     const startDate = programStartDate ? new Date(programStartDate) : null;
     
-    const programMonth = startDate ? startDate.toLocaleDateString('en-US', { month: 'long' }) : 'Spring';
+    const programMonth = startDate ? startDate.toLocaleDateString('en-US', { 
+      month: 'long',
+      timeZone: 'America/New_York' // Force EST timezone for consistency
+    }) : 'Spring';
     
     if (!openDate || !closeDate) {
       return {
