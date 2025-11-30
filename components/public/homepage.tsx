@@ -888,7 +888,7 @@ function AlphaBetHomepageContent() {
                     ...contentSection,
                     id: contentSection?.id || "default-why-alpha-bet",
                     title: contentSection?.title || "Why Alpha-Bet?",
-                    content: contentSection?.content || "This isn't a traditional classroom. This is a community of like-minded individuals who share your unique experiences and understand the 'battle-tested' approach to problem-solving.\n\n• Proven Network: Access to Version Bravo ecosystem with US and Israeli operators\n• Veteran-to-Veteran Mentorship: Learn from successful entrepreneur combat veterans\n• Fast-Track to Success: Priority application to Version Bravo accelerator with investment",
+                    content: contentSection?.content || "This isn't a traditional classroom. This is a community of like-minded individuals who share your unique experiences and understand the 'battle-tested' approach to problem-solving.\n\n• Proven Network: Access to The Vetted ecosystem with US and Israeli operators\n• Veteran-to-Veteran Mentorship: Learn from successful entrepreneur combat veterans\n• Fast-Track to Success: Priority application to Version Bravo accelerator with investment",
                     description: contentSection?.description || getDefaultDescription('why-alpha-bet'),
                     type: "why-alpha-bet"
                   });
@@ -929,7 +929,7 @@ function AlphaBetHomepageContent() {
                     ...contentSection,
                     id: contentSection?.id || "default-what-you-gain",
                     title: contentSection?.title || "What You'll Gain",
-                    content: contentSection?.content || "Transform your military experience into entrepreneurial success through our comprehensive 10-week program.\n\n• Build a Strong Team: Connect and develop startups with mission-driven veteran peers\n• Gain Confidence & Knowledge: Master the entrepreneurial process from ideation to venture creation\n• Experience Real-World Pitching: Present your startup to actual investors\n• Receive Priority for Acceleration: Direct path to Version Bravo accelerator with investment opportunity",
+                    content: contentSection?.content || "Transform your military experience into entrepreneurial success through our comprehensive 10-week program.\n\n• Build a Strong Team: Connect and develop startups with mission-driven veteran peers\n• Gain Confidence & Knowledge: Master the entrepreneurial process from ideation to venture creation\n• Experience Real-World Pitching: Present your startup to actual investors\n• Receive Priority for Acceleration: Direct path to The Vetted Accelerator with investment opportunity",
                     description: contentSection?.description || getDefaultDescription('what-you-gain'),
                     type: "what-you-gain"
                   });

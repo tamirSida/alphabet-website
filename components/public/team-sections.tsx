@@ -68,7 +68,6 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
     }
   ];
 
-  // Default Version Bravo Team (all non-founder team members)
   const defaultVersionBravoStaff: TeamMember[] = [
     {
       id: 'tommy-knapp',
@@ -163,7 +162,6 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
   ];
 
 
-  // Merge CMS data with Version Bravo Team defaults (including founders)
   const mergedVersionBravoTeam = React.useMemo(() => {
     // Combine founders and team defaults
     const allDefaults = [...defaultFounders, ...defaultVersionBravoStaff];
@@ -361,10 +359,10 @@ export default function TeamSections({ founders, staff, team, onEdit, onDelete, 
           )}
         </div>
 
-        {/* Section 2: Version Bravo Team (including founders) */}
+        {/* Section 2: Team (including founders) */}
         <div className="mb-16">
           <div className="text-center mb-8">
-            <h3 className="text-2xl sm:text-3xl font-bold text-black mb-4" style={{ fontFamily: "'Black Ops One', cursive" }}>Version Bravo Team</h3>
+            <h3 className="text-2xl sm:text-3xl font-bold text-black mb-4" style={{ fontFamily: "'Black Ops One', cursive" }}>Alpha-Bet Team</h3>
             <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-red-500 mx-auto rounded-full"></div>
           </div>
           
