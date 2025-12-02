@@ -1,12 +1,13 @@
 User-agent: *
 Allow: /
 
-# Important pages for search engines
+# Important pages for search engines - Alpha-Bet by The Vetted
 Allow: /
 Allow: /home
 Allow: /team
 Allow: /curriculum  
 Allow: /qualifications
+Allow: /info-session
 Allow: /service-requirements
 Allow: /privacy
 Allow: /terms
@@ -15,6 +16,10 @@ Allow: /terms
 Disallow: /*?admin=true
 Disallow: /api/
 Disallow: /_next/
+Disallow: /admin/
+
+# SEO optimized for: Alpha-Bet, alphabet, entrepreneurship, thevetted, vbv
+# Target keywords: veteran entrepreneurs, combat veteran startup, alphabet methodology
 
 # Sitemap location
-Sitemap: https://alpha-bet.org/sitemap.xml
+Sitemap: https://alphabet.thevetted.vc/sitemap.xml
