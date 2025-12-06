@@ -133,7 +133,7 @@ export default function NotificationSignupForm({ isOpen, onClose }: Notification
           </h2>
           <button
             onClick={onClose}
-            className="text-white hover:text-gray-200 transition-colors"
+            className="text-white hover:text-gray-200 transition-colors cursor-pointer disabled:cursor-not-allowed"
             disabled={isSubmitting}
           >
             <X className="h-6 w-6" />
@@ -261,7 +261,7 @@ export default function NotificationSignupForm({ isOpen, onClose }: Notification
                 <Button
                   type="submit"
                   disabled={isSubmitting || !emailsMatch || Object.values(formData).some(v => !v.trim())}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 cursor-pointer disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">

@@ -216,7 +216,7 @@ export default function HeroSection({
                 <Button 
                   size="sm"
                   onClick={() => setShowNotificationForm(true)}
-                  className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                  className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 cursor-pointer"
                 >
                   Get Notified
                 </Button>
