@@ -9,11 +9,13 @@ import BottomNavigation from './bottom-navigation';
 import DiscreteAdminAccess, { DiscreteAdminDot, useUrlAdminAccess } from '@/components/admin/discrete-access';
 import EditableSection from '@/components/admin/editable-section';
 import SimpleAdminToggle from '@/components/admin/simple-admin-toggle';
-import EditModal from '@/components/admin/edit-modal';
+import EditModal, { FormField } from '@/components/admin/edit-modal';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { EXTERNAL_URLS } from '@/lib/config/urls';
+import { dateInputToUTC, utcToDateInput, legacyDateToUTC } from '@/lib/utils/timezone';
+import NotificationSignupForm from './notification-signup-form';
 // AdminProvider is now in root layout
 
 import { CMSServiceFactory } from '@/lib/cms/content-services';
@@ -42,6 +44,7 @@ function AlphaBetHomepageContent() {
   const [missionEditModalOpen, setMissionEditModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
   const [editingType, setEditingType] = useState<string>('');
+  const [showNotificationForm, setShowNotificationForm] = useState(false);
 
   // State to store the current content for each section
   const [sectionContent, setSectionContent] = useState({
@@ -326,10 +329,25 @@ function AlphaBetHomepageContent() {
   const handleSave = useCallback(async (data: any) => {
     try {
       if (editingType === 'hero') {
+        // Convert ET dates to UTC for storage
+        const processedData = { ...data };
+        if (processedData.applicationWindowOpens) {
+          processedData.applicationWindowOpens = dateInputToUTC(processedData.applicationWindowOpens);
+        }
+        if (processedData.applicationWindowCloses) {
+          processedData.applicationWindowCloses = dateInputToUTC(processedData.applicationWindowCloses);
+        }
+        if (processedData.programStartDate) {
+          processedData.programStartDate = dateInputToUTC(processedData.programStartDate);
+        }
+        if (processedData.programEndDate) {
+          processedData.programEndDate = dateInputToUTC(processedData.programEndDate);
+        }
+
         if (editingItem && editingItem.id) {
-          await CMSServiceFactory.getHeroService().update(editingItem.id, data);
+          await CMSServiceFactory.getHeroService().update(editingItem.id, processedData);
         } else {
-          await CMSServiceFactory.getHeroService().create(data);
+          await CMSServiceFactory.getHeroService().create(processedData);
         }
       } else if (editingType === 'content') {
         // Fix the Firebase document not existing issue
@@ -421,21 +439,52 @@ function AlphaBetHomepageContent() {
     }
   }, [editingType, editingItem, contentSections.length, faqs.length, loadContent, sectionContent, saveContentToDatabase, updateContentSection]);
 
+  // Dynamic fields function for hero section
+  const getUpdatedHeroFields = useCallback((formData: any) => {
+    const baseFields: FormField[] = [
+      { key: 'headline', label: 'Headline', type: 'text' as const, required: true, placeholder: 'Enter the main headline' },
+      { key: 'subHeadline', label: 'First Sub-headline', type: 'textarea' as const, required: true, placeholder: 'The only entrepreneurship program for US and Israeli combat veterans.' },
+      { key: 'subHeadline2', label: 'Second Sub-headline', type: 'textarea' as const, required: false, placeholder: 'Alpha-Bet equips you with the skills, network, and battle-tested mindset to build a successful startup...' },
+      { 
+        key: 'applicationWindowMode', 
+        label: 'Application Window Mode', 
+        type: 'radio' as const, 
+        required: false, 
+        options: [
+          { label: 'Application Window', value: 'application-window' },
+          { label: 'Notify Me', value: 'notify-me' }
+        ]
+      }
+    ];
+
+    // Conditionally add fields based on the selected mode
+    if (formData.applicationWindowMode === 'application-window') {
+      baseFields.push(
+        { key: 'applicationWindowOpens', label: 'Application Window Opens (ET)', type: 'date' as const, required: false, placeholder: '2025-08-09', helper: 'Date when applications open (Eastern Time)' },
+        { key: 'applicationWindowCloses', label: 'Application Window Closes (ET)', type: 'date' as const, required: false, placeholder: '2025-10-31', helper: 'Date when applications close (Eastern Time)' },
+        { key: 'programStartDate', label: 'Program Start Date (ET)', type: 'date' as const, required: false, placeholder: '2025-11-04', helper: 'Date when the program starts (Eastern Time)' },
+        { key: 'programEndDate', label: 'Program End Date (ET)', type: 'date' as const, required: false, placeholder: '2026-01-15', helper: 'Date when the program ends (Eastern Time)' }
+      );
+    } else if (formData.applicationWindowMode === 'notify-me') {
+      baseFields.push(
+        { key: 'notifyMeLink', label: 'Notify Me Link', type: 'url' as const, required: false, placeholder: 'https://example.com/notify', helper: 'URL for the "Get Notified" button' }
+      );
+    }
+
+    baseFields.push(
+      { key: 'ctaText', label: 'Call-to-Action Text', type: 'text' as const, required: true, placeholder: 'e.g., Apply Now' },
+      { key: 'ctaLink', label: 'Call-to-Action Link', type: 'text' as const, required: true, placeholder: '/curriculum or https://...' },
+      { key: 'backgroundImage', label: 'Background Image URL', type: 'text' as const, required: false, placeholder: '/images/hero.jpeg or https://...' }
+    );
+
+    return baseFields;
+  }, []);
+
   const getEditFields = useCallback((type: string) => {
     switch (type) {
       case 'hero':
-        return [
-          { key: 'headline', label: 'Headline', type: 'text' as const, required: true, placeholder: 'Enter the main headline' },
-          { key: 'subHeadline', label: 'First Sub-headline', type: 'textarea' as const, required: true, placeholder: 'The only entrepreneurship program for US and Israeli combat veterans.' },
-          { key: 'subHeadline2', label: 'Second Sub-headline', type: 'textarea' as const, required: false, placeholder: 'Alpha-Bet equips you with the skills, network, and battle-tested mindset to build a successful startup...' },
-          { key: 'applicationWindowOpens', label: 'Application Window Opens', type: 'date' as const, required: false, placeholder: '2025-01-15' },
-          { key: 'applicationWindowCloses', label: 'Application Window Closes', type: 'date' as const, required: false, placeholder: '2025-02-28' },
-          { key: 'programStartDate', label: 'Program Start Date', type: 'date' as const, required: false, placeholder: '2025-03-15' },
-          { key: 'programEndDate', label: 'Program End Date', type: 'date' as const, required: false, placeholder: '2025-05-24' },
-          { key: 'ctaText', label: 'Call-to-Action Text', type: 'text' as const, required: true, placeholder: 'e.g., Apply Now' },
-          { key: 'ctaLink', label: 'Call-to-Action Link', type: 'text' as const, required: true, placeholder: '/curriculum or https://...' },
-          { key: 'backgroundImage', label: 'Background Image URL', type: 'text' as const, required: false, placeholder: '/images/hero.jpeg or https://...' }
-        ];
+        // Use the dynamic fields function
+        return getUpdatedHeroFields(editingItem || {});
       case 'content':
         return [
           { key: 'title', label: 'Title', type: 'text' as const, required: true, placeholder: 'Enter section title' },
@@ -496,10 +545,12 @@ function AlphaBetHomepageContent() {
     headline: "From Battlefield to Business: Your Next Mission Starts Here.",
     subHeadline: "The only entrepreneurship program for US and Israeli combat veterans.",
     subHeadline2: "Alpha-Bet equips you with the skills, network, and battle-tested mindset to build a successful startup. It's time to channel your experience into innovation.",
+    applicationWindowMode: "application-window" as const,
     applicationWindowOpens: "2025-01-15",
     applicationWindowCloses: "2025-02-28",
     programStartDate: "2025-03-15",
     programEndDate: "2025-05-24",
+    notifyMeLink: "",
     ctaText: "Explore Program",
     ctaLink: "/curriculum"
   };
@@ -558,7 +609,7 @@ function AlphaBetHomepageContent() {
                 </div>
                 
                 {/* Mobile application status - shows above subHeadline2 on mobile only */}
-                {(activeHero.applicationWindowOpens || activeHero.applicationWindowCloses || activeHero.programStartDate) && (
+                {(activeHero.applicationWindowMode === 'application-window' && (activeHero.applicationWindowOpens || activeHero.applicationWindowCloses || activeHero.programStartDate)) && (
                   <div className="lg:hidden mb-6">
                     {(() => {
                       const now = new Date();
@@ -634,6 +685,31 @@ function AlphaBetHomepageContent() {
                     })()}
                   </div>
                 )}
+
+                {/* Mobile notify me status - shows above subHeadline2 on mobile only */}
+                {activeHero.applicationWindowMode === 'notify-me' && (
+                  <div className="lg:hidden mb-6">
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-4 mb-6 shadow-lg">
+                      <div id="notify-me-status-mobile" className="text-center">
+                        <div 
+                          className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" 
+                          style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
+                        >
+                          Click here to get notified when applications for the next class open
+                        </div>
+                        <div className="mt-4">
+                          <Button 
+                            size="sm"
+                            onClick={() => setShowNotificationForm(true)}
+                            className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                          >
+                            Get Notified
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 
                 {activeHero.subHeadline2 && (
                   <p className="hidden lg:block text-base sm:text-lg text-black mb-6 leading-relaxed">
@@ -649,7 +725,7 @@ function AlphaBetHomepageContent() {
                     </button>
                   </Link>
                 </div>
-                {(activeHero.applicationWindowOpens || activeHero.applicationWindowCloses || activeHero.programStartDate) && (
+                {(activeHero.applicationWindowMode === 'application-window' && (activeHero.applicationWindowOpens || activeHero.applicationWindowCloses || activeHero.programStartDate)) && (
                   <div className="hidden lg:block">
                     {(() => {
                     const now = new Date();
@@ -723,6 +799,31 @@ function AlphaBetHomepageContent() {
                       </div>
                     );
                   })()}
+                  </div>
+                )}
+
+                {/* Desktop notify me status - shows on desktop only */}
+                {activeHero.applicationWindowMode === 'notify-me' && (
+                  <div className="hidden lg:block">
+                    <div id="notify-me-status" className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-3 mb-6">
+                      <div className="text-center lg:text-left">
+                        <div 
+                          className="text-sm sm:text-base text-gray-800 font-medium leading-relaxed mb-3" 
+                          style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
+                        >
+                          Click here to get notified when applications for the next class open
+                        </div>
+                        <div className="flex justify-center lg:justify-start">
+                          <Button 
+                            size="sm"
+                            onClick={() => setShowNotificationForm(true)}
+                            className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                          >
+                            Get Notified
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -1003,8 +1104,15 @@ function AlphaBetHomepageContent() {
         onSave={handleSave}
         title={`Edit ${editingType}`}
         fields={editingType ? getEditFields(editingType) : []}
-        initialData={editingItem}
+        initialData={editingType === 'hero' && editingItem ? {
+          ...editingItem,
+          applicationWindowOpens: editingItem.applicationWindowOpens ? utcToDateInput(legacyDateToUTC(editingItem.applicationWindowOpens)) : '',
+          applicationWindowCloses: editingItem.applicationWindowCloses ? utcToDateInput(legacyDateToUTC(editingItem.applicationWindowCloses)) : '',
+          programStartDate: editingItem.programStartDate ? utcToDateInput(legacyDateToUTC(editingItem.programStartDate)) : '',
+          programEndDate: editingItem.programEndDate ? utcToDateInput(legacyDateToUTC(editingItem.programEndDate)) : ''
+        } : editingItem}
         loading={loading}
+        getUpdatedFields={editingType === 'hero' ? getUpdatedHeroFields : undefined}
       />
 
       {/* Mission Edit Modal */}
@@ -1014,6 +1122,12 @@ function AlphaBetHomepageContent() {
         onSave={handleSaveMission}
         initialData={missionSection}
         loading={loading}
+      />
+
+      {/* Notification Signup Form */}
+      <NotificationSignupForm 
+        isOpen={showNotificationForm}
+        onClose={() => setShowNotificationForm(false)}
       />
 
       {/* Custom CSS for hiding scrollbar */}

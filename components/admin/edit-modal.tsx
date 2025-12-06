@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
-interface FormField {
+export interface FormField {
   key: string;
   label: string;
   type: 'text' | 'textarea' | 'email' | 'url' | 'number' | 'radio' | 'date' | 'datetime-local' | 'titles-list';

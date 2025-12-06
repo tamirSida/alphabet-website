@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { EXTERNAL_URLS } from '@/lib/config/urls';
+import { formatDateForDisplay, normalizeDate } from '@/lib/utils/timezone';
+import NotificationSignupForm from './notification-signup-form';
 
 interface HeroSectionProps {
   headline: string;
@@ -12,10 +14,12 @@ interface HeroSectionProps {
   ctaText: string;
   ctaLink: string;
   backgroundImage?: string;
+  applicationWindowMode?: 'application-window' | 'notify-me';
   applicationWindowOpens?: string;
   applicationWindowCloses?: string;
   programStartDate?: string;
   programEndDate?: string;
+  notifyMeLink?: string;
 }
 
 export default function HeroSection({
@@ -25,33 +29,28 @@ export default function HeroSection({
   ctaText,
   ctaLink,
   backgroundImage,
+  applicationWindowMode,
   applicationWindowOpens,
   applicationWindowCloses,
   programStartDate,
-  programEndDate
+  programEndDate,
+  notifyMeLink
 }: HeroSectionProps) {
   const [dividerWidth, setDividerWidth] = useState(200);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const [showNotificationForm, setShowNotificationForm] = useState(false);
 
-  // Format date for display (consistent timezone)
+  // Format date for display (using timezone utility)
   const formatDate = (dateString: string) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'America/New_York' // Force EST timezone for consistency
-    });
+    return formatDateForDisplay(normalizeDate(dateString));
   };
 
   // Get program start month name
   const getProgramStartMonth = (dateString: string) => {
     if (!dateString) return 'Winter';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
+    return formatDateForDisplay(normalizeDate(dateString), { 
       month: 'long',
-      timeZone: 'America/New_York' // Force EST timezone for consistency
+      timeZone: 'America/New_York'
     });
   };
 
@@ -177,7 +176,7 @@ export default function HeroSection({
         )}
         
         {/* Application Status Message */}
-        {(applicationWindowOpens || applicationWindowCloses || programStartDate) && (
+        {(applicationWindowMode === 'application-window' && (applicationWindowOpens || applicationWindowCloses || programStartDate)) && (
           <div id="application-status" className="bg-gradient-to-r from-blue-500/10 to-gray-500/10 backdrop-blur-md rounded-xl border border-gray-400/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 max-w-3xl mx-auto shadow-lg">
             <div className="text-center">
               <div 
@@ -202,6 +201,29 @@ export default function HeroSection({
             </div>
           </div>
         )}
+
+        {/* Notify Me Message */}
+        {applicationWindowMode === 'notify-me' && (
+          <div id="notify-me-status" className="bg-gradient-to-r from-blue-500/10 to-gray-500/10 backdrop-blur-md rounded-xl border border-gray-400/30 px-4 sm:px-8 py-3 sm:py-5 mb-6 max-w-3xl mx-auto shadow-lg">
+            <div className="text-center">
+              <div 
+                className="text-sm sm:text-lg text-black font-medium leading-relaxed mb-3" 
+                style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
+              >
+                Click here to get notified when applications for the next class open
+              </div>
+              <div className="mt-4">
+                <Button 
+                  size="sm"
+                  onClick={() => setShowNotificationForm(true)}
+                  className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-105"
+                >
+                  Get Notified
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Link href={ctaLink}>
@@ -215,6 +237,11 @@ export default function HeroSection({
         </div>
       </div>
       
+      {/* Notification Signup Form */}
+      <NotificationSignupForm 
+        isOpen={showNotificationForm}
+        onClose={() => setShowNotificationForm(false)}
+      />
     </section>
   );
 }

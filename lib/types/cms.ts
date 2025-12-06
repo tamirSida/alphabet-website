@@ -6,10 +6,12 @@ export interface HeroSection {
   ctaText: string;
   ctaLink: string;
   backgroundImage?: string;
+  applicationWindowMode?: 'application-window' | 'notify-me'; // New toggle field
   applicationWindowOpens?: string;
   applicationWindowCloses?: string;
   programStartDate?: string;
   programEndDate?: string;
+  notifyMeLink?: string; // URL for "notify me" option
   isVisible: boolean;
   order: number;
   createdAt: Date;
