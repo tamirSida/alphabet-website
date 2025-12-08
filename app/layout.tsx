@@ -41,12 +41,7 @@ export const metadata: Metadata = {
     siteName: "Alpha-Bet by The Vetted",
     type: "website",
     locale: "en_US",
-    images: [{
-      url: "https://alphabet.thevetted.vc/logo.png",
-      width: 1200,
-      height: 630,
-      alt: "Alpha-Bet Entrepreneurship Program by The Vetted"
-    }],
+    images: ["/logo.png"],
   },
   twitter: {
     card: "summary_large_image",
@@ -54,7 +49,7 @@ export const metadata: Metadata = {
     creator: "@versionbravo",
     title: "Alpha-Bet | Combat Veteran Entrepreneurship | The Vetted",
     description: "Alpha-Bet: Elite entrepreneurship program by The Vetted. Alphabet methodology for veteran entrepreneurs. VBV accelerator program.",
-    images: ["https://alphabet.thevetted.vc/logo.png"],
+    images: ["/logo.png"],
   },
   alternates: {
     canonical: "https://alphabet.thevetted.vc",
