@@ -110,7 +110,7 @@ function SortableTeamMember({ member, index, onEdit, onDelete, hoveredMember, se
         <div className="flex justify-center mb-6">
           <div className="relative">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white/20 shadow-xl">
-              {member.image ? (
+              {member.image && !member.image.includes('media.licdn.com') ? (
                 <Image
                   src={member.image}
                   alt={member.name}
@@ -122,8 +122,8 @@ function SortableTeamMember({ member, index, onEdit, onDelete, hoveredMember, se
                   }}
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                  <i className="fas fa-user text-white text-2xl"></i>
+                <div className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center">
+                  <i className="fas fa-user text-white text-2xl opacity-50"></i>
                 </div>
               )}
             </div>
