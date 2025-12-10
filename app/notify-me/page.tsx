@@ -12,9 +12,9 @@ export default function NotifyMePage() {
 
   const handleClose = () => {
     setShowForm(false);
-    // Redirect to home after closing
+    // Redirect to root after closing
     setTimeout(() => {
-      router.push('/home');
+      router.push('/');
     }, 500);
   };
 
@@ -37,7 +37,7 @@ export default function NotifyMePage() {
 
         {/* Back Navigation */}
         <div className="mb-6">
-          <Link href="/home">
+          <Link href="/">
             <Button 
               variant="outline" 
               className="text-white border-white/30 hover:bg-white/10"
