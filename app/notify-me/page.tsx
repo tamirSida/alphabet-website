@@ -8,15 +8,33 @@ import Link from 'next/link';
 
 export default function NotifyMePage() {
   const [showForm, setShowForm] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const router = useRouter();
 
   const handleClose = () => {
     setShowForm(false);
+    setIsRedirecting(true);
     // Redirect to root after closing
     setTimeout(() => {
       router.push('/');
     }, 500);
   };
+
+  if (isRedirecting) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+          <p 
+            className="text-xl text-white"
+            style={{ fontFamily: "'Gunplay', 'Black Ops One', cursive" }}
+          >
+            Redirecting...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center p-4">
